@@ -1,0 +1,5 @@
+.venv
+Articles
+Datasets
+Processed_Datasets
+*.zip
