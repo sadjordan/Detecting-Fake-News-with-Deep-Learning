@@ -39,20 +39,8 @@ Jordan Ling Shen Hang
 \subsection{Problem Statement}
 Fake news threatens personal, organisational and institutions by creating distrust and damaging reputations. Fake news can be particularly damaging as even if it can be refuted, it may still cause lasting damage to reputations. With the widespread use of social media, the proliferation of fake news has greatly increased both in terms of speed and quantity. This has led to the sheer volume of fake news (and real news) overwhelming human fact-checkers and preventing them from manually verifying all content. 
 
-In one recent (as of writing) example, \textcite{The-Guardian_2025} 
-%reference
+But what is fake news? According to \textcite{definition} the definition of fake news is generally agreed to be either completely or partially false information, with varying levels of agreement for other additional criteria. Such as the intent to deceive, and if only content in a news format should be counted. For the purpose of this research, the working definition of fake news defined by \textcite{definition} will be used: 
 
-%continue later/ delete, not sure if relevant
-
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.8\linewidth]{search_term-fake-news.png}
-%     \caption{Note. Figure depicts Google searches for the search term "Fake News".}
-%     \label{fig:placeholder}
-% \end{figure}
-% %cite properly
-
-But what is fake news? According to \textcite{definition} the definition of fake news is generally agreed to be either completely or partially false information, with varying levels of agreement for other additional criteria. Such as the intent to deceive, and if only content in a news format should be counted. For the purpose of this research, the working definition of fake news defined by \parencite{definition} will be used: 
 \begin{quote}
     a type of online disinformation (1), with (2) misleading
 and/or false statements that may or may not be associated with real events, (3) intentionally
@@ -62,16 +50,12 @@ the reader’s attention, in order to obtain more clicks and shares and, therefo
 advertising revenue and/or ideological gain \textcite{definition}
 \end{quote} 
 
-%unsure if needed
+In a recent (as of writing) example of fake news causing adverse impact, \textcite{Savage-Guardian_2025} wrote for The Guardian about YouTube channels spreading fake news about UK politics in their videos, acruing close to 1.2 billion views in total. While some forms of news which are factually fake are usually harmless (parody, satire, etc.) fake news, with the intent or deceiving those who consume it is dangerous, it can widen division, spread prejudice and cause distrust in institutions are among just a few examples. And while fake news may sound innoculous enough, 'It's just fake news, ignore it', it can lead to serious consequnces, including injury and death. In one such example, during the COVID-19 vaccination campaign in Taiwan an adverse correlation between prevalence of fake news and vaccination rates were found \parencite{vaccination}.
 
-Current methods, such as machine learning approaches, fail to capture the semantic data meaningfully, reducing its detection accuracy. While deep learning approaches are often limited by the increasing use of LLMs, which are able to emulate the writing style of real news, reducing detection accuracy \textcite{sheepdog}.
+As a result, the development of automated fake news detection systems have been explored. But limitations related to generalisation where detection systems perform poorly on data which did not appear in its training sets \parencite{BERT-finetuning} limit their applicability. Furthermore, current methods such as machine learning approaches, fail to capture the semantic data meaningfully, reducing its detection accuracy. While deep learning approaches are often limited by the increasing use of LLMs, which are able to emulate the writing style of real news, reducing detection accuracy \textcite{sheepdog}.
+
 
 This highlights the need for new approaches which are capable of tackling LLM-generated fake news. 
-
-
-
-
-%need more here
 
 \subsection{Research Objectives}
 The objectives of this project are:

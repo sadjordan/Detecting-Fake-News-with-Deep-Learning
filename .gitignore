@@ -3,3 +3,14 @@ Articles
 Datasets
 Processed_Datasets
 *.zip
+
+FYP/main.aux
+FYP/main.bbl
+FYP/main.bcf
+FYP/main.blg
+FYP/main.fdb_latexmk
+FYP/main.fls
+FYP/main.log
+FYP/main.out
+FYP/main.run.xml
+FYP/main.synctex.gz
