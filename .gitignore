@@ -15,3 +15,5 @@ FYP/main.log
 FYP/main.out
 FYP/main.run.xml
 FYP/main.synctex.gz
+Code/dataset_processing/preprocessed_datasets
+Code/dataset_processing/processed_datasets
