@@ -1,34 +1,126 @@
-\documentclass[stu,12pt,floatsintext]{apa7}
+% \documentclass[stu,12pt,floatsintext]{apa7}
+% \usepackage{csquotes}
+% \usepackage[style=apa,sortcites=true,sorting=nyt,backend=biber]{biblatex}
+% \DeclareLanguageMapping{american}{american-apa}
+% \addbibresource{MyBib.bib}
+
+% \usepackage[T1]{fontenc}
+% % \usepackage[utf8]{inputenc}
+% \usepackage{mathptmx}
+% \usepackage{enumerate}
+% \geometry{margin=0.5in}
+
+% \usepackage{xspace}
+% % \usepackage{graphicx}
+% \usepackage{float}
+% \usepackage{tabularx}
+% \usepackage{booktabs} 
+% \usepackage{lipsum}
+
+% \renewcommand{\baselinestretch}{1.0}
+
+% \newcommand\nd{\textsuperscript{nd}\xspace}
+% \newcommand\rd{\textsuperscript{rd}\xspace}
+% \newcommand\nth{\textsuperscript{th}\xspace} %\th is taken already
+
+% \setlength\parindent{0pt} % set paragraph indent to zero
+
+% \author{
+% Jordan Ling Shen Hang 
+% }
+
+% \title{Fake News Detection Using Deep Learning}
+
+% \begin{document}
+% \maketitle
+
+\documentclass[stu,12pt,floatsintext,donotrepeattitle]{apa7}
 \usepackage{csquotes}
 \usepackage[style=apa,sortcites=true,sorting=nyt,backend=biber]{biblatex}
 \DeclareLanguageMapping{american}{american-apa}
 \addbibresource{MyBib.bib}
 
+% --- FONT CONFIGURATION (ARIAL) ---
 \usepackage[T1]{fontenc}
-% \usepackage[utf8]{inputenc}
-\usepackage{mathptmx}
-\usepackage{enumerate}
-\geometry{margin=0.5in}
+\usepackage{helvet} % Helvet is the standard LaTeX clone for Arial
+\renewcommand{\familydefault}{\sfdefault} % Force entire document to use Sans-Serif (Arial)
+% \usepackage{mathptmx} % REMOVED: This was forcing Times New Roman
 
+% --- MARGIN CONFIGURATION ---
+% apa7 loads geometry automatically, so we overwrite the settings here
+\geometry{left=38mm, right=28mm, top=28mm, bottom=28mm}
+
+% --- SPACING AND INDENTATION ---
+\usepackage{setspace}
+\onehalfspacing % 1.5 Line spacing for text
+\usepackage{indentfirst} % Ensure first paragraph of sections is indented
+\setlength{\parindent}{12.7mm} % Paragraph indent 12.7mm
+\setlength{\parskip}{\baselineskip} % Double spacing between paragraphs
+
+% --- CAPTION CONFIGURATION ---
+% Ensures captions for Tables and Charts (Figures) are single spaced
+\usepackage[font={singlespacing}]{caption}
+
+% --- HEADINGS CONFIGURATION ---
+% We use titlesec to override apa7's default section styling
+\usepackage{titlesec}
+\setcounter{secnumdepth}{3} % Enable numbering (1, 1.1, 1.1.1) which apa7 usually hides
+
+% --- TABLE SPACING ---
+% Ensure tables are single spaced per guidelines
+\AtBeginEnvironment{tabular}{\singlespacing}
+\AtBeginEnvironment{tabularx}{\singlespacing}
+
+\newcommand\nd{\textsuperscript{nd}\xspace}
+
+% Section (Mapped to Chapter Heading): Arial 14pt Bold
+\titleformat{\section}
+  {\normalfont\sffamily\fontsize{14}{17}\bfseries}{\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{0pt}{20pt}
+
+% Subsection (Mapped to Sub-heading): Arial 12pt Bold
+\titleformat{\subsection}
+  {\normalfont\sffamily\fontsize{12}{14.4}\bfseries}{\thesubsection}{1em}{}
+
+% Subsubsection (Mapped to Sub-sub-heading): Arial 12pt Bold
+\titleformat{\subsubsection}
+  {\normalfont\sffamily\fontsize{12}{14.4}\bfseries}{\thesubsubsection}{1em}{}
+
+
+% --- PAGE NUMBERING (Bottom Center) ---
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{} % Clear default apa7 headers/footers
+\fancyfoot[C]{\thepage} % Center footer page number
+\renewcommand{\headrulewidth}{0pt} % Remove header line
+
+% Ensure plain pages (like title page) also use this style
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[C]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+% --- PACKAGES ---
+\usepackage{enumerate}
 \usepackage{xspace}
 % \usepackage{graphicx}
 \usepackage{float}
 \usepackage{tabularx}
 \usepackage{booktabs} 
 \usepackage{lipsum}
+\usepackage{etoolbox} 
 
-\renewcommand{\baselinestretch}{1.0}
+% --- TABLE SPACING FIX ---
+% Ensure tables are single spaced per guidelines
+\AtBeginEnvironment{tabular}{\singlespacing}
+\AtBeginEnvironment{tabularx}{\singlespacing}
 
 \newcommand\nd{\textsuperscript{nd}\xspace}
 \newcommand\rd{\textsuperscript{rd}\xspace}
-\newcommand\nth{\textsuperscript{th}\xspace} %\th is taken already
+\newcommand\nth{\textsuperscript{th}\xspace}
 
-\setlength\parindent{0pt} % set paragraph indent to zero
-
-\author{
-Jordan Ling Shen Hang 
-}
-
+\author{Jordan Ling Shen Hang}
 \title{Fake News Detection Using Deep Learning}
 
 \begin{document}
@@ -137,7 +229,7 @@ The rise of Large Language Models (LLMs) have complicated detection of fake news
 \subsubsection{Explainable Models}
 Research by \textcite{xai-bert} proposed a novel approach which sought to make the model's decision making explainable (explainable AI), the reason being that having a black-box system determine the veracity of something doesn't inspire confidence, something an explainable AI model could mitigate. The researchers utilised DistilBERT which is a lighter variant of BERT, combined with an LSTM layer, a pooling layer, dense feed forward layer and finally the output layer. They then attached an explainability module to the black-box classifier. This module is composed of two post-hoc explainable AI techniques, Local Interpretable Model-Agnostic Explanations (LIME) and Anchors. Post-hoc refers to techniques which attempt to give some level of transparency to an otherwise black-box model. LIME works by sampling the model in the vicinity of a prediction (imagine having an unknown 'X' on a spot on a graph and then picking spots around it to approximate the 'X''s coordinates) and the response to the sampling is used to train a linear model that approximates the model's prediction that can be interpreted. While Anchors refer to an algorithm that applies 'rules' to local predictions, the rules being 'if-then' statements which should ensure that any prediction will remain the same wherever the rule holds. The model was able to achieve 0.98 f1-score for both positive and negative classes. The researchers were able to conclude from the results that it is feasible to use methods such as LIME and Anchors to explain the models behaviour. Although there was some overlap between LIME and the Anchors when explaining the model's behaviour, the results showed it is possible to use multiple types of these methods can be used to derive explanations. \\
 
-\textcite{Xflag} proposed an explainable AI approach, XFlag, to fake news detection which sought to increase the transparency and trust of black-box AI models. The authors used the Weibo dataset, which was processed to extract content, user and sentiment features. Content features were extracted with Doc2Vec which generates word embeddings from the content, similar to BERT, albeit Doc2Vec is an older model. User features were extracted from the user's profile, such as followers, location, etc.. Sentiment features were extracted with the Google Cloud Natural Language API which returned the emotional, "sentimental" data from the content. These features are then passed to fully connected layers before being passed to the LSTM in order to standardise the input to the LSTM. XFlag was able to perform comparably to state of the art models, with an f1-score of 0.938. As for the explainability, the authors used the Layer-wise Relevance Propogation (LRP) algorithm which uses reverse propagation, essentially start with the model output and going in the reverse direction through the model's various layers to determine which neurons had the most impact on the result. The output of the LRP would be the model's (being tested) input shape but with the relevance score for each neuron, this is known as the explanation vector. LRP was applied to the XFlag model after the model was trained, and the output explanation vectors are then passed to Situation Awareness-based Agent Transparency (SAT) framework, specifically the SAT-3 (the researchers used other SAT versions from SAT 1 - 3 which each iteration having more insightful explanations, SAT-3 was most preferred by users) which takes this raw data and processes it in order to generate visualisations, textual annotations and the model's uncertainty so that the user can see how the model came to the conclusion that it did. Users were tested on their trust of the XFlag model with various SAT versions, the lowest being SAT-1 which, similar to a model with no explainability, output the result without deeper explanation. The results were that users reported highest satisfaction and trust as the SAT level and correspondingly, the depth of the explanations of the model's prediction, increased, the highest being SAT-3. 
+\textcite{Xflag} proposed an explainable AI approach, XFlag, to fake news detection which sought to increase the transparency and trust of black-box AI models. The authors used the Weibo dataset, which was processed to extract content, user and sentiment features. Content features were extracted with Doc2Vec which generates word embeddings from the content, similar to BERT, albeit Doc2Vec is an older model. User features were extracted from the user's profile, such as followers, location, etc.. Sentiment features were extracted with the Google Cloud Natural Language API which returned the emotional, "sentimental" data from the content. These features are then passed to fully connected layers before being passed to the LSTM in order to standardise the input to the LSTM. XFlag was able to perform comparably to state of the art models, with an f1-score of 0.938. As for the explainability, the authors used the Layer-wise Relevance Propogation (LRP) algorithm which uses reverse propagation, essentially start with the model output and going in the reverse direction through the model's various layers to determine which neurons had the most impact on the result. The output of the LRP would be the model's (being tested) input shape but with the relevance score for each neuron, this is known as the explanation vector. LRP was applied to the XFlag model after the model was trained, and the output explanation vectors are then passed to Situation Awareness-based Agent Transparency (SAT) framework, specifically the SAT-3 (the researchers used other SAT versions from SAT 1 - 3 which each iteration having more insightful explanations, SAT-3 was most preferred by users) which takes this raw data and processes it in order to generate visualisations, textual annotations and the model's uncertainty so that the user can see how the model came to the conclusion that it did. Users were tested on their trust of the XFlag model with various SAT versions, the lowest being SAT-1 which, similar to a model with no explainability, output the result without deeper explanation. The results were that users reported highest satisfaction and trust as the SAT level and correspondingly, the depth of the explanations of the model's prediction, increased, the highest being SAT-3. \\
 
 
 Research by \textcite{xai-bilstm} explored the use of explainable AI (XAI) for detection of toxic COVID-19 fake news, proposing the Toxic Fake News Detection System (TFNDS) which uses Bidirectional Long Short Term Memory (BiLSTM) for classification and similar to \textcite{Xflag} the authors used LIME to explain the black-box model (the BiLSTM). The authors used two datasets which they subsequently merged together, the data was then preprocessed with removal of stop words, removal of emojis, removal of repetitive posts, lemmenisation and etc.. This data is then passed to a scikit-learn (also known as sklearn) pipeline where lists of words are indexed and turned into lists of indices and the length of this list is standardised by a transformer to a maximum length of 100. This is then passed to the model which is composed of 128 BiLSTM hidden units followed by 3 dense layers with a Sigmoid output layer for the final classification. As for the explainable section, LIME augments the data by removing features to see which features (words) was most important to the output and this information is visualised by highlighting the words. On the primary dataset used, the model was able to achieve an f1-score of 0.9425 and when tested on an additional dataset for verification (WNUT-2020) it achieved an f1-score of 89.40 which outperformed all other machine learning and deep learning models the authors built. The authors also sought to ensure the LIME explanations were correct, this was done by constructing a pipeline to find the Pointwise Mutual Information (PMI) of words throughout the entire dataset (in contrast to LIME which is local) and their association with a real or fake class. To conduct the evaluation, the 20 most important words for each post as found by LIME and extracted and compared to their rank in the PMI ranking using Kendall's Tau correlation coefficient. The Kendall's correlation for the BiLSTM was 0.35, the authors noted that the general range for Kendall's Tau coefficient was between 0.3 and 0.4, indicating that the LIME explanations had issues with allignment as the PMI context is global while LIME is local. \\
@@ -145,7 +237,7 @@ Research by \textcite{xai-bilstm} explored the use of explainable AI (XAI) for d
 
 \subsubsection{Fine-tuning Approaches}
 
-An issue with current models is that while they work well with data which was found in their training sets, they often suffer in performance when they encounter data unknown to them \parencite{BERT-finetuning}. To solve this issue, \textcite{BERT-finetuning} proposed a novel approach, Feature Regularization-based Adversarial Fine-tuning (FGM-FRAT). This approach generates perturbed versions of the input in order to confuse the model. This forces the model to find new, deeper patterns instead of relying on otherwise superficial features. The key innovation however, is the addition of a regularization term to the loss function which seeks to minimise the difference between the features generated from the unperturbed, original text with the features generated from the perturbed text. This ensures the feature representation generated by the model will remain similar between original and perturbed text, improving generalisation. The authors used the FakeNewsNet dataset to fine-tune a BERT model using the FGM-FRAT approach using the FakeNewsNet dataset. The authors then tested the fine-tuned model with unseen datasets (BuzzFeedNews, LIAR, WELFake and KaggleFakeNews), using the standard BERT model as a baseline as well as some other fine-tuned BERT models which were fine-tuned with various approaches. The BERT-FGM-FRAT model performed the best amongst all models tested, with improvements of up to 0.32 in terms of f1-score against the base BERT model on the BuzzFeedNews dataset. While for other datasets the BERT-FGM-FRAT managed to offer sigificant performance improvements with the sole exception of the WELFake dataset where it was only able to improve upon the base model incrementally with a 0.03 (f1-score) improvement.
+An issue with current models is that while they work well with data which was found in their training sets, they often suffer in performance when they encounter data unknown to them \parencite{BERT-finetuning}. To solve this issue, \textcite{BERT-finetuning} proposed a novel approach, Feature Regularization-based Adversarial Fine-tuning (FGM-FRAT). This approach generates perturbed versions of the input in order to confuse the model. This forces the model to find new, deeper patterns instead of relying on otherwise superficial features. The key innovation however, is the addition of a regularization term to the loss function which seeks to minimise the difference between the features generated from the unperturbed, original text with the features generated from the perturbed text. This ensures the feature representation generated by the model will remain similar between original and perturbed text, improving generalisation. The authors used the FakeNewsNet dataset to fine-tune a BERT model using the FGM-FRAT approach using the FakeNewsNet dataset. The authors then tested the fine-tuned model with unseen datasets (BuzzFeedNews, LIAR, WELFake and KaggleFakeNews), using the standard BERT model as a baseline as well as some other fine-tuned BERT models which were fine-tuned with various approaches. The BERT-FGM-FRAT model performed the best amongst all models tested, with improvements of up to 0.32 in terms of f1-score against the base BERT model on the BuzzFeedNews dataset. While for other datasets the BERT-FGM-FRAT managed to offer sigificant performance improvements with the sole exception of the WELFake dataset where it was only able to improve upon the base model incrementally with a 0.03 (f1-score) improvement. \\
 
 \subsubsection{Graph-based Approaches}
 Methods which seek to analyse propagation structure for fake news detection often use graph-based methods which overlook the semantic information being propagated, while methods which analyse the semantic information of the content usually fail to understand the propagation structure \parencite{GBCA}. Research by \textcite{GBCA} proposed a novel approach, Graph Convolution Network and BERT combined with Co-Attention (GBCA) which seeks to combine graph based analysis of propagation techniques while using BERT for semantic analysis in order to classify fake news. To capture the spread of news, the proposed model constructs two graphs to capture propagation and dispersation using Edged-enhanced Bayesian Graph Convolution Network (EBGCN). For semantic feature extraction, the GBCA uses a pre-trained BERT to generate vectors from the content which capture the semantic data. And finally to integrate the two approaches, the authors used a co-attention mechanism which computes an affinity matrix to find the relationship between the features from both the structural (propagation and dispersion) and semantic features, the co-attention mechanism will then dynamically assign weights to the features. The authors used three datasets, Twitter15, Twitter16, and PHEME; and used baseline methods including GRU-RNN, SVM-TK (Support Vector Machine - Tree Kernel) among other graph-based methods and deep learning methods. GBCA managed to outperform all models it was compared against in terms of accuracy with a score of 92.8\%, 90.3\% and 70.8\% for the Twitter15, Twitter16, and PHEME datasets respectively; however it was beaten by several Graph Comvolution Networks (GCNs) when it came to f1-score for some of the classes. Despite this, it is worth noting the GBCA was more computationally efficient when training as the co-attention module used reduced the amount of iterations required for convergence. 
