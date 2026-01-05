@@ -4,6 +4,7 @@ Datasets
 Processed_Datasets
 *.zip
 Stuff
+*.csv
 
 FYP/main.aux
 FYP/main.bbl
