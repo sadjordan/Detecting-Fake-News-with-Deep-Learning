@@ -1,4 +1,5 @@
 .venv
+.venv3-13
 Articles
 Datasets
 Processed_Datasets
@@ -6,6 +7,7 @@ Processed_Datasets
 Stuff
 *.csv
 dolma_300_2024_1.2M.100_combined.txt
+*.txt
 FYP/main.bbl-SAVE-ERROR
 
 FYP/main.aux
