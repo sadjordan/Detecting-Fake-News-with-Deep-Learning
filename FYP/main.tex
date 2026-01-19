@@ -340,19 +340,42 @@ The WELFake dataset was downloaded from Kaggle, and contains 72134 rows of data.
 \subsubsection{Fake News Classification}
 This dataset, named "Fake News Classification" was downloaded from Kaggle. It contains 40597 rows of data with 4 columns: an unnamed ID column, title, text and label. There were no missing values or duplicates in any of the rows. And the class balance had an excess of approximately 3000 in favour of the positive class (real). 
 
-%diagram of class balance
+\begin{figure} {H}
+    \centering
+    \includegraphics[width=0.5\linewidth]{Fake news classification class balance.png}
+    \caption{Note. Figure depicts the class distribution of the Fake News Classification dataset}
+    \label{fig:placeholder}
+\end{figure}
 
 \subsubsection{FakeNewsNet}
 The FakeNewsNet dataset was downloaded from Kaggle, it is worth noting this was not the original dataset, it had been its various csv files merged by the uploading user "algord". FakeNewsNet contains 23196 rows, with 5 columns: title, news_url, source_domain, tweet_num and label. The dataset contained missing values in the news_url and source_domain columns (which is acceptable as this is not required later on in training or testing). There were 137 duplicate rows (which will be dropped later on). The class balance was heavily skewed in favour of the positive (real) class, with approximately 75\% of all rows belonging to the positive class. 
 
-%diagram of class balance
+\begin{figure} {H}
+    \centering
+    \includegraphics[width=0.5\linewidth]{FakeNewsNet class distribution.png}
+    \caption{Note. Figure depicts the class distribution of the FakeNewsNet dataset}
+    \label{fig:placeholder}
+\end{figure}
 
 \subsubsection{Fake News Detection}
 The Fake News Detection dataset was downloaded from Hugging Face. It contains 44267 rows and 6 columns: Unnamed ID column, title, text, subject, date, and label. There were no missing values or duplicate rows. The class balance is relatively balanced with the difference between the positive and negative classes being approximately ± 3\%. 
 
+\begin{figure} {H}
+    \centering
+    \includegraphics[width=0.5\linewidth]{fake news detection class balance.png}
+    \caption{Note. Figure depicts the class distribution of the Fake News Detection dataset}
+    \label{fig:placeholder}
+\end{figure}
+
 \subsubsection{ISOT}
 The ISOT dataset was downloaded from the University of Victoria website. It contains 44898 rows with 5 columns: title, text, subject, date and label. There were no missing values. However there were 209 duplicate rows. The class balance was relatively balanced, with the difference in proportion of the positive and negative classes being approximately ± 5\%.
-\subsection{Data Understanding}
+
+\begin{figure} {H}
+    \centering
+    \includegraphics[width=0.5\linewidth]{ISOT class balance.png}
+    \caption{Note. Figure depicts the class distribution of the ISOT dataset}
+    \label{fig:placeholder}
+\end{figure}\subsection{Data Understanding}
 
 \subsection{Data Pre-processing}
 The data was processed by first dropping any columns that did not contain the label or textual columns, such as source URLs, and other metadata like date. Then, if the dataset split title and text, this would be combined. In one of the datasets "FakeNewsNet", only the title column was used. After this, the now combined text column was stripped of any non-unicode characters as well as links, phone numbers and other non-ASCII characters. The removal of non-ASCII characters is possible as this research focuses on English news. After this, any rows with empty strings are removed, as well as duplicate rows. \\
@@ -445,10 +468,10 @@ The formulae described above are also written below in mathematical notation:
 
 \section{Theoretical Framework}
 
-\subsection{Embedding Models}
+\subsection{Embedding Approaches}
 
 \subsubsection{Global Vectors for Word Representation}
-Global Vectors for Word Representation or GLoVe is an unsupervised embedding model which generates word embeddings. GLoVe embeddings are pre-trained on massive textual datasets with a pre-set number of dimensions. The training process works by constructing a co-occurence matrix where each entry indicates the frequency of two words occuring next to one another within a predefined context window. \textit{Theres some logarithms and ratio stuff here but im tired so continue this bit later}
+Global Vectors for Word Representation or GLoVe is an unsupervised embedding algorithm which generates word embeddings. GLoVe embeddings are pre-trained on massive textual datasets with a pre-set number of dimensions. The training process works by constructing a co-occurence matrix where each entry indicates the frequency of two words occuring next to one another within a predefined context window. \textit{Theres some logarithms and ratio stuff here but im tired so continue this bit later}
 %continue later
 
 This co-occurence matrix is then compressed using matrix factorisation to create dense vector representations of each word. 
@@ -459,7 +482,7 @@ After training these embeddings can be loaded (which is what was done here) and 
 
 % filepath: /Users/jordan/Desktop/Live_Projects/FYP_Documents/FYP/main.tex
 \subsubsection{Word2Vec}
-
+Word2Vec (Word to Vector) is a neural network embedding model which converts words into dense vector representations. There are two main architectural variants, Continuous Bag of Words and Skip-gram; Skip-gram was used in this instance and thus will be the only variant elaborated on. The Word2Vec Skip-gram variant works by 
 
 \subsubsection{BERT}
 
@@ -475,6 +498,8 @@ After training these embeddings can be loaded (which is what was done here) and 
 
 \subsubsection{BERT-finetuning}
 
+
+
 \subsection{Preliminary Results}
 
 \subsubsection{GLoVe Embedding}
@@ -482,6 +507,11 @@ After training these embeddings can be loaded (which is what was done here) and 
 \subsubsection{Word2Vec}
 
 \subsubsection{BERT-finetuning}
+
+
+
+
+
 \subsection{Gantt chart for FYP2}
 
 \section{Conclusion}
