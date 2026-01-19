@@ -388,8 +388,6 @@ Word2Vec & \begin{itemize}[leftmargin=*, nosep]
 \subsection{Modelling}
 Modelling depended on which kind of embedding was used. For BERT, fine-tuning was used to turn BERT into a classification model. For GLoVe and Word2Vec, after the datasets were turned into embeddings, the now vectorised datasets were fitted to machine learning models and used to train several deep-learning models as well, specifically: CNN, LSTM and CNN-LSTM. 
 
-% filepath: /Users/jordan/Desktop/Live_Projects/FYP_Documents/FYP/main.tex
-
 \begin{table}[H]
 \centering
 \caption{Summary of Modelling Approaches for Each Embedding Type}
@@ -446,11 +444,44 @@ The formulae described above are also written below in mathematical notation:
 \end{equation}
 
 \section{Theoretical Framework}
-\subsection{Models}
+
+\subsection{Embedding Models}
+
+\subsubsection{Global Vectors for Word Representation}
+Global Vectors for Word Representation or GLoVe is an unsupervised embedding model which generates word embeddings. GLoVe embeddings are pre-trained on massive textual datasets with a pre-set number of dimensions. The training process works by constructing a co-occurence matrix where each entry indicates the frequency of two words occuring next to one another within a predefined context window. \textit{Theres some logarithms and ratio stuff here but im tired so continue this bit later}
+%continue later
+
+This co-occurence matrix is then compressed using matrix factorisation to create dense vector representations of each word. 
+
+
+After training these embeddings can be loaded (which is what was done here) and then used to generate embeddings of input text. 
+
+
+% filepath: /Users/jordan/Desktop/Live_Projects/FYP_Documents/FYP/main.tex
+\subsubsection{Word2Vec}
+
+
+\subsubsection{BERT}
+
+\subsection{Classification Models}
 
 \section{Implementation Plan}
+
 \subsection{Experiments}
+
+\subsubsection{GLoVe Embedding}
+
+\subsubsection{Word2Vec}
+
+\subsubsection{BERT-finetuning}
+
 \subsection{Preliminary Results}
+
+\subsubsection{GLoVe Embedding}
+
+\subsubsection{Word2Vec}
+
+\subsubsection{BERT-finetuning}
 \subsection{Gantt chart for FYP2}
 
 \section{Conclusion}
