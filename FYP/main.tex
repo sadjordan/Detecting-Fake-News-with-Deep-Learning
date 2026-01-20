@@ -106,12 +106,13 @@
 \usepackage{enumerate}
 \usepackage{enumitem}
 \usepackage{xspace}
-% \usepackage{graphicx}
+\usepackage{graphicx}
 \usepackage{float}
 \usepackage{tabularx}
 \usepackage{booktabs} 
 \usepackage{lipsum}
 \usepackage{etoolbox} 
+\usepackage{longtable}
 
 % --- CODE SNIPPET CONFIGURATION ---
 \usepackage{listings}
@@ -572,10 +573,104 @@ The number of epochs was set at 3, to avoid overfitting but just enough to allow
 At the end the best model is selected using f1-score, and this (best model) model will undergo teh final evaluation using the test set.
 \subsection{Preliminary Results}
 
+
 \subsubsection{GLoVe Embedding}
 
-\subsubsection{Word2Vec}
+\begingroup
+\small
+% Force table to fill page width
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
 
+% @{\extracolsep{\fill}} spreads the columns out evenly
+\begin{longtable}{@{\extracolsep{\fill}}llccccc}
+\caption{Detailed Machine Learning Model Performance (GloVe Embeddings)} \label{tab:glove_ml_detailed} \\
+\toprule
+\textbf{Dataset} & \textbf{Model} & \textbf{Acc} & \textbf{Class} & \textbf{Prec} & \textbf{Rec} & \textbf{F1} \\
+\midrule
+\endfirsthead
+
+\multicolumn{7}{c}{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\toprule
+\textbf{Dataset} & \textbf{Model} & \textbf{Acc} & \textbf{Class} & \textbf{Prec} & \textbf{Rec} & \textbf{F1} \\
+\midrule
+\endhead
+
+\bottomrule
+\multicolumn{7}{r}{{Continued on next page}} \\
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+\textbf{WELFake} & Gaussian NB & 0.69 & 0 & 0.66 & 0.87 & 0.75 \\
+ & & & 1 & 0.75 & 0.47 & 0.57 \\
+ & KNN & 0.85 & 0 & 0.82 & 0.94 & 0.87 \\
+ & & & 1 & 0.91 & 0.75 & 0.82 \\
+ & Logistic Regression & 0.90 & 0 & 0.90 & 0.91 & 0.91 \\
+ & & & 1 & 0.89 & 0.88 & 0.89 \\
+ & Random Forest & 0.87 & 0 & 0.88 & 0.89 & 0.89 \\
+ & & & 1 & 0.86 & 0.86 & 0.86 \\
+ & SVM & 0.93 & 0 & 0.93 & 0.94 & 0.94 \\
+ & & & 1 & 0.93 & 0.92 & 0.93 \\
+ & XGBoost & 0.91 & 0 & 0.91 & 0.92 & 0.92 \\
+ & & & 1 & 0.90 & 0.89 & 0.90 \\
+\midrule
+\textbf{ISOT} & Gaussian NB & 0.87 & 0 & 0.88 & 0.88 & 0.88 \\
+ & & & 1 & 0.86 & 0.86 & 0.86 \\
+ & KNN & 0.93 & 0 & 0.90 & 0.97 & 0.93 \\
+ & & & 1 & 0.96 & 0.88 & 0.92 \\
+ & Logistic Regression & 0.97 & 0 & 0.96 & 0.98 & 0.97 \\
+ & & & 1 & 0.98 & 0.96 & 0.97 \\
+ & Random Forest & 0.93 & 0 & 0.92 & 0.96 & 0.94 \\
+ & & & 1 & 0.95 & 0.90 & 0.92 \\
+ & SVM & 0.98 & 0 & 0.97 & 0.99 & 0.98 \\
+ & & & 1 & 0.98 & 0.97 & 0.98 \\
+ & XGBoost & 0.96 & 0 & 0.95 & 0.98 & 0.96 \\
+ & & & 1 & 0.97 & 0.94 & 0.96 \\
+\midrule
+\textbf{Fake News Detection} & Gaussian NB & 0.87 & 0 & 0.85 & 0.86 & 0.85 \\
+ & & & 1 & 0.88 & 0.87 & 0.88 \\
+ & KNN & 0.93 & 0 & 0.96 & 0.89 & 0.92 \\
+ & & & 1 & 0.91 & 0.97 & 0.94 \\
+ & Logistic Regression & 0.97 & 0 & 0.97 & 0.96 & 0.97 \\
+ & & & 1 & 0.97 & 0.98 & 0.97 \\
+ & Random Forest & 0.94 & 0 & 0.94 & 0.91 & 0.93 \\
+ & & & 1 & 0.93 & 0.96 & 0.94 \\
+ & SVM & 0.98 & 0 & 0.98 & 0.97 & 0.98 \\
+ & & & 1 & 0.98 & 0.99 & 0.98 \\
+ & XGBoost & 0.96 & 0 & 0.97 & 0.95 & 0.96 \\
+ & & & 1 & 0.96 & 0.97 & 0.97 \\
+\midrule
+\textbf{Fake News Classification} & Gaussian NB & 0.88 & 0 & 0.86 & 0.86 & 0.86 \\
+ & & & 1 & 0.89 & 0.89 & 0.89 \\
+ & KNN & 0.92 & 0 & 0.93 & 0.89 & 0.91 \\
+ & & & 1 & 0.91 & 0.94 & 0.93 \\
+ & Logistic Regression & 0.95 & 0 & 0.94 & 0.95 & 0.95 \\
+ & & & 1 & 0.95 & 0.95 & 0.95 \\
+ & Random Forest & 0.92 & 0 & 0.91 & 0.91 & 0.91 \\
+ & & & 1 & 0.93 & 0.93 & 0.93 \\
+ & SVM & 0.96 & 0 & 0.96 & 0.97 & 0.96 \\
+ & & & 1 & 0.97 & 0.96 & 0.97 \\
+ & XGBoost & 0.95 & 0 & 0.94 & 0.95 & 0.95 \\
+ & & & 1 & 0.96 & 0.95 & 0.95 \\
+\midrule
+\textbf{FakeNewsNet} & Gaussian NB & 0.70 & 0 & 0.41 & 0.65 & 0.50 \\
+ & & & 1 & 0.87 & 0.71 & 0.78 \\
+ & KNN & 0.80 & 0 & 0.60 & 0.49 & 0.54 \\
+ & & & 1 & 0.85 & 0.90 & 0.88 \\
+ & Logistic Regression & 0.80 & 0 & 0.63 & 0.39 & 0.49 \\
+ & & & 1 & 0.83 & 0.93 & 0.88 \\
+ & Random Forest & 0.79 & 0 & 0.64 & 0.21 & 0.32 \\
+ & & & 1 & 0.80 & 0.96 & 0.87 \\
+ & SVM & 0.83 & 0 & 0.73 & 0.42 & 0.53 \\
+ & & & 1 & 0.84 & 0.95 & 0.89 \\
+ & XGBoost & 0.81 & 0 & 0.63 & 0.42 & 0.50 \\
+ & & & 1 & 0.84 & 0.92 & 0.88 \\
+\end{longtable}
+\endgroup
+
+\subsubsection{Word2Vec}
 
 
 \subsubsection{BERT-finetuning}
