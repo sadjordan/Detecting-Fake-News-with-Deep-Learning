@@ -113,6 +113,31 @@
 \usepackage{lipsum}
 \usepackage{etoolbox} 
 
+% --- CODE SNIPPET CONFIGURATION ---
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstdefinestyle{pythonstyle}{
+    backgroundcolor=\color{white},   
+    commentstyle=\color{green!50!black},
+    keywordstyle=\color{blue},
+    stringstyle=\color{purple},
+    basicstyle=\ttfamily\footnotesize, % Use a monospaced font
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,
+    numberstyle=\tiny\color{gray},
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=single % Adds a box around the code
+}
+\lstset{style=pythonstyle}
+
 % --- TABLE SPACING FIX ---
 % Ensure tables are single spaced per guidelines
 \AtBeginEnvironment{tabular}{\singlespacing}
@@ -409,7 +434,7 @@ Word2Vec & \begin{itemize}[leftmargin=*, nosep]
 \end{table}
 
 \subsection{Modelling}
-Modelling depended on which kind of embedding was used. For BERT, fine-tuning was used to turn BERT into a classification model. For GLoVe and Word2Vec, after the datasets were turned into embeddings, the now vectorised datasets were fitted to machine learning models and used to train several deep-learning models as well, specifically: CNN, LSTM and CNN-LSTM. 
+Modelling depended on which kind of embedding was used. For BERT, fine-tuning was used to fine-tune a base BERT-uncased model into a 2-label classification model. For GLoVe and Word2Vec, after the datasets were turned into embeddings, the now vectorised datasets were fitted to machine learning models and used to train several deep-learning models as well, specifically: CNN, LSTM and CNN-LSTM. 
 
 \begin{table}[H]
 \centering
@@ -490,26 +515,88 @@ Word2Vec (Word to Vector) is a neural network embedding model which converts wor
 
 \section{Implementation Plan}
 
+
+
+
+
+
 \subsection{Experiments}
 
 \subsubsection{GLoVe Embedding}
 
 \subsubsection{Word2Vec}
 
-\subsubsection{BERT-finetuning}
+\subsubsection{BERT fine-tuning}
+Experiements using BERT involved fine-tuning a base BERT-uncased model for each dataset, meaning in total as five datasets were applied, 5 models were trained. Each dataset was split 70-15-15, 70\% training and 15\% validation and test.
 
+The datasets were previously cleaned and processed as was explain previously, but in order for the data to be suitable to input to BERT, it undergoes further processing in the form of tokenisation using the base BERT-uncased tokeniser with the following settings: truncation = true, padding = true, max_length = 128. 
 
+\begin{lstlisting}[language=Python, caption={BERT Tokenizer Configuration}]
+train_encodings = tokenizer(
+      input_text,
+      truncation=True,
+      padding=True,
+      max_length=128
+  )
+\end{lstlisting}
 
+After tokenisation, the BERT-uncased model is loaded and the training arguments are set. Below is a code excerpt of the training arguments:
+
+\begin{lstlisting}[language=Python, caption={BERT Fine-tuning Configuration}]
+training_args = TrainingArguments(
+      output_dir='./results',
+      num_train_epochs=3,
+      per_device_train_batch_size=32,
+      per_device_eval_batch_size=64,
+      warmup_steps=500,
+      weight_decay=0.01,
+      logging_dir='./logs',
+      logging_steps=50,
+      eval_strategy="steps",
+      eval_steps=1000,
+      save_strategy="steps",
+      save_steps=1000,
+      save_total_limit=2,
+      load_best_model_at_end=True,
+      metric_for_best_model="f1",
+      greater_is_better=True,
+      optim="adamw_torch",
+      fp16=False,
+      dataloader_num_workers=0,
+      report_to="none",
+  )
+\end{lstlisting}
+
+The number of epochs was set at 3, to avoid overfitting but just enough to allow for the weights to be updated to perform better and the batch size was set to 32 to allow for training to progress at a reasonable rate while also allowing for stable gradient updates.
+
+At the end the best model is selected using f1-score, and this (best model) model will undergo teh final evaluation using the test set.
 \subsection{Preliminary Results}
 
 \subsubsection{GLoVe Embedding}
 
 \subsubsection{Word2Vec}
 
+
+
 \subsubsection{BERT-finetuning}
+The results from the baseline finetuned BERT models exhibited very high accuracy, recall and precision. As can be refered to in the results table, it appears that the FakeNewsNet dataset was the most challenging dataset. All the other datasets proved to be no challenge for each of their finetuned BERT models. It is however notable that the F1-scores are in the range (with the exception of the FakeNewsNet dataset) exceed 0.98, this may indicate that these datasets may have gathered the data for their positive and negative classes with a methodlogy that unknowingly introduced some level of data leakage. The alternative is that BERT is simply a very effective model, but the relatively lower performance of BERT on the FakeNewsNet dataset indicates the other datasets may be of lower quality or are less challenging. 
 
-
-
+\begin{table}[htbp]
+\centering
+\caption{BERT Fine-tuning Results (Evaluated using test set)}
+\label{tab:bert_test}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Dataset} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
+\midrule
+WELFake & 0.9898 & 0.9844 & 0.9933 & 0.9889 \\
+FakeNewsNet & 0.8499 & 0.8934 & 0.9100 & 0.9016 \\
+Fake News Detection & 0.9969 & 0.9950 & 0.9994 & 0.9972 \\
+ISOT & 0.9997 & 0.9993 & 1.0000 & 0.9996 \\
+Fake News Classification & 0.9974 & 0.9975 & 0.9978 & 0.9976 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 
 \subsection{Gantt chart for FYP2}
