@@ -8,8 +8,9 @@ Stuff
 *.csv
 dolma_300_2024_1.2M.100_combined.txt
 *.txt
-FYP/main.bbl-SAVE-ERROR
+result_extraction_scripts
 
+FYP/main.bbl-SAVE-ERROR
 FYP/main.aux
 FYP/main.bbl
 FYP/main.bcf
