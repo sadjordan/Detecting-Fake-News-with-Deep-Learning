@@ -664,14 +664,18 @@ At the end the best model is selected using f1-score, and this (best model) mode
 \subsection{Preliminary Results}
 
 \subsubsection{GLoVe Embedding}
+Experimentation with GLoVe embeddings showed that ML models trained using GLoVe embeddings performed well, however, with the exception of ML models trained on the FakeNewsNet dataset. Results for the ML models range from 0.82 - 0.98 with FakeNewsNet excluded and an anomalous result from the Gaussian Naive Bayes model for the WELFake dataset excluded as well. Elaborating on the anomalous result, it shows that the Gaussian NB model for WELFake performing poorly relative to other ML models across all datasets, this seems to be an outlier which also appears in Word2Vec's results, indicating something about the dataset which is not particularly compadible with Gaussian Naive Bayes. 
+
+For the DL models, the CNN models performed poorly on all datasets, with F1-scores in the range of 0.11 - 0.72 (excluding FakeNewsNet). Likely because CNN's are not optimal for sequential data, something which LSTMs are generally better at. For the CNN-LSTM models, it is clear that the hybridisation does not solve the drawbacks experienced by the CNN model with results between 0.28 - 0.72 (excluding FakeNewsNet). And lastly, LSTMs performed substantially better than its hybrid and CNN counterparts, with scores ranging from 0.92 - 0.98. This is likely because LSTMs are able to capture long-term dependencies and "remember" key discernable differences that CNNs are not able to.
+
+Lastly, the unique performance of models on FakeNewsNet warrants additional discussion. For the ML models, while overall accuracy is high, this is compounded by the fact that the models actually perform very poorly on the negative class, with F1-scores for the negative class between 0.32 - 0.54. This trend can also be seen in the DL models, with the CNN and CNN-LSTM models failing to predict the negative class entirely and the LSTM model having an F1-score of 0.59 for the negative class, compared to 0.88 for the positive class. This can be attributed to the class imbalance of the dataset, which has three times the number of positive samples than negative samples. 
+
 
 \begingroup
 \small
-% Force table to fill page width
 \setlength\LTleft{0pt}
 \setlength\LTright{0pt}
 
-% @{\extracolsep{\fill}} spreads the columns out evenly
 \begin{longtable}{@{\extracolsep{\fill}}llccccc}
 \caption{Detailed Machine Learning Model Performance (GloVe Embeddings)} \label{tab:glove_ml_detailed} \\
 \toprule
@@ -809,9 +813,9 @@ At the end the best model is selected using f1-score, and this (best model) mode
 
 
 \subsubsection{Word2Vec}
-The results for the models trained using the Word2Vec embeddings showed interest results, especially pertaining to the datasets used and its performance on different models. 
+The results for the models trained using the Word2Vec embeddings showed interest results, especially pertaining to the datasets used and its performance on different models. And if comparing to GLoVe embedding results, it seems that the results for Word2Vec performed on-par if not slighly better in some cases.
 
-Firsly, the machine learning models generally did very well on all datasets save for FakeNewsNet, indicating the dataset is more challenging than its peers. Notably the Gaussian Naive Bayes model performed relatively poorly on the WELFake dataset with an F1-score of 0.77 and 0.60 for the negative and positive classes respectively while other ML models (across all datasets) had F1-scores at or exceeding 0.89 (except for FakeNewsNet). This seems to be an outlier, as the other ML models for WELFake seem to have performed well. 
+Firsly, the machine learning models generally did very well on all datasets save for FakeNewsNet, indicating the dataset is more challenging than its peers. Notably the Gaussian Naive Bayes model performed relatively poorly on the WELFake dataset with an F1-score of 0.77 and 0.60 for the negative and positive classes respectively while other ML models (across all datasets) had F1-scores at or exceeding 0.89 (except for FakeNewsNet). This seems to be an outlier which also appears in the GLoVe embedding results, the cause of which was elaborated on in the GLoVe embedding results discussion section.
 
 As for the DL approaches, the results indicate that the CNN's did not perform well with F1-scores betweem 0.58 and 0.73 (outliers and FakeNewsNet excluded). This may be because CNNs are not usually preferred for sequential data. And while CNN-LSTMs performed better than LSTMs (except for FakeNewsNet) with F1-scores between 0.59 and 0.74 (FakeNewsNet excluded), it seems the CNN component is holding the model back as LSTMs performed significantly better than the CNN-LSTM hybrid. The final DL approach employed were LSTMs, which performed by far the best with F1-scores between 0.95 and 0.99 (excluding FakeNewsNet). This is likely because LSTMs are less vulnerable to the vanishing gradient problem and are able to remember long-term depencies in the data. 
 
@@ -961,7 +965,9 @@ Finally, it is worth discussing the results for FakeNewsNet, which didn't really
 \end{table}
 
 \subsubsection{BERT-finetuning}
-The results from the baseline finetuned BERT models exhibited very high accuracy, recall and precision. As can be refered to in the results table, it appears that the FakeNewsNet dataset was the most challenging dataset. All the other datasets proved to be no challenge for each of their finetuned BERT models. It is however notable that the F1-scores are in the range (with the exception of the FakeNewsNet dataset) exceed 0.98, this may indicate that these datasets may have gathered the data for their positive and negative classes with a methodlogy that unknowingly introduced some level of data leakage. The alternative is that BERT is simply a very effective model, but the relatively lower performance of BERT on the FakeNewsNet dataset indicates the other datasets may be of lower quality or are less challenging. 
+The results from the baseline finetuned BERT models exhibited very high accuracy, recall and precision. As can be refered to in the results table, it appears that the FakeNewsNet dataset was the most challenging dataset. All the other datasets proved to be no challenge for each of their finetuned BERT models. It is however notable that the F1-scores are in the range (with the exception of the FakeNewsNet dataset) exceed 0.98, this may indicate that these datasets may have gathered the data for their positive and negative classes with a methodology that unknowingly introduced some level of data leakage. The alternative is that BERT is simply a very effective model, but the relatively lower performance of BERT on the FakeNewsNet dataset indicates the other datasets may be of lower quality or are less challenging. 
+
+Referencing the results from GLoVe and Word2Vec, it is clear that the FakeNewsnet dataset is challenging due to its class imbalance. However due to the evaluation method used for BERT's models, there is no breakdown by positive and negative class. 
 
 \begin{table}[H]
 \centering
