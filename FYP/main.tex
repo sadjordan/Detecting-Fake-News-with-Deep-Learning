@@ -1,39 +1,3 @@
-% \documentclass[stu,12pt,floatsintext]{apa7}
-% \usepackage{csquotes}
-% \usepackage[style=apa,sortcites=true,sorting=nyt,backend=biber]{biblatex}
-% \DeclareLanguageMapping{american}{american-apa}
-% \addbibresource{MyBib.bib}
-
-% \usepackage[T1]{fontenc}
-% % \usepackage[utf8]{inputenc}
-% \usepackage{mathptmx}
-% \usepackage{enumerate}
-% \geometry{margin=0.5in}
-
-% \usepackage{xspace}
-% % \usepackage{graphicx}
-% \usepackage{float}
-% \usepackage{tabularx}
-% \usepackage{booktabs} 
-% \usepackage{lipsum}
-
-% \renewcommand{\baselinestretch}{1.0}
-
-% \newcommand\nd{\textsuperscript{nd}\xspace}
-% \newcommand\rd{\textsuperscript{rd}\xspace}
-% \newcommand\nth{\textsuperscript{th}\xspace} %\th is taken already
-
-% \setlength\parindent{0pt} % set paragraph indent to zero
-
-% \author{
-% Jordan Ling Shen Hang 
-% }
-
-% \title{Fake News Detection Using Deep Learning}
-
-% \begin{document}
-% \maketitle
-
 \documentclass[stu,12pt,floatsintext,donotrepeattitle]{apa7}
 \usepackage{csquotes}
 \usepackage[style=apa,sortcites=true,sorting=nyt,backend=biber]{biblatex}
@@ -109,7 +73,8 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{tabularx}
-\usepackage{booktabs} 
+\usepackage{booktabs}
+\usepackage{multirow} 
 \usepackage{lipsum}
 \usepackage{etoolbox} 
 \usepackage{longtable}
@@ -172,7 +137,7 @@ advertising revenue and/or ideological gain \textcite{definition}
 
 In a recent (as of writing) example of fake news causing adverse impact, \textcite{Savage-Guardian_2025} wrote for The Guardian about YouTube channels spreading fake news about UK politics in their videos, acruing close to 1.2 billion views in total. While some forms of news which are factually fake are usually harmless (parody, satire, etc.) fake news, with the intent or deceiving those who consume it is dangerous, it can widen division, spread prejudice and cause distrust in institutions are among just a few examples. And while fake news may sound innoculous enough, 'It's just fake news, ignore it', it can lead to serious consequnces, including injury and death. In one such example, during the COVID-19 vaccination campaign in Taiwan an adverse correlation between prevalence of fake news and vaccination rates were found \parencite{vaccination}.
 
-As a result, the development of automated fake news detection systems have been explored. But limitations related to generalisation where detection systems perform poorly on data which did not appear in its training sets \parencite{BERT-finetuning} limit their applicability. Additionally, current methods such as machine learning approaches, fail to capture the semantic data meaningfully, reducing its detection accuracy. Furthermore, many approaches which employ deep learning are often black-boxes, which results in lowered trust towards these systems \parencite{xai-bert}. 
+As a result, the development of automated fake news detection systems have been explored. But limitations related to generalisation where detection systems perform poorly on data which did not appear in its training sets \parencite{BERT-finetuning} limit their applicability. Additionally, current methods such as Machine Learning (ML) approaches, fail to capture the semantic data meaningfully, reducing its detection accuracy. Furthermore, many approaches which employ Deep Learning (DL) are often black-boxes, which results in lowered trust towards these systems \parencite{xai-bert}. 
 
 This highlights the need for new approaches which are capable of detecting fake news by analysing the semantic information in the text throughly, having greater generalisation and be more transparent (explainable) when making its classifications.
 
@@ -374,7 +339,7 @@ This dataset, named "Fake News Classification" was downloaded from Kaggle. It co
 \end{figure}
 
 \subsubsection{FakeNewsNet}
-The FakeNewsNet dataset was downloaded from Kaggle, it is worth noting this was not the original dataset, it had been its various csv files merged by the uploading user "algord". FakeNewsNet contains 23196 rows, with 5 columns: title, news_url, source_domain, tweet_num and label. The dataset contained missing values in the news_url and source_domain columns (which is acceptable as this is not required later on in training or testing). There were 137 duplicate rows (which will be dropped later on). The class balance was heavily skewed in favour of the positive (real) class, with approximately 75\% of all rows belonging to the positive class. 
+The FakeNewsNet dataset was downloaded from Kaggle, it is worth noting this was not the original dataset, it had been its various csv files merged by the uploading user "algord". FakeNewsNet contains 23196 rows, with 5 columns: title, news\_url, source\_domain, tweet\_num and label. The dataset contained missing values in the news\_url and source\_domain columns (which is acceptable as this is not required later on in training or testing). There were 137 duplicate rows (which will be dropped later on). The class balance was heavily skewed in favour of the positive (real) class, with approximately 75\% of all rows belonging to the positive class. 
 
 \begin{figure} {H}
     \centering
@@ -516,16 +481,141 @@ Word2Vec (Word to Vector) is a neural network embedding model which converts wor
 
 \section{Implementation Plan}
 
-
-
-
-
-
 \subsection{Experiments}
 
 \subsubsection{GLoVe Embedding}
+Experiments involing GLoVe saw the text in the datasets turned into GLoVe embeddings. But first the text in each dataset were turned into lowercase, before being turned into embeddings using weights found in the file 'dolma\_300\_2024\_1.2M.100\_combined.txt'. Each respective dataset and its now converted text was then used to train several machine learning models (KNN, Gaussian NB, Logistic Regression, SVC, XGBoost, Random Forest) and deep learning models (CNN, CNN-LSTM, LSTM). 
+
+Below are tables containing the training parameters for the models trained (both machine learning and deep learning models): 
+
+\begin{table}[H]
+    \centering
+    \caption{Machine Learning Model Training Hyperparameters}
+    \label{tab:ml_model_params}
+    \begin{tabular}{l l}
+        \hline
+        \textbf{Model} & \textbf{Training Arguments} \\
+        \hline
+        K-Nearest Neighbors (KNN) & \texttt{n\_neighbors=5} \\
+        Gaussian Naive Bayes & Default parameters \\
+        Logistic Regression & \texttt{max\_iter=1000} \\
+        Support Vector Classifier (SVC) & Default parameters \\
+        XGBoost & \texttt{use\_label\_encoder=False}, \texttt{eval\_metric='logloss'} \\
+        Random Forest Classifier & \texttt{n\_estimators=100}, \texttt{random\_state=42} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[ht]
+    \centering
+    \caption{Deep Learning Model Hyperparameters}
+    \label{tab:dl_model_params}
+    \begin{tabular}{l l l}
+        \hline
+        \textbf{Model} & \textbf{Parameter} & \textbf{Value} \\
+        \hline
+        \multicolumn{3}{c}{\textbf{Common Training settings}} \\
+        & Epochs & 10 \\
+        & Batch Size & 32 \\
+        & Learning Rate & 0.001 \\
+        & Optimizer & Adam \\
+        & Loss Function & BCELoss \\
+        & Validation Split & 0.2 \\
+        \hline
+        \multirow{4}{*}{CNN} & Number of Filters & 100 \\
+        & Filter Sizes & [3, 4, 5] \\
+        & Dropout & 0.5 \\
+        & Activation & ReLU (Hidden), Sigmoid (Output) \\
+        \hline
+        \multirow{4}{*}{LSTM} & Hidden Dimension & 128 \\
+        & Number of Layers & 2 \\
+        & Dropout & 0.5 \\
+        & Activation & ReLU (Hidden), Sigmoid (Output) \\
+        \hline
+        \multirow{6}{*}{CNN-LSTM} & CNN Filters & 64 \\
+        & CNN Filter Sizes & [3, 4, 5] \\
+        & LSTM Hidden Dims & 128 \\
+        & LSTM Layers & 1 \\
+        & Dropout & 0.5 \\
+        & Activation & ReLU (Hidden), Sigmoid (Output) \\
+        \hline
+    \end{tabular}
+\end{table}
 
 \subsubsection{Word2Vec}
+Word2Vec experimentation saw the text (from previous processing steps) undergo some final processing which involved turning the text into all lowercase and the text undergoing lemmenisation using the Python library 
+NLTK's \textit{WordNetLemmatizer}. After this, the proccessed text was used to train the Word2Vec model for each dataset (as there are 5 datasets, there will be 5 different Word2Vec embedding models).
+
+The training arguments for the Word2Vec models can be found below (note the exact code can not be found in the notebook used for Word2Vec training, but these are the exact arguments used and this snippet was made for simplified viewing of the arguments): 
+\begin{lstlisting}[language=Python, caption={Word2Vec Models' Traning Configuration}]
+model = Word2Vec(
+        sentences=tokenized_texts,
+        vector_size=100,
+        window=5,
+        min_count=2,
+        workers=4,
+        epochs=10,
+        sg=1  # 1 for skip-gram, 0 for CBOW
+    )
+\end{lstlisting}
+
+After the each Word2Vec model is trained, the models are employed to convert each dataset into embedding-form which can be understood by machine learning and deep learning models. After this process, each respective dataset and its embeddings were then used to train several machine learning models (KNN, Gaussian NB, Logistic Regression, SVC, XGBoost, Random Forest) and deep learning models (CNN, CNN-LSTM, LSTM). 
+
+Below are tables containing the training parameters for the models trained (note, these parameters are the same as the ones used for the GloVe embedding experiments): 
+
+\begin{table}[H]
+    \centering
+    \caption{Machine Learning Model Training Hyperparameters}
+    \label{tab:ml_model_params}
+    \begin{tabular}{l l}
+        \hline
+        \textbf{Model} & \textbf{Training Arguments} \\
+        \hline
+        K-Nearest Neighbors (KNN) & \texttt{n\_neighbors=5} \\
+        Gaussian Naive Bayes & Default parameters \\
+        Logistic Regression & \texttt{max\_iter=1000} \\
+        Support Vector Classifier (SVC) & Default parameters \\
+        XGBoost & \texttt{use\_label\_encoder=False}, \texttt{eval\_metric='logloss'} \\
+        Random Forest Classifier & \texttt{n\_estimators=100}, \texttt{random\_state=42} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[ht]
+    \centering
+    \caption{Deep Learning Model Hyperparameters}
+    \label{tab:dl_model_params}
+    \begin{tabular}{l l l}
+        \hline
+        \textbf{Model} & \textbf{Parameter} & \textbf{Value} \\
+        \hline
+        \multicolumn{3}{c}{\textbf{Common Training settings}} \\
+        & Epochs & 10 \\
+        & Batch Size & 32 \\
+        & Learning Rate & 0.001 \\
+        & Optimizer & Adam \\
+        & Loss Function & BCELoss \\
+        & Validation Split & 0.2 \\
+        \hline
+        \multirow{4}{*}{CNN} & Number of Filters & 100 \\
+        & Filter Sizes & [3, 4, 5] \\
+        & Dropout & 0.5 \\
+        & Activation & ReLU (Hidden), Sigmoid (Output) \\
+        \hline
+        \multirow{4}{*}{LSTM} & Hidden Dimension & 128 \\
+        & Number of Layers & 2 \\
+        & Dropout & 0.5 \\
+        & Activation & ReLU (Hidden), Sigmoid (Output) \\
+        \hline
+        \multirow{6}{*}{CNN-LSTM} & CNN Filters & 64 \\
+        & CNN Filter Sizes & [3, 4, 5] \\
+        & LSTM Hidden Dims & 128 \\
+        & LSTM Layers & 1 \\
+        & Dropout & 0.5 \\
+        & Activation & ReLU (Hidden), Sigmoid (Output) \\
+        \hline
+    \end{tabular}
+\end{table}
 
 \subsubsection{BERT fine-tuning}
 Experiements using BERT involved fine-tuning a base BERT-uncased model for each dataset, meaning in total as five datasets were applied, 5 models were trained. Each dataset was split 70-15-15, 70\% training and 15\% validation and test.
@@ -573,7 +663,6 @@ The number of epochs was set at 3, to avoid overfitting but just enough to allow
 At the end the best model is selected using f1-score, and this (best model) model will undergo teh final evaluation using the test set.
 \subsection{Preliminary Results}
 
-
 \subsubsection{GLoVe Embedding}
 
 \begingroup
@@ -611,7 +700,7 @@ At the end the best model is selected using f1-score, and this (best model) mode
  & & & 1 & 0.89 & 0.88 & 0.89 \\
  & Random Forest & 0.87 & 0 & 0.88 & 0.89 & 0.89 \\
  & & & 1 & 0.86 & 0.86 & 0.86 \\
- & SVM & 0.93 & 0 & 0.93 & 0.94 & 0.94 \\
+ & SVC & 0.93 & 0 & 0.93 & 0.94 & 0.94 \\
  & & & 1 & 0.93 & 0.92 & 0.93 \\
  & XGBoost & 0.91 & 0 & 0.91 & 0.92 & 0.92 \\
  & & & 1 & 0.90 & 0.89 & 0.90 \\
@@ -624,7 +713,7 @@ At the end the best model is selected using f1-score, and this (best model) mode
  & & & 1 & 0.98 & 0.96 & 0.97 \\
  & Random Forest & 0.93 & 0 & 0.92 & 0.96 & 0.94 \\
  & & & 1 & 0.95 & 0.90 & 0.92 \\
- & SVM & 0.98 & 0 & 0.97 & 0.99 & 0.98 \\
+ & SVC & 0.98 & 0 & 0.97 & 0.99 & 0.98 \\
  & & & 1 & 0.98 & 0.97 & 0.98 \\
  & XGBoost & 0.96 & 0 & 0.95 & 0.98 & 0.96 \\
  & & & 1 & 0.97 & 0.94 & 0.96 \\
@@ -637,7 +726,7 @@ At the end the best model is selected using f1-score, and this (best model) mode
  & & & 1 & 0.97 & 0.98 & 0.97 \\
  & Random Forest & 0.94 & 0 & 0.94 & 0.91 & 0.93 \\
  & & & 1 & 0.93 & 0.96 & 0.94 \\
- & SVM & 0.98 & 0 & 0.98 & 0.97 & 0.98 \\
+ & SVC & 0.98 & 0 & 0.98 & 0.97 & 0.98 \\
  & & & 1 & 0.98 & 0.99 & 0.98 \\
  & XGBoost & 0.96 & 0 & 0.97 & 0.95 & 0.96 \\
  & & & 1 & 0.96 & 0.97 & 0.97 \\
@@ -650,7 +739,7 @@ At the end the best model is selected using f1-score, and this (best model) mode
  & & & 1 & 0.95 & 0.95 & 0.95 \\
  & Random Forest & 0.92 & 0 & 0.91 & 0.91 & 0.91 \\
  & & & 1 & 0.93 & 0.93 & 0.93 \\
- & SVM & 0.96 & 0 & 0.96 & 0.97 & 0.96 \\
+ & SVC & 0.96 & 0 & 0.96 & 0.97 & 0.96 \\
  & & & 1 & 0.97 & 0.96 & 0.97 \\
  & XGBoost & 0.95 & 0 & 0.94 & 0.95 & 0.95 \\
  & & & 1 & 0.96 & 0.95 & 0.95 \\
@@ -663,7 +752,7 @@ At the end the best model is selected using f1-score, and this (best model) mode
  & & & 1 & 0.83 & 0.93 & 0.88 \\
  & Random Forest & 0.79 & 0 & 0.64 & 0.21 & 0.32 \\
  & & & 1 & 0.80 & 0.96 & 0.87 \\
- & SVM & 0.83 & 0 & 0.73 & 0.42 & 0.53 \\
+ & SVC & 0.83 & 0 & 0.73 & 0.42 & 0.53 \\
  & & & 1 & 0.84 & 0.95 & 0.89 \\
  & XGBoost & 0.81 & 0 & 0.63 & 0.42 & 0.50 \\
  & & & 1 & 0.84 & 0.92 & 0.88 \\
@@ -671,7 +760,7 @@ At the end the best model is selected using f1-score, and this (best model) mode
 \endgroup
 
 
-\begin{table}[htbp]
+\begin{table}[H]
 \centering
 \small
 \caption{Deep Learning Model Performance (GloVe Embeddings)}
@@ -720,14 +809,16 @@ At the end the best model is selected using f1-score, and this (best model) mode
 
 
 \subsubsection{Word2Vec}
+The results for the models trained using the Word2Vec embeddings showed interest results, especially pertaining to the datasets used and its performance on different models. 
+
+Firsly, the machine learning models generally did very well on all datasets save for FakeNewsNet, indicating the dataset is more challenging than its peers. Notably the Gaussian Naive Bayes model performed relatively poorly on the WELFake dataset with an F1-score of 0.77 and 0.60 for the negative and positive classes respectively while other ML models (across all datasets) had F1-scores at or exceeding 0.89 (except for FakeNewsNet). This seems to be an outlier, as the other ML models for WELFake seem to have performed well
+
 
 \begingroup
 \small
-% Force table to fill page width
 \setlength\LTleft{0pt}
 \setlength\LTright{0pt}
 
-% @{\extracolsep{\fill}} spreads the columns out evenly
 \begin{longtable}{@{\extracolsep{\fill}}llccccc}
 \caption{Detailed Machine Learning Model Performance (Word2Vec Embeddings)} \label{tab:glove_ml_detailed} \\
 \toprule
@@ -756,7 +847,7 @@ At the end the best model is selected using f1-score, and this (best model) mode
  & & & 1 & 0.92 & 0.92 & 0.92 \\
  & Random Forest & 0.90 & 0 & 0.90 & 0.91 & 0.91 \\
  & & & 1 & 0.89 & 0.88 & 0.89 \\
- & SVM & 0.95 & 0 & 0.96 & 0.96 & 0.96 \\
+ & SVC & 0.95 & 0 & 0.96 & 0.96 & 0.96 \\
  & & & 1 & 0.95 & 0.95 & 0.95 \\
  & XGBoost & 0.93 & 0 & 0.94 & 0.94 & 0.94 \\
  & & & 1 & 0.93 & 0.92 & 0.93 \\
@@ -769,7 +860,7 @@ At the end the best model is selected using f1-score, and this (best model) mode
  & & & 1 & 0.99 & 0.98 & 0.98 \\
  & Random Forest & 0.95 & 0 & 0.93 & 0.97 & 0.95 \\
  & & & 1 & 0.96 & 0.92 & 0.94 \\
- & SVM & 0.99 & 0 & 0.98 & 0.99 & 0.99 \\
+ & SVC & 0.99 & 0 & 0.98 & 0.99 & 0.99 \\
  & & & 1 & 0.99 & 0.98 & 0.99 \\
  & XGBoost & 0.97 & 0 & 0.96 & 0.98 & 0.97 \\
  & & & 1 & 0.98 & 0.96 & 0.97 \\
@@ -782,7 +873,7 @@ At the end the best model is selected using f1-score, and this (best model) mode
  & & & 1 & 0.98 & 0.99 & 0.99 \\
  & Random Forest & 0.96 & 0 & 0.97 & 0.94 & 0.95 \\
  & & & 1 & 0.95 & 0.97 & 0.96 \\
- & SVM & 0.99 & 0 & 1.00 & 0.98 & 0.99 \\
+ & SVC & 0.99 & 0 & 1.00 & 0.98 & 0.99 \\
  & & & 1 & 0.98 & 1.00 & 0.99 \\
  & XGBoost & 0.98 & 0 & 0.99 & 0.97 & 0.98 \\
  & & & 1 & 0.97 & 0.99 & 0.98 \\
@@ -795,7 +886,7 @@ At the end the best model is selected using f1-score, and this (best model) mode
  & & & 1 & 0.97 & 0.97 & 0.97 \\
  & Random Forest & 0.94 & 0 & 0.94 & 0.93 & 0.94 \\
  & & & 1 & 0.95 & 0.95 & 0.95 \\
- & SVM & 0.97 & 0 & 0.96 & 0.98 & 0.97 \\
+ & SVC & 0.97 & 0 & 0.96 & 0.98 & 0.97 \\
  & & & 1 & 0.98 & 0.97 & 0.97 \\
  & XGBoost & 0.96 & 0 & 0.96 & 0.96 & 0.96 \\
  & & & 1 & 0.97 & 0.96 & 0.97 \\
@@ -808,7 +899,7 @@ At the end the best model is selected using f1-score, and this (best model) mode
  & & & 1 & 0.85 & 0.94 & 0.89 \\
  & Random Forest & 0.82 & 0 & 0.70 & 0.38 & 0.49 \\
  & & & 1 & 0.83 & 0.95 & 0.89 \\
- & SVM & 0.83 & 0 & 0.76 & 0.42 & 0.54 \\
+ & SVC & 0.83 & 0 & 0.76 & 0.42 & 0.54 \\
  & & & 1 & 0.84 & 0.96 & 0.90 \\
  & XGBoost & 0.82 & 0 & 0.67 & 0.47 & 0.55 \\
  & & & 1 & 0.85 & 0.93 & 0.89 \\
@@ -818,7 +909,7 @@ At the end the best model is selected using f1-score, and this (best model) mode
 
 
 
-\begin{table}[htbp]
+\begin{table}[H]
 \centering
 \small
 \caption{Deep Learning Model Performance (Word2Vec Embeddings)}
@@ -868,7 +959,7 @@ At the end the best model is selected using f1-score, and this (best model) mode
 \subsubsection{BERT-finetuning}
 The results from the baseline finetuned BERT models exhibited very high accuracy, recall and precision. As can be refered to in the results table, it appears that the FakeNewsNet dataset was the most challenging dataset. All the other datasets proved to be no challenge for each of their finetuned BERT models. It is however notable that the F1-scores are in the range (with the exception of the FakeNewsNet dataset) exceed 0.98, this may indicate that these datasets may have gathered the data for their positive and negative classes with a methodlogy that unknowingly introduced some level of data leakage. The alternative is that BERT is simply a very effective model, but the relatively lower performance of BERT on the FakeNewsNet dataset indicates the other datasets may be of lower quality or are less challenging. 
 
-\begin{table}[htbp]
+\begin{table}[H]
 \centering
 \caption{BERT Fine-tuning Results (Evaluated using test set)}
 \label{tab:bert_test}
