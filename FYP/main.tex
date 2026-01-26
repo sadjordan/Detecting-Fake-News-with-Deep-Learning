@@ -175,12 +175,12 @@ Research conducted by \textcite{opcnn-fake} also proposed a CNN model, albeit a 
 \subsubsection{Hybrid Approaches}
 There has also been research that looked into hybrid approaches, \textcite{hybrid_cnn-lstm} proposed a hybrid deep learning model combining Long Short Term Memory (LSTM) and CNN. Using publicly available datasets (WELFake, FakeNewsNet and FakeNewsPrediction), the authors first pre-processed the data using lemmatisation (reduction of words to root form), de-capitalisation, tokenisation, among others. To process the cleaned data, the authors used FastText, both its supervised and unsupervised forms to create word embeddings. These words embeddings, generated from both the unspervised and supervised FastText models were then used to train separate models, including ensemble (stacked) machine learning models, transformer models and the CNN-LSTM hybrid mentioned earlier. Evaluation of the models using test subsets of each of the datasets used showed that those trained on unsupervised FastText embeddings performed worse than those trained on supervised FastText embeddings, with F1-scores between 0.83 - 0.97 with significant variation between the datasets it was tested on. Those trained on supervised FastText embeddings were evaluated on subsets of the datasets used (test sets) and had F1-scores of between 0.91 - 0.99. The CNN-LSTM model performed better than all other models (stacked machine learning models and transformer models), with high F1-scores of between 0.97 and 0.99 across all datasets. \\
 
-While most research seems to have been done on detecting fake news in English, research conducted by \textcite{hybrid2} detected fake news in Arabic. The authors used two datasets, Arabic Fake News Dataset (AFND) and their own dataset scraped from Twitter. The authors explored multiple types of models for detecting fake news including traditional machine learning and common deep learning models but they also proposed a hybrid model called Bidirectional Long Short Term Memory – Bidirectional Gated Recurrent Unit (Bi-LSTM – Bi-GRU). This proposed model is structured sequentially, but it can also deal with information bi-directionally and it attempts to leverage the strengths of Bi-LSTMS and Bi-GRUs. Bi-LSTMs and LSTMs in general are excellent at retaining information and addresses the vanishing gradient problem; while GRUs are able to mamnage shorter dependencies and are computationally efficient. For preprocessing, the authors first cleaned the data by removing all punctuation, unicode characters, names, URLs, stop word removal, tokenisation and other standard techniques. The cleaned data was then features were extracted using both supervised and unsupervised FastText which were then used to train models. The Bi-LSTM – Bi-GRU performed the best among all of the models tested, achieving F1-scores of between 0.98 and 0.99 depending on the dataset. \\
+While most research seems to have been done on detecting fake news in English, research conducted by \textcite{hybrid2} detected fake news in Arabic. The authors used two datasets, Arabic Fake News Dataset (AFND) and their own dataset scraped from Twitter. The authors explored multiple types of models for detecting fake news including machine learning and common deep learning models but they also proposed a hybrid model called Bidirectional Long Short Term Memory – Bidirectional Gated Recurrent Unit (Bi-LSTM – Bi-GRU). This proposed model is structured sequentially, but it can also deal with information bi-directionally and it attempts to leverage the strengths of Bi-LSTMS and Bi-GRUs. Bi-LSTMs and LSTMs in general are excellent at retaining information and addresses the vanishing gradient problem; while GRUs are able to mamnage shorter dependencies and are computationally efficient. For preprocessing, the authors first cleaned the data by removing all punctuation, unicode characters, names, URLs, stop word removal, tokenisation and other standard techniques. The cleaned data was then features were extracted using both supervised and unsupervised FastText which were then used to train models. The Bi-LSTM – Bi-GRU performed the best among all of the models tested, achieving F1-scores of between 0.98 and 0.99 depending on the dataset. \\
 
 \textcite{gbert} proposed a new deep learning model for predicting fake news called "Generative Bidirectional Encoder Representations from Transformers" or GBERT, a hybrid of Generative Pre-Trained Transformer (GPT) and Bidirection Encoder Representations from Transformers (BERT). The authors used two benchmark Indian datasets: The Indian Fake News Dataset (IFND) and FakeNewsIndia Dataset. The standard cleaning and normalisation of the textual data was applied including: decapitalisation, removal of URLs, names, punctuation stop words, numbers and emojis, and the application of stemming and lemmitisation. Now for the feature extraction the cleaned data is fed into two Large Language Model (LLM) components, BERT and GPT. BERT captures word embeddings, with context from every token inputted and outputs a summary of the context inside the input sequence. While GPT captures the global dependencies and semantic coherence in the input data and outputs the last hidden state of the final token. Finally the output from BERT and GPT (the features) are merged together in a concantenation layer before being passed to the dense layer for the final binary classification using a Sigmoid function. The results showed that the proposed GBERT model performed well, with a F1-score of 0.9623. It is worth noting, however, that XGBoost performed well in terms of accuracy (F1-score was not provided for XGBoost) with a score of 93.42\% while the proposed GBERT model has a score of 95.30\%.
 
 \subsubsection{Deep Ensemble Approaches}
-Other than approaches with CNNs, LSTMs and traditional machine learning models, there have also been attempts to construct deep ensemble models composed of deep learning models arranged in an ensemble architecture. Research conducted by \parencite{deep-ensemble} proposed a new approach for detecting fake news, by using Sequential deep learning (SDL) models as the base models in an ensemble stacking architecture with a multilevel perceptron classifier at the top. The authors used two datasets: the LIAR and ISOT datasets. The data from each dataset was preprocessed with tokenisation, lemmatisation among other standard techniques for working with textual data. Unlike with other similar works, the authors chose to do multi-class classification because fake news is usually mixed with true news. For the SDLs they are composed of dense and dropout layers. The ReLu activation function is used in all dense layers except the final output layer where a Sigmoid function was used. The ensemble model was evaluated with the test subset of each dataset used, for the LIAR dataset the model achieved F1-scores in a range from 0.48 to 0.82 for the various classes. As for the ISOT dataset, since the dataset only had two classes (real and fake), the model only had to classify true and false, the binary classification was able to achieve a 1.00 accuracy using the 2nd stage multi-class classification. \\
+Other than approaches with CNNs, LSTMs and machine learning models, there have also been attempts to construct deep ensemble models composed of deep learning models arranged in an ensemble architecture. Research conducted by \parencite{deep-ensemble} proposed a new approach for detecting fake news, by using Sequential deep learning (SDL) models as the base models in an ensemble stacking architecture with a multilevel perceptron classifier at the top. The authors used two datasets: the LIAR and ISOT datasets. The data from each dataset was preprocessed with tokenisation, lemmatisation among other standard techniques for working with textual data. Unlike with other similar works, the authors chose to do multi-class classification because fake news is usually mixed with true news. For the SDLs they are composed of dense and dropout layers. The ReLu activation function is used in all dense layers except the final output layer where a Sigmoid function was used. The ensemble model was evaluated with the test subset of each dataset used, for the LIAR dataset the model achieved F1-scores in a range from 0.48 to 0.82 for the various classes. As for the ISOT dataset, since the dataset only had two classes (real and fake), the model only had to classify true and false, the binary classification was able to achieve a 1.00 accuracy and f1-score using the 2nd stage classifier. \\
 
 
 \subsubsection{Machine Learning Approaches}
@@ -269,13 +269,14 @@ Methods which seek to analyse propagation structure for fake news detection ofte
     \textcite{gbert} & 2024 & \citetitle{gbert} & Generative Biderectional Encoder Representations from Transformers (GBERT) & Use of BERT to generate word embeddings and GPT to generate global vectors. Outputs from BERT and GPT are subsequently combined and passed to a classifier. & F1-score of 0.9623 & Researchers also experimented with XGBoost which performed nearly on par with GBERT in terms of accuracy. & Yes \\
     \addlinespace
     % --- Row 6 ---
-    Williams et al. & 2023 & Title of Paper 6 & Key finding six & Proposed Model F & Replication study \\
+    \textcite{deep-ensemble} & 2022 & \citetitle{deep-ensemble} & Deep Ensemble (Stacking) & Use of SDL models as base models and multilevel-perceptron classifier at the top. & F1-score of 1.00 for ISOT F1-scores of 0.48 - 0.82 for LIAR & LIAR dataset has more than 2 classes & No \\
     \addlinespace
     % --- Row 7 ---
-    Chen, L. & 2020 & Title of Paper 7 & Key finding seven & Proposed Model G & Sample size details \\
+    \textcite{traditional-ml} & 2021 & \citetitle{traditional-ml} & Various Machine Learning Models & ML models fitted onto preprocessed datasets with key features extracted during processing & Accuracy of 0.73 (Best model; XGBoost) & - & No \\
     \addlinespace
     % --- Row 8 ---
-    Rodriguez & 2017 & Title of Paper 8 & Key finding eight & Proposed Model H & Theoretical contribution \\
+    \textcite{multimodal} & 2023 & \citetitle{multimodal} & Multimodal Progressive Fusion
+    Approach (MPFN) & BERT for text feature extraction, visual feature extractor component for images and these two components are combined using the progressive multimodal feature fusion process. & F1-scores between 0.889 - 0.740 & Multimodal approach & Yes \\
     \addlinespace
     % --- Row 9 ---
     Lee, M. & 2021 & Title of Paper 9 & Key finding nine & Proposed Model I & Empirical evidence \\
@@ -366,18 +367,26 @@ The ISOT dataset was downloaded from the University of Victoria website. It cont
     \includegraphics[width=0.5\linewidth]{ISOT class balance.png}
     \caption{Note. Figure depicts the class distribution of the ISOT dataset}
     \label{fig:placeholder}
-\end{figure}\subsection{Data Understanding}
+\end{figure}
+
+\subsection{Data Understanding}
 
 \subsection{Data Pre-processing}
 The data was processed by first dropping any columns that did not contain the label or textual columns, such as source URLs, and other metadata like date. Then, if the dataset split title and text, this would be combined. In one of the datasets "FakeNewsNet", only the title column was used. After this, the now combined text column was stripped of any non-unicode characters as well as links, phone numbers and other non-ASCII characters. The removal of non-ASCII characters is possible as this research focuses on English news. After this, any rows with empty strings are removed, as well as duplicate rows. \\
 
-After the above processes, the data was then processed seperately depending on the type of model being trained. For BERT, the data was tokenised using BERT's tokeniser without further processing steps. For GLoVe, the data was decapitalised and then split into individual words for processing. Whereas for Word2Vec, the data was both decapitalised and lemmenised before the data is used to train the Word2Vec model. 
+\begin{figure} {H}
+    \centering
+    \includegraphics[width=0.5\linewidth]{FYP_Research_Methodology.png}
+    \caption{Note. Figure depicts preprocessing steps in flowchart form}
+    \label{fig:preprcessing_flowchart}
+\end{figure}
 
-% filepath: /Users/jordan/Desktop/Live_Projects/FYP_Documents/FYP/main.tex
+
+After the above processes, the data was then processed seperately depending on the type of model being trained. For BERT, the data was tokenised using BERT's tokeniser without further processing steps. For GLoVe, the data was decapitalised and then split into individual words for processing. Whereas for Word2Vec, the data was both decapitalised and lemmenised before the data is used to train the Word2Vec model. 
 
 \begin{table}[H]
 \centering
-\caption{Summary of Preprocessing Steps for Each Model Type}
+\caption{Summary of Additional Preprocessing Steps for Each Model Type}
 \label{tab:preprocessing}
 \begin{tabular}{@{}lp{10cm}@{}}
 \toprule
@@ -434,8 +443,6 @@ F1-score is a formula which combines precision and recall. Precision describes t
 Meanwhile, accuracy is found by dividing the number of correct predictions over the total number of predictions.\\
 
 The formulae described above are also written below in mathematical notation: 
-
-% filepath: /Users/jordan/Desktop/Live_Projects/FYP_Documents/FYP/main.tex
 
 \begin{equation}
 \text{Precision} = \frac{\text{True\ Positives}}{\text{True\ Positives} + \text{False\ Positives}}
@@ -988,6 +995,12 @@ Fake News Classification & 0.9974 & 0.9975 & 0.9978 & 0.9976 \\
 
 
 \subsection{Gantt chart for FYP2}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{FYP2-Gantt_Chart.png}
+    \caption{Note. Figure depicts planned timeline for FYP2 for MMU Term 2610}
+    \label{fig:FYP2-GANTT_CHART}
+\end{figure}
 
 \section{Conclusion}
 
