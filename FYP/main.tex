@@ -1,5 +1,6 @@
 \documentclass[stu,12pt,floatsintext,donotrepeattitle]{apa7}
 \usepackage{csquotes}
+\usepackage{amsmath}
 \usepackage[style=apa,sortcites=true,sorting=nyt,backend=biber]{biblatex}
 \DeclareLanguageMapping{american}{american-apa}
 \addbibresource{MyBib.bib}
@@ -110,7 +111,8 @@
 \AtBeginEnvironment{tabular}{\singlespacing}
 \AtBeginEnvironment{tabularx}{\singlespacing}
 
-\newcommand\nd{\textsuperscript{nd}\xspace}
+\providecommand{\nd}{}
+\renewcommand{\nd}{\textsuperscript{nd}\xspace}
 \newcommand\rd{\textsuperscript{rd}\xspace}
 \newcommand\nth{\textsuperscript{th}\xspace}
 
@@ -679,7 +681,7 @@ Below are tables containing the training parameters for the models trained (note
 \subsubsection{BERT fine-tuning}
 Experiements using BERT involved fine-tuning a base BERT-uncased model for each dataset, meaning in total as five datasets were applied, 5 models were trained. Each dataset was split 70-15-15, 70\% training and 15\% validation and test.
 
-The datasets were previously cleaned and processed as was explain previously, but in order for the data to be suitable to input to BERT, it undergoes further processing in the form of tokenisation using the base BERT-uncased tokeniser with the following settings: truncation = true, padding = true, max_length = 128. 
+The datasets were previously cleaned and processed as was explain previously, but in order for the data to be suitable to input to BERT, it undergoes further processing in the form of tokenisation using the base BERT-uncased tokeniser with the following settings: truncation = true, padding = true, max\_length = 128. 
 
 \begin{lstlisting}[language=Python, caption={BERT Tokenizer Configuration}]
 train_encodings = tokenizer(
