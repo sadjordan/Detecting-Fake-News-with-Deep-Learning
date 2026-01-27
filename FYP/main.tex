@@ -320,7 +320,7 @@ Methods which seek to analyse propagation structure for fake news detection ofte
 \section{Research Methodology}
 \subsection{Datasets}
 \subsubsection{WELFake Dataset}
-The WELFake dataset was downloaded from Kaggle, and contains 72134 rows of data. The class balance was relatively balanced, with the real news class having an excess of 2000 rows as can be referred to in figure 5. As for features, the dataset came with four columns, an unnamed ID column, title (of the news article), text (from the news article) and the label (real/fake). 
+The WELFake dataset was downloaded from Kaggle, and contains 72134 rows of data. The class balance was relatively balanced, with the real news class having an excess of 2000 rows as can be referred to in figure 5. As for features, the dataset came with four columns, an unnamed ID column, title (of the news article), text (from the news article) and the label (real/fake). There were 558 missing values in the 'title' column and 39 missing values in the 'text' column intitially.
 
 \begin{figure} [H]
     \centering
@@ -330,7 +330,7 @@ The WELFake dataset was downloaded from Kaggle, and contains 72134 rows of data.
 \end{figure}
 
 \subsubsection{Fake News Classification}
-This dataset, named "Fake News Classification" was downloaded from Kaggle. It contains 40597 rows of data with 4 columns: an unnamed ID column, title, text and label. There were no missing values or duplicates in any of the rows. And the class balance had an excess of approximately 3000 in favour of the positive class (real). 
+This dataset, named "Fake News Classification" was downloaded from Kaggle. It contains 40597 rows of data with 4 columns: an unnamed ID column, title, text and label. There were no missing values or duplicates in any of the rows initially before pre-processing. And the class balance had an excess of approximately 3000 in favour of the positive class (real). 
 
 \begin{figure} [H]
     \centering
@@ -340,7 +340,7 @@ This dataset, named "Fake News Classification" was downloaded from Kaggle. It co
 \end{figure}
 
 \subsubsection{FakeNewsNet}
-The FakeNewsNet dataset was downloaded from Kaggle, it is worth noting this was not the original dataset, it had been its various csv files merged by the uploading user "algord". FakeNewsNet contains 23196 rows, with 5 columns: title, news\_url, source\_domain, tweet\_num and label. The dataset contained missing values in the news\_url and source\_domain columns (which is acceptable as this is not required later on in training or testing). There were 137 duplicate rows (which will be dropped later on). The class balance was heavily skewed in favour of the positive (real) class, with approximately 75\% of all rows belonging to the positive class. 
+The FakeNewsNet dataset was downloaded from Kaggle, it is worth noting this was not the original dataset, it had been its various csv files merged by the uploading user "algord". FakeNewsNet contains 23196 rows, with 5 columns: title, news\_url, source\_domain, tweet\_num and label. The dataset contained missing values in the news\_url and source\_domain columns (which is acceptable as this is not required later on in training or testing). There were 137 duplicate rows (which will be dropped later on) initially. The class balance was heavily skewed in favour of the positive (real) class, with approximately 75\% of all rows belonging to the positive class. 
 
 \begin{figure} [H]
     \centering
@@ -350,7 +350,7 @@ The FakeNewsNet dataset was downloaded from Kaggle, it is worth noting this was 
 \end{figure}
 
 \subsubsection{Fake News Detection}
-The Fake News Detection dataset was downloaded from Hugging Face. It contains 44267 rows and 6 columns: Unnamed ID column, title, text, subject, date, and label. There were no missing values or duplicate rows. The class balance is relatively balanced with the difference between the positive and negative classes being approximately ± 3\%. 
+The Fake News Detection dataset was downloaded from Hugging Face. It contains 44267 rows and 6 columns: Unnamed ID column, title, text, subject, date, and label. There were no missing values or duplicate rows initially. The class balance is relatively balanced with the difference between the positive and negative classes being approximately ± 3\%. 
 
 \begin{figure} [H]
     \centering
@@ -360,7 +360,7 @@ The Fake News Detection dataset was downloaded from Hugging Face. It contains 44
 \end{figure}
 
 \subsubsection{ISOT}
-The ISOT dataset was downloaded from the University of Victoria website. It contains 44898 rows with 5 columns: title, text, subject, date and label. There were no missing values. However there were 209 duplicate rows. The class balance was relatively balanced, with the difference in proportion of the positive and negative classes being approximately ± 5\%.
+The ISOT dataset was downloaded from the University of Victoria website. It contains 44898 rows with 5 columns: title, text, subject, date and label. There were no missing values initially. However there were 209 duplicate rows initially. The class balance was relatively balanced, with the difference in proportion of the positive and negative classes being approximately ± 5\%.
 
 \begin{figure} [H]
     \centering
@@ -372,7 +372,57 @@ The ISOT dataset was downloaded from the University of Victoria website. It cont
 \subsection{Data Understanding}
 
 \subsection{Data Pre-processing}
-The data was processed by first dropping any columns that did not contain the label or textual columns, such as source URLs, and other metadata like date. Then, if the dataset split title and text into different columns, this would be combined. In one of the datasets "FakeNewsNet", only the title column was used. After this, the now combined text column was stripped of any non-unicode characters as well as links, phone numbers and other non-ASCII characters. The removal of non-ASCII characters is possible as this research focuses on English news. After this, any rows with empty strings are removed, as well as duplicate rows. \\
+The data was processed by first merging 'title' and 'text' columns together if the dataset had split 'title' and 'text' into different columns, this would be combined. In one of the datasets "FakeNewsNet", only the 'title; column was used. After the columns were combined, the new 'combined\_text' column was checked for missing strings and null values, of which none were found.
+
+After combining the columns, any columns that did not contain the label or 'combined\_text' column were dropped, such as source URLs columns, and other metadata like date. This revealed substantially more duplicated rows, likely as a result of the datasets being gathered through scraping methods which scraped the same content from multiple sources causing the dataset to have duplicated textual columns but different metadata, which allowed it to evade detection earlier. The total number of samples dropped is summarised in table X. %name the table when done
+
+Once completed, the 'combined\_text' column was stripped of any non-unicode characters as well as links, phone numbers and other non-ASCII characters. The removal of non-ASCII characters is possible as this research focuses on English news. After this, any rows with empty strings are removed. 
+
+\begin{table}[H]
+    \centering
+    \scriptsize % Reduces font size slightly to fit width
+    \setlength{\tabcolsep}{3pt} % Reduces space between columns
+    \caption{Summary of Data Preprocessing Statistics}
+    \label{tab:preprocessing_stats}
+    \begin{tabular}{l cc cc cc cc}
+        \toprule
+         & \multicolumn{2}{c}{\textbf{Initial}} 
+         & \multicolumn{2}{c}{\textbf{After Combining Text}} 
+         & \multicolumn{2}{c}{\textbf{After Dropping Rows}} 
+         & \multicolumn{2}{c}{\textbf{After Cleaning}} \\
+        \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9}
+        \textbf{Dataset} & \textbf{Missing*} & \textbf{Duplicates} & \textbf{Missing*} & \textbf{Duplicates} & \textbf{Missing*} & \textbf{Duplicates} & \textbf{Missing*} & \textbf{Duplicates} \\
+        \midrule
+        WELFake & 597 & 0 & 0 & - & - & 8458 & 6 & - \\
+        Fake News Classification & 0 & 0 & 0 & - & - & 2 & 5 & - \\
+        FakeNewsNet & 660 & 137 & 0 & - & - & 1349 & 3 & - \\
+        Fake News Detection & 0 & 0 & 0 & - & - & 5612 & 5 & - \\
+        ISOT & 0 & 0 & 0 & - & - & 5795 & 5 & - \\
+        \bottomrule
+    \end{tabular}
+    \par\medskip
+    \raggedright
+    \footnotesize{\textit{Note.} (-) indicates metric not checked at this stage. \\
+    (\*) Shows the sum of missing values, not necessarily the number of rows (in stages after Initial, only \texttt{combined\_text} is checked).}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Dataset Shapes (Initial vs. Final)}
+    \label{tab:dataset_shapes}
+    \begin{tabular}{l c c}
+        \toprule
+        \textbf{Dataset} & \textbf{Initial Shape} & \textbf{Final Shape} \\
+        \midrule
+        WELFake & (72134, 4) & (63670, 2) \\
+        Fake News Classification & (40587, 4) & (40580, 2) \\
+        FakeNewsNet & (23196, 5) & (21844, 2) \\
+        Fake News Detection & (44267, 6) & (38650, 2) \\
+        ISOT & (44898, 5) & (39098, 2) \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
 
 \begin{figure} [H]
     \centering
@@ -923,9 +973,6 @@ Finally, it is worth discussing the results for FakeNewsNet, which didn't really
 \end{longtable}
 \endgroup
 
-
-
-
 \begin{table}[H]
 \centering
 \small
@@ -1005,9 +1052,6 @@ Fake News Classification & 0.9974 & 0.9975 & 0.9978 & 0.9976 \\
 \end{figure}
 
 \section{Conclusion}
-
-% \bibliographystyle{apacite}
-% \bibliography{MyBib}{}
 
 \printbibliography
 
