@@ -171,7 +171,7 @@ And lastly, after training the models. The models will be tested on the test set
 \subsubsection{Convolutional Neural Networks}
 In research conducted by \textcite{cnn_chinese}, which detected fake news on Chinese social media networks using an augmented Convolutional Neural Network (CNN), Convolutional Feed-Forward or Conv-FFD. In order to process the Chinese characters, the researchers used a three-step process starting with one-hot-encoding the over 4000 Chinese characters, then feeding this data in an embedding process which converts the one-hot-encoded data into vector representations of each character, culminating in iterating through all the characters to get the vector representation of each one (essentially mapping the characters to the vector embedding). As for the feature modelling process (the process of understanding the relationship between characters/words), the researchers used the CNN model which is able to learn hidden features from conducting convolution operations. They used a 'sliding window' in order to create sentence-level embedding. Then in order to classify the text as real or fake, a softmax activation function is used in order to predict the class of the input text. The model achieved an F1-score of 0.8702 - 0.8855, indicating it is capable of predicting whether a given body of (Chinese) text is real or fake. \\
 
-Research conducted by \textcite{opcnn-fake} also proposed a CNN model, albeit a modified one they called the "optimized Convolutional Neural Network to detect fake news" or OPCNN-FAKE. Aside from the proposed models, the authors also built machine learning models and other deep learning models like LSTMs The authors used four datasets, Fake News Detection (from Kaggle), FakeNewsNet, FA-KES5, and the ISOT dataset. The datasets were cleaned by converting all characters to lowercase, removing URLS, removing special symbols, removing stop words, tokenisation and stemming (reduction to root word). After the data was cleaned, two methodologies were used for feature generation, one for training the machine learning models and one for the deep learning models. For machine learning models, the feature generation used two techniques, N-grams (up to n = 4) and Term Frequency - Inverse Document Frequency (TD-IDF). While for the deep learning models, feature generation was done via word embeddings (the authors classified this as the "Embedding Layer" or the first layer of the proposed OPCNN-FAKE model), specifically the Global Vectors for Word Representations (GLoVe) which converted the cleaned textual data into dense vectors (more specifically they used glove6B.zip). The preprocessed datasets were then split 80-20 into training and test sets respectively and the training set was used to train the machine learning and deep learning models, including the proposed OPCNN-FAKE model. For the deep learning models, a technique called "Hyperopt Optimisation" was used to adapt the various model parameters including epoch, dropout and batch size, among others. The proposed OPCNN-FAKE model was configured with six layers, the embedding layer, dropout layer, convolutional layer, pooling layer, flatten layer and output layer respectively. Without diving too deeply into the architecture, the embedding layer was previously explained; the dropout layer randomly deactivates some neurons to mitigate overfitting; the convolutional layer uses a convolution filter and feature map to identify the data patterns and high and low level features while employing a ReLu activation function; the pooling layer reduces the number of features in the feature map so as to only retain the most important features; the flatten layer flattens the feature map into a one-dimensional array; the output layer takes the one dimensional array from the flatten layer and classifies it as fake (0) or true (1). The models were then evaluated using cross-validation and the OPCNN-FAKE model achieved the best F1-score across all four datasets used, with the proposed model achieving an F1-score of 0.959 on the Kaggle dataset and a perfect F1-score of 0.9999 on the ISOT dataset.
+Research conducted by \textcite{opcnn-fake} also proposed a CNN model, albeit a modified one they called the "optimized Convolutional Neural Network to detect fake news" or OPCNN-FAKE. Aside from the proposed models, the authors also built machine learning models and other deep learning models like LSTMs The authors used four datasets, Fake News Detection (from Kaggle), FakeNewsNet, FA-KES5, and the ISOT dataset. The datasets were cleaned by converting all characters to lowercase, removing URLS, removing special symbols, removing stop words, tokenisation and stemming (reduction to root word). After the data was cleaned, two methodologies were used for feature generation, one for training the machine learning models and one for the deep learning models. For machine learning models, the feature generation used two techniques, N-grams (up to n = 4) and Term Frequency - Inverse Document Frequency (TD-IDF). While for the deep learning models, feature generation was done via word embeddings (the authors classified this as the "Embedding Layer" or the first layer of the proposed OPCNN-FAKE model), specifically the Global Vectors for Word Representations (GloVe) which converted the cleaned textual data into dense vectors (more specifically they used GloVe6B.zip). The preprocessed datasets were then split 80-20 into training and test sets respectively and the training set was used to train the machine learning and deep learning models, including the proposed OPCNN-FAKE model. For the deep learning models, a technique called "Hyperopt Optimisation" was used to adapt the various model parameters including epoch, dropout and batch size, among others. The proposed OPCNN-FAKE model was configured with six layers, the embedding layer, dropout layer, convolutional layer, pooling layer, flatten layer and output layer respectively. Without diving too deeply into the architecture, the embedding layer was previously explained; the dropout layer randomly deactivates some neurons to mitigate overfitting; the convolutional layer uses a convolution filter and feature map to identify the data patterns and high and low level features while employing a ReLu activation function; the pooling layer reduces the number of features in the feature map so as to only retain the most important features; the flatten layer flattens the feature map into a one-dimensional array; the output layer takes the one dimensional array from the flatten layer and classifies it as fake (0) or true (1). The models were then evaluated using cross-validation and the OPCNN-FAKE model achieved the best F1-score across all four datasets used, with the proposed model achieving an F1-score of 0.959 on the Kaggle dataset and a perfect F1-score of 0.9999 on the ISOT dataset.
 
 
 
@@ -265,7 +265,7 @@ Methods which seek to analyse propagation structure for fake news detection ofte
     \textcite{cnn_chinese} & 2023 & \citetitle{cnn_chinese} &  Convolutional Feed-Forward (Conv-FFD) & Use of CNN to learn relationships and ultimately classify based on sentence-level embeddings generated by a "sliding window" & F1-scores of between 0.8702 - 0.8855. & Researchers one-hot-encoded Chinese characters, a technique not feasible for English text. & No \\
     \addlinespace
     % --- Row 2 ---
-    \textcite{opcnn-fake} & 2021 & \citetitle{opcnn-fake} & Optimized Convolutional Neural Network to Detect Fake News (OPCNN-FAKE) & Use of GLoVe to produce word embeddings which are then use to train the OPCNN-FAKE model. & F1-scores of between 0.959 - 0.9999 & Extremely high scores on ISOT dataset indicate some level of overfitting. & No \\
+    \textcite{opcnn-fake} & 2021 & \citetitle{opcnn-fake} & Optimized Convolutional Neural Network to Detect Fake News (OPCNN-FAKE) & Use of GloVe to produce word embeddings which are then use to train the OPCNN-FAKE model. & F1-scores of between 0.959 - 0.9999 & Extremely high scores on ISOT dataset indicate some level of overfitting. & No \\
     \addlinespace
     % --- Row 3 ---
     \textcite{hybrid_cnn-lstm} & 2024 & \citetitle{hybrid_cnn-lstm} & CNN-LSTM & Use of FastText to produce word embeddings which is then used to train a CNN-LSTM hybrid. & F1-scores of between 0.91 - 0.99 & - & No \\
@@ -432,7 +432,7 @@ Once completed, the 'combined\_text' column was stripped of any non-unicode char
 \end{figure}
 
 
-After the above processes, the data was then processed seperately depending on the type of model being trained. For BERT, the data was tokenised using BERT's tokeniser without further processing steps. For GLoVe, the data was decapitalised and then split into individual words for processing. Whereas for Word2Vec, the data was both decapitalised and lemmenised before the data is used to train the Word2Vec model. 
+After the above processes, the data was then processed seperately depending on the type of model being trained. For BERT, the data was tokenised using BERT's tokeniser without further processing steps. For GloVe, the data was decapitalised and then split into individual words for processing. Whereas for Word2Vec, the data was both decapitalised and lemmenised before the data is used to train the Word2Vec model. 
 
 \begin{table}[H]
 \centering
@@ -444,7 +444,7 @@ After the above processes, the data was then processed seperately depending on t
 \midrule
 BERT & Tokenization using BERT's tokenizer (no additional preprocessing) \\
 \addlinespace
-GLoVe & \begin{itemize}[leftmargin=*, nosep]
+GloVe & \begin{itemize}[leftmargin=*, nosep]
     \item Decapitalization (lowercase conversion)
     \item Splitting into individual words
 \end{itemize} \\
@@ -459,7 +459,7 @@ Word2Vec & \begin{itemize}[leftmargin=*, nosep]
 \end{table}
 
 \subsection{Modelling}
-Modelling depended on which kind of embedding was used. For BERT, fine-tuning was used to fine-tune a base BERT-uncased model into a 2-label classification model. For GLoVe and Word2Vec, after the datasets were turned into embeddings, the now vectorised datasets were fitted to machine learning models and used to train several deep-learning models as well, specifically: CNN, LSTM and CNN-LSTM. 
+Modelling depended on which kind of embedding was used. For BERT, fine-tuning was used to fine-tune a base BERT-uncased model into a 2-label classification model. For GloVe and Word2Vec, after the datasets were turned into embeddings, the now vectorised datasets were fitted to machine learning models and used to train several deep-learning models as well, specifically: CNN, LSTM and CNN-LSTM. 
 
 \begin{table}[H]
 \centering
@@ -473,7 +473,7 @@ BERT & \begin{itemize}[leftmargin=*, nosep]
     \item Fine-tuning to convert BERT into a classification model 
 \end{itemize} \\
 \addlinespace
-GLoVe & \begin{itemize}[leftmargin=*, nosep]
+GloVe & \begin{itemize}[leftmargin=*, nosep]
     \item Machine learning models (trained on vectorised datasets)
     \item Deep learning models: CNN, LSTM, CNN-LSTM
 \end{itemize} \\
@@ -529,18 +529,18 @@ Long Short Term Memory of LSTMs is a type of Recurrent Neural Network (RNN) whic
 
 \subsection{Embedding Approaches}
 \subsubsection{Global Vectors for Word Representation}
-Global Vectors for Word Representation or GLoVe is an unsupervised embedding algorithm which generates word embeddings. GLoVe embeddings are pre-trained on massive textual datasets with a pre-set number of dimensions. The training process works by constructing a co-occurence matrix where the rows and columns represent each unique word and each entry in the matrix indicates the frequency of two words occuring next to one another within a predefined context window. So for example, the co-occurence matrix would capture how frequently the words "statistics" and "math" appear together. 
+Global Vectors for Word Representation or GloVe is an unsupervised embedding algorithm which generates word embeddings developed by \textcite{glove}. GloVe embeddings are pre-trained on massive textual datasets with a pre-set number of dimensions. The training process works by constructing a co-occurence matrix where the rows and columns represent each unique word and each entry in the matrix indicates the frequency of two words occuring next to one another within a predefined context window. So for example, the co-occurence matrix would capture how frequently the words "statistics" and "math" appear together. 
 
 But how is the co-occurence matrix turned into vectors? This takes place during training, each word is assigned a random vector, and then finds the dot product of two vectors (in this case, each vector is a word), then compares it to the logarithm of the co-occurence matrix count (of the two words) to find the error, then depending on the error, the vectors will be updated so it is closer to the logarithm of the co-occurence matrix count. So for example, if two words, "apple" and "fruit" have a logarithm-count of 0.5, and the dot product of their random vector representations returned a value of 0.3, the error would be 0.2 and the model will modify the vectors such that in the next iteration, the dot product will closer align with the logarithm-count. 
 
-But that is not all, if GLoVe only relied on counts in the co-occurence matrix it would encounter issues where common words like "the" become associated with everything and the vectors generated would be less meaningful. To solve this, GLoVe employs weights to ensure the vectors being trained are meaningful. Rare words will be given lower weights (noise), and while common words will have higher weights, there will be a cap so that "the" doesn't unfairly bias the vectors being produced. 
+But that is not all, if GloVe only relied on counts in the co-occurence matrix it would encounter issues where common words like "the" become associated with everything and the vectors generated would be less meaningful. To solve this, GloVe employs weights to ensure the vectors being trained are meaningful. Rare words will be given lower weights (noise), and while common words will have higher weights, there will be a cap so that "the" doesn't unfairly bias the vectors being produced. 
 
 After training these embeddings can be loaded (which is what was done here) and then used to generate embeddings of input text. 
 
-To conclude, GLoVe is an unsupervised algorithm which generates word embeddings based on a massive textual datasets. The vectors produced are representative of the frequency of words relative to other words. 
+To conclude, GloVe is an unsupervised algorithm which generates word embeddings based on a massive textual datasets. The vectors produced are representative of the frequency of words relative to other words. 
 
 \subsubsection{Word2Vec}
-Word2Vec (Word to Vector) is a neural network embedding model which converts words into dense vector representations. There are two main architectural variants, Continuous Bag of Words and Skip-gram; Skip-gram was used in this instance and thus will be the only variant elaborated on. 
+Word2Vec is a neural network embedding model which converts words into dense vector representations developed by \textcite{word2vec}. There are two main architectural variants, Continuous Bag of Words and Skip-gram; Skip-gram was used in this instance and thus will be the only variant elaborated on. 
 
 The Word2Vec Skip-gram variant works by trying to predict the words around a single target word. So, using the example of the sentence "I love vanilla ice cream", the target word being the word "vanilla" and the windows being set at two words; the model would focus on trying to predict the words "I", "love", "ice", "cream" around the word "vanilla". 
 
@@ -549,7 +549,7 @@ To do this, the input word (represented in on-hot-encoded form) is taken in by t
 This massive guessing operation is used to train the hidden layer, so that when the training is complete, the output layer is stripped and the output of the hidden layer becomes the vectors. So to conclude, Word2Vec's Skip-gram variant works by trying to guess words around a target word and through this exercise trains a hidden layer which will be used to turn words into vectors. 
 
 \subsubsection{Bidirectional Encoder Representations from Transformers}
-Bidirectional Encoder Representations from Transformers or BERT is a self-supervised bidirectional model which differs from Word2Vec and GLoVe in that while Word2Vec and GLoVe have a single vector for each word; BERT outputs different vectors for each word depending on the context. 
+Bidirectional Encoder Representations from Transformers or BERT is a self-supervised bidirectional model which differs from Word2Vec and GloVe in that while Word2Vec and GloVe have a single vector for each word; BERT outputs different vectors for each word depending on the context. 
 
 To do this, BERT is trained through two objectives: Masked Language Modelling (MLM) and Next Sentence Prediction (NSP) \parencite{roberta}. MLM works by trying to get BERT to predict the missing word. So using the previous example of "I love vanilla ice cream", say the word "ice" is 'masked' (omitted), BERT will have to try and guess the missing word from: "I love vanilla [mask] cream". Since BERT is bidirectional, it will consider words preceding and subsequent to the mask. This technique gets BERT to learn the relationship between words in a sentence. 
 
@@ -561,7 +561,9 @@ In conclusion, the bidrectional nature of BERT gives it an edge and the objectiv
 
 \subsection{Explainable AI Approaches}
 \subsubsection{LIME}
+Local Intepretable Model-Agnostic Explanations or LIME is a technique used to explain black-box models. LIME, true to its acronym tries to explain the black-box model 'locally', by taking a prediction, then creating many variations of the data point which lead to that prediction to see how the black-box model responds to these changes. These 'perturbed' data points are assigned weights, with the greater in similarity a point is to the original data point, the higher the weight. These perturbed data points and the black-box's prediction are then used to form a small, weighted dataset which is fitted onto a small interpretable model (often linear regression). The weights from this model will be used to explain the behaviour of the actual black-box model for that one specific prediction. 
 
+To put the above into an example, let's say there is a XGBoost model being used to determine if a person has diabetes. Let's also say that this model only takes 3 features as input: weight, height and age. When given the input [90, 169, 56], it predicts true. To explain this, LIME will then generate variations around this input data, so called 'perturbed data points', for example [89, 167, 58]. These variations of the original data points are then passed to the XGBoost model as input and the output is noted. A dataset is then constructed based on the perturbed data points, the black-box's output, and the proximity of the perturbed data points to the original data point. This weighted dataset is fit onto a linear regression model and this model, as it is interpretable and not a black-box, is used to explain the black-box's prediction.
 
 \subsection{Classification Models}
 
@@ -569,8 +571,8 @@ In conclusion, the bidrectional nature of BERT gives it an edge and the objectiv
 
 \subsection{Experiments}
 
-\subsubsection{GLoVe Embedding}
-Experiments involing GLoVe saw the text in the datasets turned into GLoVe embeddings. But first the text in each dataset were turned into lowercase, before being turned into embeddings using weights found in the file 'dolma\_300\_2024\_1.2M.100\_combined.txt'. Each respective dataset and its now converted text was then used to train several machine learning models (KNN, Gaussian NB, Logistic Regression, SVC, XGBoost, Random Forest) and deep learning models (CNN, CNN-LSTM, LSTM). 
+\subsubsection{GloVe Embedding}
+Experiments involing GloVe saw the text in the datasets turned into GloVe embeddings. But first the text in each dataset were turned into lowercase, before being turned into embeddings using weights found in the file 'dolma\_300\_2024\_1.2M.100\_combined.txt'. Each respective dataset and its now converted text was then used to train several machine learning models (KNN, Gaussian NB, Logistic Regression, SVC, XGBoost, Random Forest) and deep learning models (CNN, CNN-LSTM, LSTM). 
 
 Below are tables containing the training parameters for the models trained (both machine learning and deep learning models): 
 
@@ -749,8 +751,8 @@ The number of epochs was set at 3, to avoid overfitting but just enough to allow
 At the end the best model is selected using f1-score, and this (best model) model will undergo the final evaluation using the test set.
 \subsection{Preliminary Results}
 
-\subsubsection{GLoVe Embedding}
-Experimentation with GLoVe embeddings showed that ML models trained using GLoVe embeddings performed well, however, with the exception of ML models trained on the FakeNewsNet dataset. Results for the ML models range from 0.82 - 0.98 with FakeNewsNet excluded and an anomalous result from the Gaussian Naive Bayes model for the WELFake dataset excluded as well. Elaborating on the anomalous result, it shows that the Gaussian NB model for WELFake performing poorly relative to other ML models across all datasets, this seems to be an outlier which also appears in Word2Vec's results, indicating something about the dataset which is not particularly compadible with Gaussian Naive Bayes. 
+\subsubsection{GloVe Embedding}
+Experimentation with GloVe embeddings showed that ML models trained using GloVe embeddings performed well, however, with the exception of ML models trained on the FakeNewsNet dataset. Results for the ML models range from 0.82 - 0.98 with FakeNewsNet excluded and an anomalous result from the Gaussian Naive Bayes model for the WELFake dataset excluded as well. Elaborating on the anomalous result, it shows that the Gaussian NB model for WELFake performing poorly relative to other ML models across all datasets, this seems to be an outlier which also appears in Word2Vec's results, indicating something about the dataset which is not particularly compadible with Gaussian Naive Bayes. 
 
 For the DL models, the CNN models performed poorly on all datasets, with F1-scores in the range of 0.11 - 0.72 (excluding FakeNewsNet). Likely because CNN's are not optimal for sequential data, something which LSTMs are generally better at. For the CNN-LSTM models, it is clear that the hybridisation does not solve the drawbacks experienced by the CNN model with results between 0.28 - 0.72 (excluding FakeNewsNet). And lastly, LSTMs performed substantially better than its hybrid and CNN counterparts, with scores ranging from 0.92 - 0.98. This is likely because LSTMs are able to capture long-term dependencies and "remember" key discernable differences that CNNs are not able to.
 
@@ -763,7 +765,7 @@ Lastly, the unique performance of models on FakeNewsNet warrants additional disc
 \setlength\LTright{0pt}
 
 \begin{longtable}{@{\extracolsep{\fill}}llccccc}
-\caption{Detailed Machine Learning Model Performance (GloVe Embeddings)} \label{tab:glove_ml_detailed} \\
+\caption{Detailed Machine Learning Model Performance (GloVe Embeddings)} \label{tab:GloVe_ml_detailed} \\
 \toprule
 \textbf{Dataset} & \textbf{Model} & \textbf{Acc} & \textbf{Class} & \textbf{Prec} & \textbf{Rec} & \textbf{F1} \\
 \midrule
@@ -854,7 +856,7 @@ Lastly, the unique performance of models on FakeNewsNet warrants additional disc
 \centering
 \small
 \caption{Deep Learning Model Performance (GloVe Embeddings)}
-\label{tab:glove_dl_detailed}
+\label{tab:GloVe_dl_detailed}
 \begin{tabular}{lllcccc}
 \toprule
 \textbf{Dataset} & \textbf{Model} & \textbf{Acc} & \textbf{Class} & \textbf{Prec} & \textbf{Rec} & \textbf{F1} \\
@@ -899,9 +901,9 @@ Lastly, the unique performance of models on FakeNewsNet warrants additional disc
 
 
 \subsubsection{Word2Vec}
-The results for the models trained using the Word2Vec embeddings showed interest results, especially pertaining to the datasets used and its performance on different models. And if comparing to GLoVe embedding results, it seems that the results for Word2Vec performed on-par if not slighly better in some cases.
+The results for the models trained using the Word2Vec embeddings showed interest results, especially pertaining to the datasets used and its performance on different models. And if comparing to GloVe embedding results, it seems that the results for Word2Vec performed on-par if not slighly better in some cases.
 
-Firsly, the machine learning models generally did very well on all datasets save for FakeNewsNet, indicating the dataset is more challenging than its peers. Notably the Gaussian Naive Bayes model performed relatively poorly on the WELFake dataset with an F1-score of 0.77 and 0.60 for the negative and positive classes respectively while other ML models (across all datasets) had F1-scores at or exceeding 0.89 (except for FakeNewsNet). This seems to be an outlier which also appears in the GLoVe embedding results, the cause of which was elaborated on in the GLoVe embedding results discussion section.
+Firsly, the machine learning models generally did very well on all datasets save for FakeNewsNet, indicating the dataset is more challenging than its peers. Notably the Gaussian Naive Bayes model performed relatively poorly on the WELFake dataset with an F1-score of 0.77 and 0.60 for the negative and positive classes respectively while other ML models (across all datasets) had F1-scores at or exceeding 0.89 (except for FakeNewsNet). This seems to be an outlier which also appears in the GloVe embedding results, the cause of which was elaborated on in the GloVe embedding results discussion section.
 
 As for the DL approaches, the results indicate that the CNN's did not perform well with F1-scores betweem 0.58 and 0.73 (outliers and FakeNewsNet excluded). This may be because CNNs are not usually preferred for sequential data. And while CNN-LSTMs performed better than LSTMs (except for FakeNewsNet) with F1-scores between 0.59 and 0.74 (FakeNewsNet excluded), it seems the CNN component is holding the model back as LSTMs performed significantly better than the CNN-LSTM hybrid. The final DL approach employed were LSTMs, which performed by far the best with F1-scores between 0.95 and 0.99 (excluding FakeNewsNet). This is likely because LSTMs are less vulnerable to the vanishing gradient problem and are able to remember long-term depencies in the data. 
 
@@ -914,7 +916,7 @@ Finally, it is worth discussing the results for FakeNewsNet, which didn't really
 \setlength\LTright{0pt}
 
 \begin{longtable}{@{\extracolsep{\fill}}llccccc}
-\caption{Detailed Machine Learning Model Performance (Word2Vec Embeddings)} \label{tab:glove_ml_detailed} \\
+\caption{Detailed Machine Learning Model Performance (Word2Vec Embeddings)} \label{tab:GloVe_ml_detailed} \\
 \toprule
 \textbf{Dataset} & \textbf{Model} & \textbf{Acc} & \textbf{Class} & \textbf{Prec} & \textbf{Rec} & \textbf{F1} \\
 \midrule
@@ -1004,7 +1006,7 @@ Finally, it is worth discussing the results for FakeNewsNet, which didn't really
 \centering
 \small
 \caption{Deep Learning Model Performance (Word2Vec Embeddings)}
-\label{tab:glove_dl_detailed}
+\label{tab:GloVe_dl_detailed}
 \begin{tabular}{lllcccc}
 \toprule
 \textbf{Dataset} & \textbf{Model} & \textbf{Acc} & \textbf{Class} & \textbf{Prec} & \textbf{Rec} & \textbf{F1} \\
@@ -1050,7 +1052,9 @@ Finally, it is worth discussing the results for FakeNewsNet, which didn't really
 \subsubsection{BERT-finetuning}
 The results from the baseline finetuned BERT models exhibited very high accuracy, recall and precision. As can be refered to in the results table, it appears that the FakeNewsNet dataset was the most challenging dataset. All the other datasets proved to be no challenge for each of their finetuned BERT models. It is however notable that the F1-scores are in the range (with the exception of the FakeNewsNet dataset) exceed 0.98, this may indicate that these datasets may have gathered the data for their positive and negative classes with a methodology that unknowingly introduced some level of data leakage. The alternative is that BERT is simply a very effective model, but the relatively lower performance of BERT on the FakeNewsNet dataset indicates the other datasets may be of lower quality or are less challenging. 
 
-Referencing the results from GLoVe and Word2Vec, it is clear that the FakeNewsnet dataset is challenging due to its class imbalance. However due to the evaluation method used for BERT's models, there is no breakdown by positive and negative class. 
+Referencing the results from GloVe and Word2Vec, it is clear that the FakeNewsNet dataset is challenging due to its class imbalance and potentially due to the fact that FakeNewsNet only contains the titles of the articles, not the rest of the content. 
+
+BERT has either matched or outperformed the already excellent results obtained from the machine learning models and deep learning models trained on GloVe and Word2Vec vector embeddings. This includes FakeNewsNet where it was able to optain an F1-score of 0.9016, which was not able to be reached by any of the other machine learning or deep learning models trained on GloVe or Word2Vec embeddings. 
 
 \begin{table}[H]
 \centering
@@ -1079,6 +1083,18 @@ Fake News Classification & 0.9974 & 0.9975 & 0.9978 & 0.9976 \\
 \end{figure}
 
 \section{Conclusion}
+Thus far for this research, pursuant to the research objectives: completed a thorough literature review of related works, gathered relevant datasets, drafted up a proposed model and conducted experiments with various embedding algorithms and through which preliminary results were obtained. The remaining work for this Final Year Project (FYP) are: cross-validation of baseline models (1-fold results are in preliminary results), implementation and evaluation of the proposed model and lastly, the creation of a simple application through which the proposed model can be used to test if a given piece of news is real or fake.
+
+For the literature review, 16 articles were reviewed, through which substantial insight was gained into the research around fake news detection. Insight was gained into the use of various embedding algorithms such as BERT, GloVe and Doc2Vec for text, as well as other techniques such as VGG19 for image processing. Furthermore, the various approaches undertaken by the authors of the read papers were noted, and informed the development of the proposed model for this research. These approaches varied from machine learning, to multi-layered models employing embedding algorithms, deep learning and graphical models amongst other algorithms. Most interestingly, many state-of-the-art models were black-boxes, which motivated the reading of articles discussing explainable AI techniques, such as LIME. To conclude, the literature review was critical to the development of a substantial knowledge base which supported this FYP and efforts toward the research goals.
+
+Relevant datasets were gathered from Kaggle, research papers and HuggingFace. Originally seven datasets were gathered, but two of them proved to be incompatible and were not used. The five chosen datasets were previously described in detail in Chapter 3. These datasets were then cleaned and preprocessed, allowing for their use in the later experiments with teh variosu embedding algorithms.
+
+The proposed model was constructed based on approaches to fake news detection in the articles reviewed in the literature review. This proposed model is to be primarily based upon a BERT model, fine-tuned using an adversarial technique of which it's goal is to create embeddings which can enable for a more generalised model. This fine-tuned BERT model will then have its outputs explained using a LIME component. This proposed model seeks to be more practical and usable compared to other models which output misleading predictions when the input is even slightly different than the dataset it was trained on. And it aims to address the issue of trust as well, through the implementation of LIME which will explain the proposed model's predictions.
+
+Lastly, experiments on various embedding algorithms were conducted which aimed to gain insight into how these different algorithms actually perform. The experimental data showed that while some models trained on GloVe and Word2Vec embeddings were able to perform well, they were either matched or outperformed by BERT. This highlights the superiority of BERT, and was a key reason in the decision to use BERT as a component of the proposed model. These experiments, aside from obtaining preliminary results, also allowed for the gaining of hand-on knowledge related to applying these embedding algorithms which will be cruicial when developing the more complex proposed model.
+
+The remaining work for the second half of this FYP will be done in accordance to the 
+
 
 \printbibliography
 
