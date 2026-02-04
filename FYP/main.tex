@@ -540,9 +540,17 @@ After training these embeddings can be loaded (which is what was done here) and 
 To conclude, GLoVe is an unsupervised algorithm which generates word embeddings based on a massive textual datasets. The vectors produced are representative of the frequency of words relative to other words. 
 
 \subsubsection{Word2Vec}
-Word2Vec (Word to Vector) is a neural network embedding model which converts words into dense vector representations. There are two main architectural variants, Continuous Bag of Words and Skip-gram; Skip-gram was used in this instance and thus will be the only variant elaborated on. The Word2Vec Skip-gram variant works by 
+Word2Vec (Word to Vector) is a neural network embedding model which converts words into dense vector representations. There are two main architectural variants, Continuous Bag of Words and Skip-gram; Skip-gram was used in this instance and thus will be the only variant elaborated on. 
+
+The Word2Vec Skip-gram variant works by trying to predict the words around a single target word. So, using the example of the sentence "I love vanilla ice cream", the target word being the word "vanilla" and the windows being set at two words; the model would focus on trying to predict the words "I", "love", "ice", "cream" around the word "vanilla". 
+
+To do this, the input word (represented in on-hot-encoded form) is taken in by the model as input and passed to the hidden layer and the outputs from this layer is passed to the output layer which tries to guess the words surrounding the input. If the model gets it right, say by correctly guessing the words "ice" and "cream", the connections between these words and the target word is strengthened and if it fails the model will update the weights in the hidden layer so that it will be more likely to guess the correct words in the next iteration.
+
+This massive guessing operation is used to train the hidden layer, so that when the training is complete, the output layer is stripped and the output of the hidden layer becomes the vectors. So to conclude, Word2Vec's Skip-gram variant works by trying to guess words around a target word and through this exercise trains a hidden layer which will be used to turn words into vectors. 
 
 \subsubsection{BERT}
+
+
 
 \subsection{Classification Models}
 
@@ -727,7 +735,7 @@ training_args = TrainingArguments(
 
 The number of epochs was set at 3, to avoid overfitting but just enough to allow for the weights to be updated to perform better and the batch size was set to 32 to allow for training to progress at a reasonable rate while also allowing for stable gradient updates.
 
-At the end the best model is selected using f1-score, and this (best model) model will undergo teh final evaluation using the test set.
+At the end the best model is selected using f1-score, and this (best model) model will undergo the final evaluation using the test set.
 \subsection{Preliminary Results}
 
 \subsubsection{GLoVe Embedding}
