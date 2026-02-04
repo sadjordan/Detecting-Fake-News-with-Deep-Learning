@@ -521,22 +521,24 @@ The formulae described above are also written below in mathematical notation:
 
 \subsection{Deep Learning Approaches}
 
-\subsection{Convolutional Neural Networks}
-Convolutional Neural Networks or CNNs are neural networks which generaly have 3 layers: A convolutional layer, pooling layer and a fully-connected layer. The convolutional layer is the key part of a CNN, and 
+\subsubsection{Convolutional Neural Networks}
+Convolutional Neural Networks or CNNs are neural networks which generaly have 3 layers: A convolutional layer, pooling layer and a fully-connected layer. The convolutional layer is the key part of a CNN, and it uses a grid of numbers called kernels (or filters) to 'scan' through the various features and perform a mathematical operation known as 'convolution'. After the convolution layer, the pooling layer reduces the size of the data which also helps with reducing the computational demands and also helps with ensuring the model doesn't become focussed on small and irrelevant details. The final, fully-connected layer works by flattening the prior layer's multi-dimensional features into a single layer. This single-layer output can now be fed to a standard neural network for classification.
+
+\subsubsection{Long Short Term Memory}
+Long Short Term Memory of LSTMs is a type of Recurrent Neural Network (RNN) which aims to solve an issue with RNNs called the 'Vanishing Gradient Problem'. Essentially, the issue is that RNNs work using gradients which inform the weights in neurons, and these gradients are calculated using the chain rule, which means after dozens of multiplications a gradient will rapidly lose its value. This means that RNNs have 'short term memory', an issue LSTM's solve by selectively holding on to important information in a 'Cell State' through a system of gates. There are three gates: forget gate, input gate, and output gate. The forget gate figures out what information should be forgotten because it is now longer useful. The input gate decides what is worth adding to the 'Cell State'. And lastly the output gate figures out what information in the 'Cell State' is important or relevant to the current situation and outputs that. This ensures that LSTMs are able to hold on to important information over a long-term and doesn't suffer from short-term foregetfulness. This makes LSTMs especially suitable for sequential input where important discriminating features are far between each other. 
 
 \subsection{Embedding Approaches}
-
 \subsubsection{Global Vectors for Word Representation}
-Global Vectors for Word Representation or GLoVe is an unsupervised embedding algorithm which generates word embeddings. GLoVe embeddings are pre-trained on massive textual datasets with a pre-set number of dimensions. The training process works by constructing a co-occurence matrix where each entry indicates the frequency of two words occuring next to one another within a predefined context window. \textit{Theres some logarithms and ratio stuff here but im tired so continue this bit later}
-%continue later
+Global Vectors for Word Representation or GLoVe is an unsupervised embedding algorithm which generates word embeddings. GLoVe embeddings are pre-trained on massive textual datasets with a pre-set number of dimensions. The training process works by constructing a co-occurence matrix where the rows and columns represent each unique word and each entry in the matrix indicates the frequency of two words occuring next to one another within a predefined context window. So for example, the co-occurence matrix would capture how frequently the words "statistics" and "math" appear together. 
 
-This co-occurence matrix is then compressed using matrix factorisation to create dense vector representations of each word. 
+But how is the co-occurence matrix turned into vectors? This takes place during training, each word is assigned a random vector, and then finds the dot product of two vectors (in this case, each vector is a word), then compares it to the logarithm of the co-occurence matrix count (of the two words) to find the error, then depending on the error, the vectors will be updated so it is closer to the logarithm of the co-occurence matrix count. So for example, if two words, "apple" and "fruit" have a logarithm-count of 0.5, and the dot product of their random vector representations returned a value of 0.3, the error would be 0.2 and the model will modify the vectors such that in the next iteration, the dot product will closer align with the logarithm-count. 
 
+But that is not all, if GLoVe only relied on counts in the co-occurence matrix it would encounter issues where common words like "the" become associated with everything and the vectors generated would be less meaningful. To solve this, GLoVe employs weights to ensure the vectors being trained are meaningful. Rare words will be given lower weights (noise), and while common words will have higher weights, there will be a cap so that "the" doesn't unfairly bias the vectors being produced. 
 
 After training these embeddings can be loaded (which is what was done here) and then used to generate embeddings of input text. 
 
+To conclude, GLoVe is an unsupervised algorithm which generates word embeddings based on a massive textual datasets. The vectors produced are representative of the frequency of words relative to other words. 
 
-% filepath: /Users/jordan/Desktop/Live_Projects/FYP_Documents/FYP/main.tex
 \subsubsection{Word2Vec}
 Word2Vec (Word to Vector) is a neural network embedding model which converts words into dense vector representations. There are two main architectural variants, Continuous Bag of Words and Skip-gram; Skip-gram was used in this instance and thus will be the only variant elaborated on. The Word2Vec Skip-gram variant works by 
 
