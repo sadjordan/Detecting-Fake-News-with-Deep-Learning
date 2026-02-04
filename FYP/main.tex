@@ -548,8 +548,19 @@ To do this, the input word (represented in on-hot-encoded form) is taken in by t
 
 This massive guessing operation is used to train the hidden layer, so that when the training is complete, the output layer is stripped and the output of the hidden layer becomes the vectors. So to conclude, Word2Vec's Skip-gram variant works by trying to guess words around a target word and through this exercise trains a hidden layer which will be used to turn words into vectors. 
 
-\subsubsection{BERT}
+\subsubsection{Bidirectional Encoder Representations from Transformers}
+Bidirectional Encoder Representations from Transformers or BERT is a self-supervised bidirectional model which differs from Word2Vec and GLoVe in that while Word2Vec and GLoVe have a single vector for each word; BERT outputs different vectors for each word depending on the context. 
 
+To do this, BERT is trained through two objectives: Masked Language Modelling (MLM) and Next Sentence Prediction (NSP) \parencite{roberta}. MLM works by trying to get BERT to predict the missing word. So using the previous example of "I love vanilla ice cream", say the word "ice" is 'masked' (omitted), BERT will have to try and guess the missing word from: "I love vanilla [mask] cream". Since BERT is bidirectional, it will consider words preceding and subsequent to the mask. This technique gets BERT to learn the relationship between words in a sentence. 
+
+The next technique, NSP is exactly as it sounds. It tries to get BERT to guess if a sentence comes directly after another sentence \parencite{roberta}. So, let's say BERT is given two sentences: the previous example of "I love vanilla ice cream.", and "It tastes so sweet". BERT will have to guess if the latter sentence comes after the former. This was intended to get BERT to learn relationships between pairs of sentences.
+
+However it is important to note that the importance of NSP to BERT may be overstated, as \textcite{roberta} hypothesised after experiments with the NSP component of the loss function showed that removing the NSP loss function could match or even slightly improve performance on downstream tasks. 
+
+In conclusion, the bidrectional nature of BERT gives it an edge and the objectives used to train it, specifically MLM gave it an advantage when understanding context, allowing it to create more meaningful vectors. As a note, BERT does have many variants, including RoBERTa, developed by \textcite{roberta} who were cited earlier; this research uses the original BERT, developed by Google. 
+
+\subsection{Explainable AI Approaches}
+\subsubsection{LIME}
 
 
 \subsection{Classification Models}
