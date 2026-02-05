@@ -762,151 +762,88 @@ The number of epochs was set at 3, to avoid overfitting but just enough to allow
 
 At the end the best model is selected using f1-score, and this (best model) model will undergo the final evaluation using the test set.
 \subsection{Preliminary Results}
-
 \subsubsection{GloVe Embedding}
-Experimentation with GloVe embeddings showed that ML models trained using GloVe embeddings performed well, however, with the exception of ML models trained on the FakeNewsNet dataset. Results for the ML models range from 0.82 - 0.98 with FakeNewsNet excluded and an anomalous result from the Gaussian Naive Bayes model for the WELFake dataset excluded as well. Elaborating on the anomalous result, it shows that the Gaussian NB model for WELFake performing poorly relative to other ML models across all datasets, this seems to be an outlier which also appears in Word2Vec's results, indicating something about the dataset which is not particularly compadible with Gaussian Naive Bayes. 
+Experimentation with GloVe embeddings showed that ML models trained using GloVe embeddings performed well, however, with the exception of ML models trained on the FakeNewsNet dataset. Results for the ML models range from 0.85 - 0.98 (F1-score) with FakeNewsNet excluded and an anomalous result from the Gaussian Naive Bayes model for the WELFake dataset excluded as well. Elaborating on the anomalous result, it shows that the Gaussian NB model for WELFake performing poorly relative to other ML models across all datasets, this seems to be an outlier which also appears in Word2Vec's results, indicating something about the dataset which is not particularly compadible with Gaussian Naive Bayes. 
 
-For the DL models, the CNN models performed poorly on all datasets, with F1-scores in the range of 0.11 - 0.72 (excluding FakeNewsNet). Likely because CNN's are not optimal for sequential data, something which LSTMs are generally better at. For the CNN-LSTM models, it is clear that the hybridisation does not solve the drawbacks experienced by the CNN model with results between 0.28 - 0.72 (excluding FakeNewsNet). And lastly, LSTMs performed substantially better than its hybrid and CNN counterparts, with scores ranging from 0.92 - 0.98. This is likely because LSTMs are able to capture long-term dependencies and "remember" key discernable differences that CNNs are not able to.
+For the DL models, the CNN models performed poorly on all datasets, with F1-scores in the range of 0.44 - 0.60 (excluding FakeNewsNet). Likely because CNN's are not optimal for sequential data, something which LSTMs are generally better at. For the CNN-LSTM models, it is clear that the hybridisation does not solve the drawbacks experienced by the CNN model with results between 0.61 - 0.68 (excluding FakeNewsNet). And lastly, LSTMs performed substantially better than its hybrid and CNN counterparts, with scores ranging from 0.93 - 0.98. This is likely because LSTMs are able to capture long-term dependencies and "remember" key discernable differences that CNNs are not able to.
 
-Lastly, the unique performance of models on FakeNewsNet warrants additional discussion. For the ML models, while overall accuracy is high, this is compounded by the fact that the models actually perform very poorly on the negative class, with F1-scores for the negative class between 0.32 - 0.54. This trend can also be seen in the DL models, with the CNN and CNN-LSTM models failing to predict the negative class entirely and the LSTM model having an F1-score of 0.59 for the negative class, compared to 0.88 for the positive class. This can be attributed to the class imbalance of the dataset, which has three times the number of positive samples than negative samples. 
+Lastly, the unique performance of models on FakeNewsNet warrants additional discussion. For the ML models, while overall accuracy is high, this is compounded by the fact that the models actually perform very poorly on the negative class, with F1-scores for the negative class between 0.32 - 0.54 (results in Table \ref{tab:glove_ml} do not differentiate by class, this assessment was made observing the classification reports generated during experimentation). This trend can also be seen in the DL models, with the CNN and CNN-LSTM models failing to predict the negative class entirely (explaining their exact same results) and the LSTM model having an F1-score of 0.59 for the negative class, compared to 0.88 for the positive class (overall F1-score of 0.82). This can be attributed to the class imbalance of the dataset, which has three times the number of positive samples than negative samples. And potentially the content of the dataset as well, as the dataset only has the title feature. 
 
-
-\begingroup
+\begin{table}[H]
+\centering
 \small
-\setlength\LTleft{0pt}
-\setlength\LTright{0pt}
-
-\begin{longtable}{@{\extracolsep{\fill}}llccccc}
-\caption{Detailed Machine Learning Model Performance (GloVe Embeddings)} \label{tab:GloVe_ml_detailed} \\
+\caption{Machine Learning Model Performance (GloVe Embeddings)}
+\label{tab:glove_ml}
+\begin{tabular}{llcccc}
 \toprule
-\textbf{Dataset} & \textbf{Model} & \textbf{Acc} & \textbf{Class} & \textbf{Prec} & \textbf{Rec} & \textbf{F1} \\
+\textbf{Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
 \midrule
-\endfirsthead
-
-\multicolumn{7}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
-\toprule
-\textbf{Dataset} & \textbf{Model} & \textbf{Acc} & \textbf{Class} & \textbf{Prec} & \textbf{Rec} & \textbf{F1} \\
+\textbf{WELFake} & Gaussian NB & 0.69 & 0.70 & 0.69 & 0.67 \\
+ & KNN & 0.85 & 0.86 & 0.85 & 0.85 \\
+ & Logistic Regression & 0.90 & 0.90 & 0.90 & 0.90 \\
+ & Random Forest & 0.87 & 0.87 & 0.87 & 0.87 \\
+ & SVM & 0.93 & 0.93 & 0.93 & 0.93 \\
+ & XGBoost & 0.91 & 0.91 & 0.91 & 0.91 \\
 \midrule
-\endhead
-
+\textbf{ISOT} & Gaussian NB & 0.87 & 0.87 & 0.87 & 0.87 \\
+ & KNN & 0.93 & 0.93 & 0.93 & 0.93 \\
+ & Logistic Regression & 0.97 & 0.97 & 0.97 & 0.97 \\
+ & Random Forest & 0.93 & 0.93 & 0.93 & 0.93 \\
+ & SVM & 0.98 & 0.98 & 0.98 & 0.98 \\
+ & XGBoost & 0.96 & 0.96 & 0.96 & 0.96 \\
+\midrule
+\textbf{Fake News Detection} & Gaussian NB & 0.87 & 0.87 & 0.87 & 0.87 \\
+ & KNN & 0.93 & 0.93 & 0.93 & 0.93 \\
+ & Logistic Regression & 0.97 & 0.97 & 0.97 & 0.97 \\
+ & Random Forest & 0.94 & 0.94 & 0.94 & 0.93 \\
+ & SVM & 0.98 & 0.98 & 0.98 & 0.98 \\
+ & XGBoost & 0.96 & 0.96 & 0.96 & 0.96 \\
+\midrule
+\textbf{Fake News Classification} & Gaussian NB & 0.88 & 0.88 & 0.88 & 0.88 \\
+ & KNN & 0.92 & 0.92 & 0.92 & 0.92 \\
+ & Logistic Regression & 0.95 & 0.95 & 0.95 & 0.95 \\
+ & Random Forest & 0.92 & 0.92 & 0.92 & 0.92 \\
+ & SVM & 0.96 & 0.96 & 0.96 & 0.96 \\
+ & XGBoost & 0.95 & 0.95 & 0.95 & 0.95 \\
+\midrule
+\textbf{FakeNewsNet} & Gaussian NB & 0.70 & 0.76 & 0.70 & 0.72 \\
+ & KNN & 0.80 & 0.79 & 0.80 & 0.80 \\
+ & Logistic Regression & 0.80 & 0.79 & 0.80 & 0.79 \\
+ & Random Forest & 0.79 & 0.76 & 0.79 & 0.74 \\
+ & SVM & 0.83 & 0.81 & 0.83 & 0.81 \\
+ & XGBoost & 0.81 & 0.79 & 0.81 & 0.79 \\
 \bottomrule
-\multicolumn{7}{r}{{Continued on next page}} \\
-\endfoot
-
-\bottomrule
-\endlastfoot
-
-\textbf{WELFake} & Gaussian NB & 0.69 & 0 & 0.66 & 0.87 & 0.75 \\
- & & & 1 & 0.75 & 0.47 & 0.57 \\
- & KNN & 0.85 & 0 & 0.82 & 0.94 & 0.87 \\
- & & & 1 & 0.91 & 0.75 & 0.82 \\
- & Logistic Regression & 0.90 & 0 & 0.90 & 0.91 & 0.91 \\
- & & & 1 & 0.89 & 0.88 & 0.89 \\
- & Random Forest & 0.87 & 0 & 0.88 & 0.89 & 0.89 \\
- & & & 1 & 0.86 & 0.86 & 0.86 \\
- & SVC & 0.93 & 0 & 0.93 & 0.94 & 0.94 \\
- & & & 1 & 0.93 & 0.92 & 0.93 \\
- & XGBoost & 0.91 & 0 & 0.91 & 0.92 & 0.92 \\
- & & & 1 & 0.90 & 0.89 & 0.90 \\
-\midrule
-\textbf{ISOT} & Gaussian NB & 0.87 & 0 & 0.88 & 0.88 & 0.88 \\
- & & & 1 & 0.86 & 0.86 & 0.86 \\
- & KNN & 0.93 & 0 & 0.90 & 0.97 & 0.93 \\
- & & & 1 & 0.96 & 0.88 & 0.92 \\
- & Logistic Regression & 0.97 & 0 & 0.96 & 0.98 & 0.97 \\
- & & & 1 & 0.98 & 0.96 & 0.97 \\
- & Random Forest & 0.93 & 0 & 0.92 & 0.96 & 0.94 \\
- & & & 1 & 0.95 & 0.90 & 0.92 \\
- & SVC & 0.98 & 0 & 0.97 & 0.99 & 0.98 \\
- & & & 1 & 0.98 & 0.97 & 0.98 \\
- & XGBoost & 0.96 & 0 & 0.95 & 0.98 & 0.96 \\
- & & & 1 & 0.97 & 0.94 & 0.96 \\
-\midrule
-\textbf{Fake News Detection} & Gaussian NB & 0.87 & 0 & 0.85 & 0.86 & 0.85 \\
- & & & 1 & 0.88 & 0.87 & 0.88 \\
- & KNN & 0.93 & 0 & 0.96 & 0.89 & 0.92 \\
- & & & 1 & 0.91 & 0.97 & 0.94 \\
- & Logistic Regression & 0.97 & 0 & 0.97 & 0.96 & 0.97 \\
- & & & 1 & 0.97 & 0.98 & 0.97 \\
- & Random Forest & 0.94 & 0 & 0.94 & 0.91 & 0.93 \\
- & & & 1 & 0.93 & 0.96 & 0.94 \\
- & SVC & 0.98 & 0 & 0.98 & 0.97 & 0.98 \\
- & & & 1 & 0.98 & 0.99 & 0.98 \\
- & XGBoost & 0.96 & 0 & 0.97 & 0.95 & 0.96 \\
- & & & 1 & 0.96 & 0.97 & 0.97 \\
-\midrule
-\textbf{Fake News Classification} & Gaussian NB & 0.88 & 0 & 0.86 & 0.86 & 0.86 \\
- & & & 1 & 0.89 & 0.89 & 0.89 \\
- & KNN & 0.92 & 0 & 0.93 & 0.89 & 0.91 \\
- & & & 1 & 0.91 & 0.94 & 0.93 \\
- & Logistic Regression & 0.95 & 0 & 0.94 & 0.95 & 0.95 \\
- & & & 1 & 0.95 & 0.95 & 0.95 \\
- & Random Forest & 0.92 & 0 & 0.91 & 0.91 & 0.91 \\
- & & & 1 & 0.93 & 0.93 & 0.93 \\
- & SVC & 0.96 & 0 & 0.96 & 0.97 & 0.96 \\
- & & & 1 & 0.97 & 0.96 & 0.97 \\
- & XGBoost & 0.95 & 0 & 0.94 & 0.95 & 0.95 \\
- & & & 1 & 0.96 & 0.95 & 0.95 \\
-\midrule
-\textbf{FakeNewsNet} & Gaussian NB & 0.70 & 0 & 0.41 & 0.65 & 0.50 \\
- & & & 1 & 0.87 & 0.71 & 0.78 \\
- & KNN & 0.80 & 0 & 0.60 & 0.49 & 0.54 \\
- & & & 1 & 0.85 & 0.90 & 0.88 \\
- & Logistic Regression & 0.80 & 0 & 0.63 & 0.39 & 0.49 \\
- & & & 1 & 0.83 & 0.93 & 0.88 \\
- & Random Forest & 0.79 & 0 & 0.64 & 0.21 & 0.32 \\
- & & & 1 & 0.80 & 0.96 & 0.87 \\
- & SVC & 0.83 & 0 & 0.73 & 0.42 & 0.53 \\
- & & & 1 & 0.84 & 0.95 & 0.89 \\
- & XGBoost & 0.81 & 0 & 0.63 & 0.42 & 0.50 \\
- & & & 1 & 0.84 & 0.92 & 0.88 \\
-\end{longtable}
-\endgroup
-
+\end{tabular}
+\end{table}
 
 \begin{table}[H]
 \centering
 \small
 \caption{Deep Learning Model Performance (GloVe Embeddings)}
-\label{tab:GloVe_dl_detailed}
-\begin{tabular}{lllcccc}
+\label{tab:glove_dl}
+\begin{tabular}{llcccc}
 \toprule
-\textbf{Dataset} & \textbf{Model} & \textbf{Acc} & \textbf{Class} & \textbf{Prec} & \textbf{Rec} & \textbf{F1} \\
+\textbf{Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
 \midrule
-\textbf{WELFake} & CNN & 0.5690 & 0 & 0.56 & 0.99 & 0.72 \\
- & & & 1 & 0.84 & 0.06 & 0.11 \\
- & CNN-LSTM & 0.6344 & 0 & 0.62 & 0.86 & 0.72 \\
- & & & 1 & 0.68 & 0.36 & 0.47 \\
- & LSTM & 0.9310 & 0 & 0.94 & 0.93 & 0.94 \\
- & & & 1 & 0.92 & 0.93 & 0.92 \\
+\textbf{WELFake} & CNN & 0.5690 & 0.69 & 0.57 & 0.44 \\
+ & CNN-LSTM & 0.6344 & 0.65 & 0.63 & 0.61 \\
+ & LSTM & 0.9310 & 0.93 & 0.93 & 0.93 \\
 \midrule
-\textbf{ISOT} & CNN & 0.5887 & 0 & 0.57 & 0.94 & 0.71 \\
- & & & 1 & 0.73 & 0.18 & 0.28 \\
- & CNN-LSTM & 0.6758 & 0 & 0.67 & 0.78 & 0.72 \\
- & & & 1 & 0.68 & 0.56 & 0.62 \\
- & LSTM & 0.9763 & 0 & 0.97 & 0.99 & 0.98 \\
- & & & 1 & 0.98 & 0.97 & 0.97 \\
+\textbf{ISOT} & CNN & 0.5887 & 0.64 & 0.59 & 0.51 \\
+ & CNN-LSTM & 0.6758 & 0.68 & 0.68 & 0.67 \\
+ & LSTM & 0.9763 & 0.98 & 0.98 & 0.98 \\
 \midrule
-\textbf{Fake News Detection} & CNN & 0.6292 & 0 & 0.68 & 0.34 & 0.46 \\
- & & & 1 & 0.61 & 0.87 & 0.72 \\
- & CNN-LSTM & 0.6561 & 0 & 0.81 & 0.32 & 0.45 \\
- & & & 1 & 0.62 & 0.94 & 0.75 \\
- & LSTM & 0.9770 & 0 & 0.98 & 0.97 & 0.97 \\
- & & & 1 & 0.97 & 0.99 & 0.98 \\
+\textbf{Fake News Detection} & CNN & 0.6292 & 0.64 & 0.63 & 0.60 \\
+ & CNN-LSTM & 0.6561 & 0.71 & 0.66 & 0.62 \\
+ & LSTM & 0.9770 & 0.98 & 0.98 & 0.98 \\
 \midrule
-\textbf{Fake News Classification} & CNN & 0.5920 & 0 & 0.70 & 0.18 & 0.29 \\
- & & & 1 & 0.58 & 0.93 & 0.71 \\
- & CNN-LSTM & 0.6804 & 0 & 0.67 & 0.59 & 0.63 \\
- & & & 1 & 0.69 & 0.76 & 0.72 \\
- & LSTM & 0.9614 & 0 & 0.95 & 0.96 & 0.96 \\
- & & & 1 & 0.97 & 0.96 & 0.96 \\
+\textbf{Fake News Classification} & CNN & 0.5920 & 0.63 & 0.59 & 0.52 \\
+ & CNN-LSTM & 0.6804 & 0.68 & 0.68 & 0.68 \\
+ & LSTM & 0.9614 & 0.96 & 0.96 & 0.96 \\
 \midrule
-\textbf{FakeNewsNet} & CNN & 0.7645 & 0 & 0.00 & 0.00 & 0.00 \\
- & & & 1 & 0.76 & 1.00 & 0.87 \\
- & CNN-LSTM & 0.7645 & 0 & 0.00 & 0.00 & 0.00 \\
- & & & 1 & 0.76 & 1.00 & 0.87 \\
- & LSTM & 0.8194 & 0 & 0.63 & 0.56 & 0.59 \\
- & & & 1 & 0.87 & 0.90 & 0.88 \\
+\textbf{FakeNewsNet} & CNN & 0.7645 & 0.58 & 0.76 & 0.66 \\
+ & CNN-LSTM & 0.7645 & 0.58 & 0.76 & 0.66 \\
+ & LSTM & 0.8194 & 0.81 & 0.82 & 0.82 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -915,148 +852,87 @@ Lastly, the unique performance of models on FakeNewsNet warrants additional disc
 \subsubsection{Word2Vec}
 The results for the models trained using the Word2Vec embeddings showed interest results, especially pertaining to the datasets used and its performance on different models. And if comparing to GloVe embedding results, it seems that the results for Word2Vec performed on-par if not slighly better in some cases.
 
-Firsly, the machine learning models generally did very well on all datasets save for FakeNewsNet, indicating the dataset is more challenging than its peers. Notably the Gaussian Naive Bayes model performed relatively poorly on the WELFake dataset with an F1-score of 0.77 and 0.60 for the negative and positive classes respectively while other ML models (across all datasets) had F1-scores at or exceeding 0.89 (except for FakeNewsNet). This seems to be an outlier which also appears in the GloVe embedding results, the cause of which was elaborated on in the GloVe embedding results discussion section.
+Firsly, the machine learning models generally did very well on all datasets save for FakeNewsNet, indicating the dataset is more challenging than its peers. Notably the Gaussian Naive Bayes model performed relatively poorly on the WELFake dataset with an F1-score of 0.69 while other ML models (across all datasets) had F1-scores at or exceeding 0.87 (except for FakeNewsNet), going as high as 0.99. This seems to be an outlier which also appears in the GloVe embedding results, the cause of which was elaborated on in the GloVe embedding results discussion section.
 
-As for the DL approaches, the results indicate that the CNN's did not perform well with F1-scores betweem 0.58 and 0.73 (outliers and FakeNewsNet excluded). This may be because CNNs are not usually preferred for sequential data. And while CNN-LSTMs performed better than LSTMs (except for FakeNewsNet) with F1-scores between 0.59 and 0.74 (FakeNewsNet excluded), it seems the CNN component is holding the model back as LSTMs performed significantly better than the CNN-LSTM hybrid. The final DL approach employed were LSTMs, which performed by far the best with F1-scores between 0.95 and 0.99 (excluding FakeNewsNet). This is likely because LSTMs are less vulnerable to the vanishing gradient problem and are able to remember long-term depencies in the data. 
+As for the DL approaches, the results indicate that the CNN's did not perform well with F1-scores betweem 0.43 and 0.68 (FakeNewsNet excluded). This may be because CNNs are not usually preferred for sequential data. And while CNN-LSTMs performed better than LSTMs (except for FakeNewsNet) with F1-scores between 0.65 and 0.70 (FakeNewsNet excluded), it seems the CNN component is holding the model back as LSTMs performed significantly better than the CNN-LSTM hybrid. The final DL approach employed were LSTMs, which performed by far the best with F1-scores between 0.95 and 0.99 (excluding FakeNewsNet). This is likely because LSTMs are less vulnerable to the vanishing gradient problem and are able to remember long-term depencies in the data. 
 
-Finally, it is worth discussing the results for FakeNewsNet, which didn't really follow the trends in the other four datasets. FakeNewsNet, which as previously mentioned seems to be a more challenging dataset, saw high accuracies by the ML models but when this is broken down into the positive and negative class, it is clear that the models excel at detecting the positive class due to the class imbalance. This trend can also be applied to the DL models and their results, which saw the CNN and CNN-LSTM models completely fail to classify the negative class and instead just predict the positive class likely due to the imbalance. Only the LSTM model was able to predict the negative class but this was limited to an F1-score of 0.60. It could be argued that the FakeNewsNet dataset is challenging not because of its content but because of its class imbalance. The impact of this class imbalance could be reduced by modifying the training configuration for the DL models. 
+Finally, it is worth discussing the results for FakeNewsNet, which didn't really follow the trends in the other four datasets. FakeNewsNet, which as previously mentioned seems to be a more challenging dataset, saw high accuracies by the ML models but when this is broken down into the positive and negative class, it is clear that the models excel at detecting the positive class possibly due to the class imbalance. This trend can also be applied to the DL models and their results, which saw the CNN and CNN-LSTM models completely fail to classify the negative class and instead just predict the positive class likely due to the imbalance (this can be seen in their identical results). Only the LSTM model was able to predict the negative class but this was limited to an F1-score of 0.60. It could be argued that the FakeNewsNet dataset is challenging not because of its content but because of its class imbalance. The impact of this class imbalance could be reduced by modifying the training configuration for the DL models. 
 
-
-\begingroup
+\begin{table}[H]
+\centering
 \small
-\setlength\LTleft{0pt}
-\setlength\LTright{0pt}
-
-\begin{longtable}{@{\extracolsep{\fill}}llccccc}
-\caption{Detailed Machine Learning Model Performance (Word2Vec Embeddings)} \label{tab:GloVe_ml_detailed} \\
+\caption{Machine Learning Model Performance (Word2Vec Embeddings)}
+\label{tab:word2vec_ml}
+\begin{tabular}{llcccc}
 \toprule
-\textbf{Dataset} & \textbf{Model} & \textbf{Acc} & \textbf{Class} & \textbf{Prec} & \textbf{Rec} & \textbf{F1} \\
+\textbf{Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
 \midrule
-\endfirsthead
-
-\multicolumn{7}{c}{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
-\toprule
-\textbf{Dataset} & \textbf{Model} & \textbf{Acc} & \textbf{Class} & \textbf{Prec} & \textbf{Rec} & \textbf{F1} \\
+\textbf{WELFake} & Gaussian NB & 0.71 & 0.73 & 0.71 & 0.69 \\
+ & KNN & 0.87 & 0.88 & 0.87 & 0.87 \\
+ & Logistic Regression & 0.93 & 0.93 & 0.93 & 0.93 \\
+ & Random Forest & 0.90 & 0.90 & 0.90 & 0.90 \\
+ & SVM & 0.95 & 0.95 & 0.95 & 0.95 \\
+ & XGBoost & 0.93 & 0.93 & 0.93 & 0.93 \\
 \midrule
-\endhead
-
+\textbf{ISOT} & Gaussian NB & 0.91 & 0.91 & 0.91 & 0.91 \\
+ & KNN & 0.95 & 0.95 & 0.95 & 0.95 \\
+ & Logistic Regression & 0.98 & 0.98 & 0.98 & 0.98 \\
+ & Random Forest & 0.95 & 0.95 & 0.95 & 0.95 \\
+ & SVM & 0.99 & 0.99 & 0.99 & 0.99 \\
+ & XGBoost & 0.97 & 0.97 & 0.97 & 0.97 \\
+\midrule
+\textbf{Fake News Detection} & Gaussian NB & 0.90 & 0.90 & 0.90 & 0.90 \\
+ & KNN & 0.95 & 0.95 & 0.95 & 0.95 \\
+ & Logistic Regression & 0.98 & 0.98 & 0.98 & 0.98 \\
+ & Random Forest & 0.96 & 0.96 & 0.96 & 0.96 \\
+ & SVM & 0.99 & 0.99 & 0.99 & 0.99 \\
+ & XGBoost & 0.98 & 0.98 & 0.98 & 0.98 \\
+\midrule
+\textbf{Fake News Classification} & Gaussian NB & 0.90 & 0.90 & 0.90 & 0.90 \\
+ & KNN & 0.93 & 0.93 & 0.93 & 0.93 \\
+ & Logistic Regression & 0.96 & 0.96 & 0.96 & 0.96 \\
+ & Random Forest & 0.94 & 0.94 & 0.94 & 0.94 \\
+ & SVM & 0.97 & 0.97 & 0.97 & 0.97 \\
+ & XGBoost & 0.96 & 0.96 & 0.96 & 0.96 \\
+\midrule
+\textbf{FakeNewsNet} & Gaussian NB & 0.76 & 0.78 & 0.76 & 0.76 \\
+ & KNN & 0.81 & 0.80 & 0.81 & 0.80 \\
+ & Logistic Regression & 0.83 & 0.81 & 0.83 & 0.81 \\
+ & Random Forest & 0.82 & 0.80 & 0.82 & 0.79 \\
+ & SVM & 0.83 & 0.82 & 0.83 & 0.81 \\
+ & XGBoost & 0.82 & 0.81 & 0.82 & 0.81 \\
 \bottomrule
-\multicolumn{7}{r}{{Continued on next page}} \\
-\endfoot
-
-\bottomrule
-\endlastfoot
-
-\textbf{WELFake} & Gaussian NB & 0.71 & 0 & 0.68 & 0.89 & 0.77 \\
- & & & 1 & 0.79 & 0.48 & 0.60 \\
- & KNN & 0.87 & 0 & 0.84 & 0.95 & 0.89 \\
- & & & 1 & 0.93 & 0.78 & 0.84 \\
- & Logistic Regression & 0.93 & 0 & 0.94 & 0.94 & 0.94 \\
- & & & 1 & 0.92 & 0.92 & 0.92 \\
- & Random Forest & 0.90 & 0 & 0.90 & 0.91 & 0.91 \\
- & & & 1 & 0.89 & 0.88 & 0.89 \\
- & SVC & 0.95 & 0 & 0.96 & 0.96 & 0.96 \\
- & & & 1 & 0.95 & 0.95 & 0.95 \\
- & XGBoost & 0.93 & 0 & 0.94 & 0.94 & 0.94 \\
- & & & 1 & 0.93 & 0.92 & 0.93 \\
-\midrule
-\textbf{ISOT} & Gaussian NB & 0.91 & 0 & 0.91 & 0.91 & 0.91 \\
- & & & 1 & 0.90 & 0.90 & 0.90 \\
- & KNN & 0.95 & 0 & 0.93 & 0.97 & 0.95 \\
- & & & 1 & 0.96 & 0.92 & 0.94 \\
- & Logistic Regression & 0.98 & 0 & 0.98 & 0.99 & 0.99 \\
- & & & 1 & 0.99 & 0.98 & 0.98 \\
- & Random Forest & 0.95 & 0 & 0.93 & 0.97 & 0.95 \\
- & & & 1 & 0.96 & 0.92 & 0.94 \\
- & SVC & 0.99 & 0 & 0.98 & 0.99 & 0.99 \\
- & & & 1 & 0.99 & 0.98 & 0.99 \\
- & XGBoost & 0.97 & 0 & 0.96 & 0.98 & 0.97 \\
- & & & 1 & 0.98 & 0.96 & 0.97 \\
-\midrule
-\textbf{Fake News Detection} & Gaussian NB & 0.90 & 0 & 0.89 & 0.90 & 0.89 \\
- & & & 1 & 0.91 & 0.91 & 0.91 \\
- & KNN & 0.95 & 0 & 0.97 & 0.92 & 0.94 \\
- & & & 1 & 0.94 & 0.98 & 0.96 \\
- & Logistic Regression & 0.98 & 0 & 0.99 & 0.98 & 0.98 \\
- & & & 1 & 0.98 & 0.99 & 0.99 \\
- & Random Forest & 0.96 & 0 & 0.97 & 0.94 & 0.95 \\
- & & & 1 & 0.95 & 0.97 & 0.96 \\
- & SVC & 0.99 & 0 & 1.00 & 0.98 & 0.99 \\
- & & & 1 & 0.98 & 1.00 & 0.99 \\
- & XGBoost & 0.98 & 0 & 0.99 & 0.97 & 0.98 \\
- & & & 1 & 0.97 & 0.99 & 0.98 \\
-\midrule
-\textbf{Fake News Classification} & Gaussian NB & 0.90 & 0 & 0.88 & 0.91 & 0.89 \\
- & & & 1 & 0.92 & 0.89 & 0.91 \\
- & KNN & 0.93 & 0 & 0.94 & 0.91 & 0.92 \\
- & & & 1 & 0.93 & 0.95 & 0.94 \\
- & Logistic Regression & 0.96 & 0 & 0.96 & 0.96 & 0.96 \\
- & & & 1 & 0.97 & 0.97 & 0.97 \\
- & Random Forest & 0.94 & 0 & 0.94 & 0.93 & 0.94 \\
- & & & 1 & 0.95 & 0.95 & 0.95 \\
- & SVC & 0.97 & 0 & 0.96 & 0.98 & 0.97 \\
- & & & 1 & 0.98 & 0.97 & 0.97 \\
- & XGBoost & 0.96 & 0 & 0.96 & 0.96 & 0.96 \\
- & & & 1 & 0.97 & 0.96 & 0.97 \\
-\midrule
-\textbf{FakeNewsNet} & Gaussian NB & 0.76 & 0 & 0.48 & 0.59 & 0.53 \\
- & & & 1 & 0.86 & 0.81 & 0.83 \\
- & KNN & 0.81 & 0 & 0.64 & 0.45 & 0.53 \\
- & & & 1 & 0.85 & 0.92 & 0.88 \\
- & Logistic Regression & 0.83 & 0 & 0.70 & 0.46 & 0.56 \\
- & & & 1 & 0.85 & 0.94 & 0.89 \\
- & Random Forest & 0.82 & 0 & 0.70 & 0.38 & 0.49 \\
- & & & 1 & 0.83 & 0.95 & 0.89 \\
- & SVC & 0.83 & 0 & 0.76 & 0.42 & 0.54 \\
- & & & 1 & 0.84 & 0.96 & 0.90 \\
- & XGBoost & 0.82 & 0 & 0.67 & 0.47 & 0.55 \\
- & & & 1 & 0.85 & 0.93 & 0.89 \\
-\end{longtable}
-\endgroup
+\end{tabular}
+\end{table}
 
 \begin{table}[H]
 \centering
 \small
 \caption{Deep Learning Model Performance (Word2Vec Embeddings)}
-\label{tab:GloVe_dl_detailed}
-\begin{tabular}{lllcccc}
+\label{tab:word2vec_dl}
+\begin{tabular}{llcccc}
 \toprule
-\textbf{Dataset} & \textbf{Model} & \textbf{Acc} & \textbf{Class} & \textbf{Prec} & \textbf{Rec} & \textbf{F1} \\
+\textbf{Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
 \midrule
-\textbf{WELFake} & CNN & 0.5673 & 0 & 0.56 & 0.99 & 0.72 \\
- & & & 1 & 0.89 & 0.05 & 0.09 \\
- & CNN-LSTM & 0.6457 & 0 & 0.69 & 0.63 & 0.66 \\
- & & & 1 & 0.60 & 0.66 & 0.63 \\
- & LSTM & 0.9540 & 0 & 0.96 & 0.96 & 0.96 \\
- & & & 1 & 0.95 & 0.95 & 0.95 \\
+\textbf{WELFake} & CNN & 0.5673 & 0.71 & 0.57 & 0.43 \\
+ & CNN-LSTM & 0.6457 & 0.65 & 0.65 & 0.65 \\
+ & LSTM & 0.9540 & 0.95 & 0.95 & 0.95 \\
 \midrule
-\textbf{ISOT} & CNN & 0.6726 & 0 & 0.65 & 0.83 & 0.73 \\
- & & & 1 & 0.71 & 0.49 & 0.58 \\
- & CNN-LSTM & 0.7005 & 0 & 0.69 & 0.79 & 0.74 \\
- & & & 1 & 0.71 & 0.59 & 0.65 \\
- & LSTM & 0.9875 & 0 & 0.99 & 0.99 & 0.99 \\
- & & & 1 & 0.99 & 0.98 & 0.99 \\
+\textbf{ISOT} & CNN & 0.6726 & 0.68 & 0.67 & 0.66 \\
+ & CNN-LSTM & 0.7005 & 0.70 & 0.70 & 0.70 \\
+ & LSTM & 0.9875 & 0.99 & 0.99 & 0.99 \\
 \midrule
-\textbf{Fake News Detection} & CNN & 0.6860 & 0 & 0.67 & 0.62 & 0.64 \\
- & & & 1 & 0.70 & 0.74 & 0.72 \\
- & CNN-LSTM & 0.6859 & 0 & 0.72 & 0.50 & 0.59 \\
- & & & 1 & 0.67 & 0.84 & 0.74 \\
- & LSTM & 0.9893 & 0 & 0.99 & 0.98 & 0.99 \\
- & & & 1 & 0.99 & 0.99 & 0.99 \\
+\textbf{Fake News Detection} & CNN & 0.6860 & 0.68 & 0.69 & 0.68 \\
+ & CNN-LSTM & 0.6859 & 0.69 & 0.69 & 0.68 \\
+ & LSTM & 0.9893 & 0.99 & 0.99 & 0.99 \\
 \midrule
-\textbf{Fake News Classification} & CNN & 0.6508 & 0 & 0.69 & 0.42 & 0.52 \\
- & & & 1 & 0.64 & 0.84 & 0.73 \\
- & CNN-LSTM & 0.6827 & 0 & 0.71 & 0.51 & 0.60 \\
- & & & 1 & 0.67 & 0.82 & 0.74 \\
- & LSTM & 0.9708 & 0 & 0.96 & 0.97 & 0.97 \\
- & & & 1 & 0.98 & 0.97 & 0.97 \\
+\textbf{Fake News Classification} & CNN & 0.6508 & 0.66 & 0.65 & 0.63 \\
+ & CNN-LSTM & 0.6827 & 0.69 & 0.68 & 0.67 \\
+ & LSTM & 0.9708 & 0.97 & 0.97 & 0.97 \\
 \midrule
-\textbf{FakeNewsNet} & CNN & 0.7645 & 0 & 0.00 & 0.00 & 0.00 \\
- & & & 1 & 0.76 & 1.00 & 0.87 \\
- & CNN-LSTM & 0.7645 & 0 & 0.00 & 0.00 & 0.00 \\
- & & & 1 & 0.76 & 1.00 & 0.87 \\
- & LSTM & 0.8260 & 0 & 0.65 & 0.55 & 0.60 \\
- & & & 1 & 0.87 & 0.91 & 0.89 \\
+\textbf{FakeNewsNet} & CNN & 0.7645 & 0.58 & 0.76 & 0.66 \\
+ & CNN-LSTM & 0.7645 & 0.58 & 0.76 & 0.66 \\
+ & LSTM & 0.8260 & 0.82 & 0.83 & 0.82 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1077,9 +953,9 @@ BERT has either matched or outperformed the already excellent results obtained f
 \textbf{Dataset} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
 \midrule
 WELFake & 0.9898 & 0.9844 & 0.9933 & 0.9889 \\
-FakeNewsNet & 0.8499 & 0.8934 & 0.9100 & 0.9016 \\
+FakeNewsNet & 0.8499 & 0.8934 & 0.91 & 0.9016 \\
 Fake News Detection & 0.9969 & 0.9950 & 0.9994 & 0.9972 \\
-ISOT & 0.9997 & 0.9993 & 1.0000 & 0.9996 \\
+ISOT & 0.9997 & 0.9993 & 1.00 & 0.9996 \\
 Fake News Classification & 0.9974 & 0.9975 & 0.9978 & 0.9976 \\
 \bottomrule
 \end{tabular}
