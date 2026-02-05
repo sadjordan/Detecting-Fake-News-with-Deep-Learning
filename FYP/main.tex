@@ -352,7 +352,7 @@ This dataset, named "Fake News Classification" was downloaded from Kaggle. It co
 \end{figure}
 
 \subsubsection{FakeNewsNet}
-The FakeNewsNet dataset was downloaded from Kaggle, it is worth noting this was not the original dataset, it had been its various csv files merged by the uploading user "algord". FakeNewsNet contains 23196 rows, with 5 columns: title, news\_url, source\_domain, tweet\_num and label. The dataset contained missing values in the news\_url and source\_domain columns (which is acceptable as this is not required later on in training or testing). There were 137 duplicate rows (which will be dropped later on) initially. The class balance was heavily skewed in favour of the positive (real) class, with approximately 75\% of all rows belonging to the positive class. 
+The FakeNewsNet dataset was downloaded from Kaggle, it is worth noting this was not the original dataset, it had been its various csv files merged by the uploading user "algord". The original dataset was gathered and used for research by \textcite{shu2018fakenewsnet}, \textcite{shu2017exploiting} and \textcite{shu2017fake}. We thank the authors for developing and providing this dataset for use. FakeNewsNet contains 23196 rows, with 5 columns: title, news\_url, source\_domain, tweet\_num and label. The dataset contained missing values in the news\_url and source\_domain columns (which is acceptable as this is not required later on in training or testing). There were 137 duplicate rows (which will be dropped later on) initially. The class balance was heavily skewed in favour of the positive (real) class, with approximately 75\% of all rows belonging to the positive class. 
 
 \begin{figure} [H]
     \centering
@@ -372,7 +372,7 @@ The Fake News Detection dataset was downloaded from Hugging Face. It contains 44
 \end{figure}
 
 \subsubsection{ISOT}
-The ISOT dataset was downloaded from the University of Victoria website. It contains 44898 rows with 5 columns: title, text, subject, date and label. There were no missing values initially. However there were 209 duplicate rows initially. The class balance was relatively balanced, with the difference in proportion of the positive and negative classes being approximately ± 5\%.
+The ISOT dataset was downloaded from the University of Victoria website. It was originally gathered and used for research by \textcite{isot1} and \textcite{isot2}. We thank the authors for gathering this dataset and providing it. It contains 44898 rows with 5 columns: title, text, subject, date and label. There were no missing values initially. However there were 209 duplicate rows initially. The class balance was relatively balanced, with the difference in proportion of the positive and negative classes being approximately ± 5\%.
 
 \begin{figure} [H]
     \centering
@@ -498,6 +498,27 @@ Word2Vec & \begin{itemize}[leftmargin=*, nosep]
 \bottomrule
 \end{tabular}
 \end{table}
+
+\subsubsection{Proposed Model}
+While the above describe the modelling process for the various embedding algorithms, it is the intention to use the results from the modelling process described above as baseline results for which a proposed model could be compared to. 
+
+The proposed model, hopes to utilise a custom fine-tuning process for BERT, similar to the process described by \textcite{BERT-finetuning}. This custom fine-tuning process fine-tuned the model adversarially by making slight perturbations to the input text then using a loss function which sought to minimise the difference between the output BERT gives for the perturbed and original input. This methodology increases the generalisation of the BERT model. 
+
+Furthermore, the proposed model will also have a LIME component which will complement the BERT component by giving explanations for the otherwise black box BERT component to increase trust in the model. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Proposed-model.drawio.png}
+    \caption{Note. Figure depicts the proposed models' architecture}
+    \label{fig:proposed-model}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{BERT-finetuning.drawio.png}
+    \caption{Note. Figure depicts the proposed fine-tuning process for the BERT component of the proposed model}
+    \label{fig:proposed-finetuning}
+\end{figure}
+
 
 \subsection{Evaluation}
 %check tense
