@@ -420,21 +420,22 @@ Once completed, the 'combined\_text' column was stripped of any non-unicode char
 
 \begin{table}[H]
     \centering
-    \caption{Dataset Shapes (Initial vs. Final)}
+    \caption{Dataset Size Changes After Preprocessing}
     \label{tab:dataset_shapes}
-    \begin{tabular}{l c c}
+    \begin{tabular}{l cc cc}
         \toprule
-        \textbf{Dataset} & \textbf{Initial Shape} & \textbf{Final Shape} \\
+        & \multicolumn{2}{c}{\textbf{Initial}} & \multicolumn{2}{c}{\textbf{Final}} \\
+        \cmidrule(lr){2-3} \cmidrule(lr){4-5}
+        \textbf{Dataset} & \textbf{Rows} & \textbf{Columns} & \textbf{Rows} & \textbf{Columns} \\
         \midrule
-        WELFake & (72134, 4) & (63670, 2) \\
-        Fake News Classification & (40587, 4) & (40580, 2) \\
-        FakeNewsNet & (23196, 5) & (21844, 2) \\
-        Fake News Detection & (44267, 6) & (38650, 2) \\
-        ISOT & (44898, 5) & (39098, 2) \\
+        WELFake & 72,134 & 4 & 63,670 & 2 \\
+        Fake News Classification & 40,587 & 4 & 40,580 & 2 \\
+        FakeNewsNet & 23,196 & 5 & 21,844 & 2 \\
+        Fake News Detection & 44,267 & 6 & 38,650 & 2 \\
+        ISOT & 44,898 & 5 & 39,098 & 2 \\
         \bottomrule
     \end{tabular}
 \end{table}
-
 
 \begin{figure} [H]
     \centering
@@ -500,11 +501,11 @@ Word2Vec & \begin{itemize}[leftmargin=*, nosep]
 
 \subsection{Evaluation}
 %check tense
-Evaluation of the models will be done by comparing F1-score, and its constituent metrics of recall and precision, as well as accuracy. These metrics willbe obtained from the trained models by using the test sets.\\ 
+Evaluation of the models will be done by comparing F1-score, and its constituent metrics of recall and precision, as well as accuracy. These metrics willbe obtained from the trained models by using the test sets.
 
-F1-score is a formula which combines precision and recall. Precision describes the proportion of a model's positive predictions and is calculated by dividing the number of \textit{True Positives} by the sum of \textit{True Positives} and \textit{False Positives}. Recall describes the model's ability to identify positive instances and is calculated by dividing the number of \textit{True Positives} by the sum of \textit{True Positives} and \textit{False Negatives}. Together these metrics are combined to form F1-score, which is calculated by dividing \textit{2} by the sum of the inverse of \textit{Precision} and \textit{Recall}. \\
+F1-score is a formula which combines precision and recall. Precision describes the proportion of a model's positive predictions and is calculated by dividing the number of \textit{True Positives} by the sum of \textit{True Positives} and \textit{False Positives}. Recall describes the model's ability to identify positive instances and is calculated by dividing the number of \textit{True Positives} by the sum of \textit{True Positives} and \textit{False Negatives}. Together these metrics are combined to form F1-score, which is calculated by dividing \textit{2} by the sum of the inverse of \textit{Precision} and \textit{Recall}. 
 
-Meanwhile, accuracy is found by dividing the number of correct predictions over the total number of predictions.\\
+Meanwhile, accuracy is found by dividing the number of correct predictions over the total number of predictions.
 
 The formulae described above are also written below in mathematical notation: 
 
@@ -762,6 +763,9 @@ The number of epochs was set at 3, to avoid overfitting but just enough to allow
 
 At the end the best model is selected using f1-score, and this (best model) model will undergo the final evaluation using the test set.
 \subsection{Preliminary Results}
+Please note that these preliminary results are not cross-validated. Cross-validation will be performed on all models during the second half of this final year project.
+
+
 \subsubsection{GloVe Embedding}
 Experimentation with GloVe embeddings showed that ML models trained using GloVe embeddings performed well, however, with the exception of ML models trained on the FakeNewsNet dataset. Results for the ML models range from 0.85 - 0.98 (F1-score) with FakeNewsNet excluded and an anomalous result from the Gaussian Naive Bayes model for the WELFake dataset excluded as well. Elaborating on the anomalous result, it shows that the Gaussian NB model for WELFake performing poorly relative to other ML models across all datasets, this seems to be an outlier which also appears in Word2Vec's results, indicating something about the dataset which is not particularly compadible with Gaussian Naive Bayes. 
 
