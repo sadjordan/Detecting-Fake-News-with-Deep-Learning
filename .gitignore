@@ -9,6 +9,7 @@ Stuff
 dolma_300_2024_1.2M.100_combined.txt
 *.txt
 result_extraction_scripts
+FYP/compilation.sh
 
 FYP/main.bbl-SAVE-ERROR
 FYP/main.aux
@@ -19,6 +20,12 @@ FYP/main.fdb_latexmk
 FYP/main.fls
 FYP/main.log
 FYP/main.out
+FYP/main.lof
+FYP/main.lot
+FYP/main.toc
+FYP/MyBib.bib.backup
+test.bib
+test.bib.blg
 FYP/main.run.xml
 FYP/main.synctex.gz
 Code/dataset_processing/preprocessed_datasets

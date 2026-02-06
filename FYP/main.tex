@@ -23,6 +23,10 @@
 \setlength{\parindent}{12.7mm} % Paragraph indent 12.7mm
 \setlength{\parskip}{\baselineskip} % Double spacing between paragraphs
 
+% --- TEXT JUSTIFICATION ---
+\usepackage{ragged2e}
+\justifying % Ensure all text is fully justified (both left and right margins aligned)
+
 % --- CAPTION CONFIGURATION ---
 % Ensures captions for Tables and Charts (Figures) are single spaced
 \usepackage[font={singlespacing}, labelsep=period]{caption}
@@ -59,15 +63,31 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{} % Clear default apa7 headers/footers
-\fancyfoot[C]{\thepage} % Center footer page number
-\renewcommand{\headrulewidth}{0pt} % Remove header line
+\fancyhead[L]{\fontsize{8}{10}\selectfont Project ID: 351} % Left header with blank space for project ID
+\fancyhead[R]{\fontsize{8}{10}\selectfont\thepage} % Right header with page number
+\fancyfoot[L]{\fontsize{8}{10}\selectfont Prepared by: Jordan Ling Shen Hang} % Left footer
+\fancyfoot[C]{\fontsize{8}{10}\selectfont CPT6314 Project I} % Center footer
+\fancyfoot[R]{\fontsize{8}{10}\selectfont 2530 Term} % Right footer
+\renewcommand{\headrulewidth}{0.4pt} % Add header line
+\renewcommand{\footrulewidth}{0.4pt} % Add footer line
 
 % Ensure plain pages (like title page) also use this style
 \fancypagestyle{plain}{
   \fancyhf{}
-  \fancyfoot[C]{\thepage}
-  \renewcommand{\headrulewidth}{0pt}
+  \fancyhead[L]{\fontsize{8}{10}\selectfont Project ID: 351}
+  \fancyhead[R]{\fontsize{8}{10}\selectfont\thepage}
+  \fancyfoot[L]{\fontsize{8}{10}\selectfont Prepared by: Jordan Ling Shen Hang}
+  \fancyfoot[C]{\fontsize{8}{10}\selectfont CPT6314 Project I}
+  \fancyfoot[R]{\fontsize{8}{10}\selectfont 2530 Term}
+  \renewcommand{\headrulewidth}{0.4pt}
+  \renewcommand{\footrulewidth}{0.4pt}
 }
+
+\usepackage{tocloft}
+\renewcommand{\cftsecfont}{\normalfont\sffamily\bfseries}
+\renewcommand{\cftsubsecfont}{\normalfont\sffamily}
+\renewcommand{\cftsubsubsecfont}{\normalfont\sffamily}
+\renewcommand{\cftsecpagefont}{\normalfont\sffamily}
 
 % --- PACKAGES ---
 \usepackage{enumerate}
@@ -127,6 +147,109 @@
 \thispagestyle{empty}
 
 \clearpage
+\null % Forces a blank page to appear
+\clearpage
+
+\null % Forces a blank page to appear
+\clearpage
+
+\null % Forces a blank page to appear
+\clearpage
+
+\pagenumbering{roman}
+\setcounter{page}{5}
+
+\section*{Acknowledgements}
+\addcontentsline{toc}{section}{Acknowledgements}
+I would like to thank my supervisor, Associate Professor Dr. Chua Sook Ling for her guidance during this process.
+
+\clearpage
+\tableofcontents
+
+\clearpage
+\listoffigures
+
+\clearpage
+\listoftables
+
+\clearpage
+\section*{List of Abbreviations}
+\addcontentsline{toc}{section}{List of Abbreviations}
+
+\begin{longtable}{p{3cm} p{10cm}}
+\toprule
+\textbf{Abbreviation} & \textbf{Full Form} \\
+\midrule
+\endfirsthead
+
+\multicolumn{2}{c}{{\bfseries List of Abbreviations (continued)}} \\
+\toprule
+\textbf{Abbreviation} & \textbf{Full Form} \\
+\midrule
+\endhead
+
+\bottomrule
+\multicolumn{2}{r}{{Continued on next page}} \\
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+AFND & Arabic Fake News Dataset \\
+AI & Artificial Intelligence \\
+API & Application Programming Interface \\
+BERT & Bidirectional Encoder Representations from Transformers \\
+Bi-GRU & Bidirectional Gated Recurrent Unit \\
+Bi-LSTM & Bidirectional Long Short-Term Memory \\
+BiGRU & Bidirectional Gated Recurrent Unit \\
+BiLSTM & Bidirectional Long Short-Term Memory \\
+CNN & Convolutional Neural Network \\
+CNN-LSTM & Convolutional Neural Network - Long Short-Term Memory \\
+Conv-FFD & Convolutional Feed-Forward \\
+DAGA-NN & Domain-Adversarial \& Graph Attention Neural Network \\
+DFT & Discrete Fourier Transform \\
+DistilBERT & Distilled BERT \\
+DL & Deep Learning \\
+Doc2Vec & Document to Vector \\
+EANN & Event Adversarial Neural Network \\
+EBGCN & Edged-enhanced Bayesian Graph Convolution Network \\
+ELA & Error Level Analysis \\
+FGM-FRAT & Feature Regularization-based Adversarial Fine-tuning \\
+GBERT & Generative Bidirectional Encoder Representations from Transformers \\
+GBCA & Graph Convolution Network and BERT combined with Co-Attention \\
+GCN & Graph Convolution Network \\
+GloVe & Global Vectors for Word Representations \\
+GPT & Generative Pre-Trained Transformer \\
+GRU & Gated Recurrent Unit \\
+GRU-RNN & Gated Recurrent Unit - Recurrent Neural Network \\
+ID & Identification \\
+IFND & Indian Fake News Dataset \\
+LLM & Large Language Model \\
+LIME & Local Interpretable Model-Agnostic Explanations \\
+LRP & Layer-wise Relevance Propagation \\
+LSTM & Long Short-Term Memory \\
+MCNN & Multimodal Consistency Neural Network \\
+ML & Machine Learning \\
+MPFN & Multimodal Progressive Fusion Approach \\
+OPCNN-FAKE & Optimized Convolutional Neural Network to detect fake news \\
+PMI & Pointwise Mutual Information \\
+POS & Part of Speech \\
+ReLU & Rectified Linear Unit \\
+ResNet50 & Residual Network 50 \\
+SAT & Situation Awareness-based Agent Transparency \\
+SDL & Sequential Deep Learning \\
+SVM & Support Vector Machine \\
+SVM-TK & Support Vector Machine - Tree Kernel \\
+SwinT & Swin Transformer \\
+TD-IDF & Term Frequency - Inverse Document Frequency \\
+TFNDS & Toxic Fake News Detection System \\
+VGG19 & Visual Geometry Group 19 \\
+Word2Vec & Word to Vector \\
+XAI & Explainable Artificial Intelligence \\
+XGBoost & eXtreme Gradient Boosting \\
+\end{longtable}
+
+\clearpage
 \pagenumbering{arabic}
 \setcounter{page}{1}
 \section{Introduction}
@@ -169,7 +292,7 @@ And lastly, after training the models. The models will be tested on the test set
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\linewidth]{FYP1-Gantt_chart.png}
-    \caption{Note. Gantt chart depicting the timeline for this project relative during MMU's term 2530}
+    \caption{Gantt chart depicting the timeline for this project relative during MMU's term 2530}
     \label{fig:gantt_chart}
 \end{figure}
 
@@ -206,7 +329,7 @@ In research conducted by \textcite{mcnn}, the authors proposed a novel 5-module 
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.8\linewidth]{MCNN-model-architecture.jpg}
-    \caption{Note. Figure depicts the architecture of the proposed MCNN model. The module coloured blue is the text feature extraction model; the module coloured red is the visual semantic feature extraction module; the module coloured in purple (above the text and visual semantic feature extraction modules) is the similarity measurement module; the module in yellow/orange is the visual tampering feature extraction module; and lastly the module in pink is the multimodal fusion module. From "Detecting fake news by exploring the consistency of multimodal data", by \citeauthor{mcnn}, 2021, \textit{Information Processing and Management.}, 58(5), https://doi.org/10.1016/j.ipm.2021.102610. Copyright 2024 held by 2021 Elsevier Ltd.}
+    \caption{Figure depicts the architecture of the proposed MCNN model. The module coloured blue is the text feature extraction model; the module coloured red is the visual semantic feature extraction module; the module coloured in purple (above the text and visual semantic feature extraction modules) is the similarity measurement module; the module in yellow/orange is the visual tampering feature extraction module; and lastly the module in pink is the multimodal fusion module. From "Detecting fake news by exploring the consistency of multimodal data", by \citeauthor{mcnn}, 2021, \textit{Information Processing and Management.}, 58(5), https://doi.org/10.1016/j.ipm.2021.102610. Copyright 2024 held by 2021 Elsevier Ltd.}
     \label{fig:mcnn_architecture}
 \end{figure}
 
@@ -217,7 +340,7 @@ In research conducted by \textcite{mcnn}, the authors proposed a novel 5-module 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\linewidth]{graph-based-architecture.jpg}
-    \caption{Note. Figure depicts the architecture of the DAGA-NN model, each box represents a module which is labelled in the buttom right corner. From "Improving fake news detection with domain-adversarial and graph-attention neural network" by \citeauthor{graph-attention-multimodal}, 2021, \textit{Decision Support Systems}, 151, p. 3 (https://doi.org/10.1016/j.dss.2021.113633). Copyright 2021 Elsevier B.V.}
+    \caption{Figure depicts the architecture of the DAGA-NN model, each box represents a module which is labelled in the buttom right corner. From "Improving fake news detection with domain-adversarial and graph-attention neural network" by \citeauthor{graph-attention-multimodal}, 2021, \textit{Decision Support Systems}, 151, p. 3 (https://doi.org/10.1016/j.dss.2021.113633). Copyright 2021 Elsevier B.V.}
     \label{fig:DAGA-NN Architecture}
 \end{figure}
 
@@ -249,6 +372,7 @@ Methods which seek to analyse propagation structure for fake news detection ofte
 
 \subsection{Summary}
 \begin{landscape}
+\pagestyle{empty} % Remove header and footer on landscape pages
 \begingroup
 \tiny
 \setlength{\tabcolsep}{3pt}
@@ -332,12 +456,12 @@ Methods which seek to analyse propagation structure for fake news detection ofte
 \section{Research Methodology}
 \subsection{Datasets}
 \subsubsection{WELFake Dataset}
-The WELFake dataset was downloaded from Kaggle, and contains 72134 rows of data. The class balance was relatively balanced, with the real news class having an excess of 2000 rows as can be referred to in Figure \ref{fig:welfake_dist}. As for features, the dataset came with four columns, an unnamed ID column, title (of the news article), text (from the news article) and the label (real/fake). There were 558 missing values in the 'title' column and 39 missing values in the 'text' column intitially.
+The WELFake dataset was downloaded from Kaggle, and contains 72134 rows of data. The class balance was relatively balanced, with the real news class having an excess of 2000 rows as can be referred to in Figure \ref{fig:welfake_dist}. As for features, the dataset came with four columns, an unnamed ID column, title (of the news article), text (from the news article) and the label (real/fake). There were 558 missing values in the 'title' column and 39 missing values in the 'text' column initially.
 
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.5\linewidth]{WELFake class distribution.png}
-    \caption{Note. Figure depicts the class distribution of the WELFake dataset}
+    \caption{Figure depicts the class distribution of the WELFake dataset}
     \label{fig:welfake_dist}
 \end{figure}
 
@@ -347,7 +471,7 @@ This dataset, named "Fake News Classification" was downloaded from Kaggle. It co
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.5\linewidth]{Fake news classification class balance.png}
-    \caption{Note. Figure depicts the class distribution of the Fake News Classification dataset}
+    \caption{Figure depicts the class distribution of the Fake News Classification dataset}
     \label{fig:fake_news_class_dist}
 \end{figure}
 
@@ -357,7 +481,7 @@ The FakeNewsNet dataset was downloaded from Kaggle, it is worth noting this was 
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.5\linewidth]{FakeNewsNet class distribution.png}
-    \caption{Note. Figure depicts the class distribution of the FakeNewsNet dataset}
+    \caption{Figure depicts the class distribution of the FakeNewsNet dataset}
     \label{fig:fakenewsnet_dist}
 \end{figure}
 
@@ -367,7 +491,7 @@ The Fake News Detection dataset was downloaded from Hugging Face. It contains 44
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.5\linewidth]{fake news detection class balance.png}
-    \caption{Note. Figure depicts the class distribution of the Fake News Detection dataset}
+    \caption{Figure depicts the class distribution of the Fake News Detection dataset}
     \label{fig:fake_news_detection_dist}
 \end{figure}
 
@@ -377,7 +501,7 @@ The ISOT dataset was downloaded from the University of Victoria website. It was 
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.5\linewidth]{ISOT class balance.png}
-    \caption{Note. Figure depicts the class distribution of the ISOT dataset}
+    \caption{Figure depicts the class distribution of the ISOT dataset}
     \label{fig:isot_dist}
 \end{figure}
 
@@ -440,7 +564,7 @@ Once completed, the 'combined\_text' column was stripped of any non-unicode char
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.5\linewidth]{FYP_Research_Methodology.png}
-    \caption{Note. Figure depicts preprocessing steps in flowchart form}
+    \caption{Figure depicts preprocessing steps in flowchart form}
     \label{fig:preprcessing_flowchart}
 \end{figure}
 
@@ -508,14 +632,14 @@ Furthermore, the proposed model will also have a LIME component which will compl
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\linewidth]{Proposed-model.drawio.png}
-    \caption{Note. Figure depicts the proposed models' architecture}
+    \caption{Figure depicts the proposed models' architecture}
     \label{fig:proposed-model}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\linewidth]{BERT-finetuning.drawio.png}
-    \caption{Note. Figure depicts the proposed fine-tuning process for the BERT component of the proposed model}
+    \caption{Figure depicts the proposed fine-tuning process for the BERT component of the proposed model}
     \label{fig:proposed-finetuning}
 \end{figure}
 
@@ -539,15 +663,11 @@ The formulae described above are also written below in mathematical notation:
 \end{equation}
 
 \begin{equation}
-\text{F1} = \frac{2}{\frac{1}{\text{Precision}} + \frac{1}{\text{Recall}}}
-\end{equation}
-
-\begin{equation}
 \text{F1} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
 \end{equation}
 
 \begin{equation}
-\text{Accuracy} = \frac{\text{Correct\ Predictions}}{\text{Total\ Predictions}}
+\text{Accuracy} = \frac{\text{True\ Positives} + \text{True\ Negatives}}{\text{Total\ Predictions}}
 \end{equation}
 
 \section{Theoretical Framework}
@@ -598,8 +718,6 @@ In conclusion, the bidrectional nature of BERT gives it an edge and the objectiv
 Local Intepretable Model-Agnostic Explanations or LIME is a technique used to explain black-box models. LIME, true to its acronym tries to explain the black-box model 'locally', by taking a prediction, then creating many variations of the data point which lead to that prediction to see how the black-box model responds to these changes. These 'perturbed' data points are assigned weights, with the greater in similarity a point is to the original data point, the higher the weight. These perturbed data points and the black-box's prediction are then used to form a small, weighted dataset which is fitted onto a small interpretable model (often linear regression). The weights from this model will be used to explain the behaviour of the actual black-box model for that one specific prediction. 
 
 To put the above into an example, let's say there is a XGBoost model being used to determine if a person has diabetes. Let's also say that this model only takes 3 features as input: weight, height and age. When given the input [90, 169, 56], it predicts true. To explain this, LIME will then generate variations around this input data, so called 'perturbed data points', for example [89, 167, 58]. These variations of the original data points are then passed to the XGBoost model as input and the output is noted. A dataset is then constructed based on the perturbed data points, the black-box's output, and the proximity of the perturbed data points to the original data point. This weighted dataset is fit onto a linear regression model and this model, as it is interpretable and not a black-box, is used to explain the black-box's prediction.
-
-\subsection{Classification Models}
 
 \section{Implementation Plan}
 
@@ -991,10 +1109,11 @@ Fake News Classification & 0.9974 & 0.9975 & 0.9978 & 0.9976 \\
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\linewidth]{FYP2-Gantt_Chart.png}
-    \caption{Note. Figure depicts planned timeline for FYP2 for MMU Term 2610}
+    \caption{Figure depicts planned timeline for FYP2 for MMU Term 2610}
     \label{fig:FYP2-GANTT_CHART}
 \end{figure}
 
+\clearpage
 \section{Conclusion}
 Thus far for this research, pursuant to the research objectives: completed a thorough literature review of related works, gathered relevant datasets, drafted up a proposed model and conducted experiments with various embedding algorithms and through which preliminary results were obtained. The remaining work for this Final Year Project (FYP) are: cross-validation of baseline models (1-fold results are in preliminary results), implementation and evaluation of the proposed model and lastly, the creation of a simple application through which the proposed model can be used to test if a given piece of news is real or fake.
 
