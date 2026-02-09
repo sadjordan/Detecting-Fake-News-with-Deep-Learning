@@ -26,8 +26,8 @@
 % --- TEXT JUSTIFICATION ---
 \usepackage{microtype} % Improves text justification and typography
 \usepackage{ragged2e}
-\RaggedRight % First reset
-\justifying % Then apply full justification
+% \RaggedRight % REMOVED: Causing conflict with apa7
+% \justifying % REMOVED: Moved to after maketitle
 \tolerance=1000
 \emergencystretch=3em
 \hyphenpenalty=500
@@ -152,6 +152,7 @@
 \begin{document}
 \pagenumbering{roman}
 \maketitle
+\justifying % Force full justification after apa7 defaults
 \thispagestyle{empty}
 
 \section*{Abstract}
