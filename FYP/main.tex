@@ -24,8 +24,16 @@
 \setlength{\parskip}{\baselineskip} % Double spacing between paragraphs
 
 % --- TEXT JUSTIFICATION ---
+\usepackage{microtype} % Improves text justification and typography
 \usepackage{ragged2e}
-\justifying % Ensure all text is fully justified (both left and right margins aligned)
+\RaggedRight % First reset
+\justifying % Then apply full justification
+\tolerance=1000
+\emergencystretch=3em
+\hyphenpenalty=500
+\widowpenalty=10000
+\clubpenalty=10000
+\raggedbottom
 
 % --- CAPTION CONFIGURATION ---
 % Ensures captions for Tables and Charts (Figures) are single spaced
@@ -35,7 +43,7 @@
 
 % --- HEADINGS CONFIGURATION ---
 % We use titlesec to override apa7's default section styling
-\usepackage{titlesec}
+\usepackage[explicit]{titlesec}
 \setcounter{secnumdepth}{3} % Enable numbering (1, 1.1, 1.1.1) which apa7 usually hides
 
 % --- TABLE SPACING ---
@@ -47,16 +55,16 @@
 
 % Section (Mapped to Chapter Heading): Arial 14pt Bold
 \titleformat{\section}
-  {\normalfont\sffamily\fontsize{14}{17}\bfseries}{\thesection}{1em}{}
+  {\normalfont\sffamily\fontsize{14}{17}\bfseries}{\thesection}{1em}{#1}
 \titlespacing*{\section}{0pt}{0pt}{20pt}
 
 % Subsection (Mapped to Sub-heading): Arial 12pt Bold
 \titleformat{\subsection}
-  {\normalfont\sffamily\fontsize{12}{14.4}\bfseries}{\thesubsection}{1em}{}
+  {\normalfont\sffamily\fontsize{12}{14.4}\bfseries}{\thesubsection}{1em}{#1}
 
 % Subsubsection (Mapped to Sub-sub-heading): Arial 12pt Bold
 \titleformat{\subsubsection}
-  {\normalfont\sffamily\fontsize{12}{14.4}\bfseries}{\thesubsubsection}{1em}{}
+  {\normalfont\sffamily\fontsize{12}{14.4}\bfseries}{\thesubsubsection}{1em}{#1}
 
 
 % --- PAGE NUMBERING (Bottom Center) ---
@@ -146,6 +154,9 @@
 \maketitle
 \thispagestyle{empty}
 
+\section*{Abstract}
+With the rise of social networking the spread and volume of fake news has dramatically increased, to the point where fact checking every post is unrealistic. In attempts to solve this problem, researchers have proposed methods employing machine learning and deep learning to flag fake news. However these methods are often limited by lack of applicability as they fail to generalise beyond the datasets used. Furthermore, many of these methods employ black-box models, which reduces trust in the model's predictions. In order to address these issues, we propose a model based on adversarially fine-tuning a Bidirectional Encoder Representations from Transformers (BERT) model to increase generalisation, and the use of Local Interpretable Model-Agnostic Explanations (LIME) to explain the otherwise black-box BERT model. Results from the baseline models trained show that it is possible to differentiate fake and real news. And if the proposed model could be implemented, it would allow for high accuracy fake news detection, with explainability so a user could understand the model's outputs. 
+
 \clearpage
 \null % Forces a blank page to appear
 \clearpage
@@ -157,7 +168,7 @@
 \clearpage
 
 \pagenumbering{roman}
-\setcounter{page}{5}
+\setcounter{page}{6}
 
 \section*{Acknowledgements}
 \addcontentsline{toc}{section}{Acknowledgements}
