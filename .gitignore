@@ -9,7 +9,8 @@ Stuff
 dolma_300_2024_1.2M.100_combined.txt
 *.txt
 result_extraction_scripts
-FYP/compilation.sh
+compilation.sh
+texput.log
 
 FYP/main.bbl-SAVE-ERROR
 FYP/main.aux
