@@ -112,6 +112,7 @@
 \usepackage{etoolbox} 
 \usepackage{longtable}
 \usepackage{pdflscape}
+\usepackage{pdfpages}
 
 % --- CODE SNIPPET CONFIGURATION ---
 \usepackage{listings}
@@ -1144,7 +1145,22 @@ Onto the remaining work for the second half of this FYP; Firstly, he baseline mo
 
 As for challenges faced during FYP1, there were two major challenges: difficulty understanding articles and computational power limitations. Firstly, initially when doing the literature review, it was difficult to understand all the jargon and concepts being used in these papers. This was gradually overcome through finding the definitions, understanding the concepts and experience after reading more papers. This challenge was largely overcome after the first few weeks starting the FYP as more papers were read and understanding of the research topic increased. The second issue, computational power limitations, was experienced when experimenting with the embedding algorithms and training the models. This was due to a lack of local computational power, and was overcome through the use of Google Colab's cloud computing resources. Although, clearly, the models were trained and results obtained, the limitation still exists due to Google Colab's free tier having certain limitations on the use of its high-performance cloud computing resources. 
 
-%maybe add a concluding para here
+
+\appendix
+\section{Meeting Logs}
+\label{app:meeting_logs}
+\includepdf[pages=-]{Meeting_Logs_FYP1_T2530.pdf}
+
+\appendix
+\section{Turnitin Similarity}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{FYP1-Similarity.png}
+    \caption{Turnitin Similarity Score for this interim report}
+    \label{fig:similarity-turnitin}
+\end{figure}
+
 
 \printbibliography
 
