@@ -72,6 +72,8 @@
 % --- PAGE NUMBERING (Bottom Center) ---
 \usepackage{fancyhdr}
 \pagestyle{fancy}
+\setlength{\headwidth}{\textwidth}
+\fancyhfoffset[L,R]{0pt}
 \fancyhf{} % Clear default apa7 headers/footers
 \fancyhead[L]{\fontsize{8}{10}\selectfont Project ID: 351} % Left header with blank space for project ID
 \fancyhead[R]{\fontsize{8}{10}\selectfont\thepage} % Right header with page number
@@ -149,43 +151,81 @@
 \newcommand\rd{\textsuperscript{rd}\xspace}
 \newcommand\nth{\textsuperscript{th}\xspace}
 
+
 \author{Jordan Ling Shen Hang}
 \title{Fake News Detection Using Deep Learning}
 
 \begin{document}
-\pagenumbering{roman}
-\maketitle
+% \maketitle
 \justifying % Force full justification after apa7 defaults
 \thispagestyle{empty}
 
+\includepdf[pages=1-2, ]{Template - Cover Page and Title Page.pdf}
+
+\pagenumbering{roman}\setcounter{page}{3}
+
+% \clearpage
+\thispagestyle{fancy}
+\section*{Copyright}
+\addcontentsline{toc}{section}{Copyright}
+\begingroup
+\setlength{\parindent}{0pt} 
+© 2026 Universiti Telekom Sdn. Bhd. ALL RIGHTS RESERVED.
+
+Copyright of this report belongs to Universiti Telekom Sdn.  Bhd.  as qualified by Regulation 7.2 (c) of the Multimedia University Intellectual Property and Commercialisation Policy. No part of this publication may be reproduced, stored in or introduced into a retrieval system, or transmitted in any form or by any means (electronic, mechanical, photocopying, recording, or otherwise), or for any purpose, without the express written permission of Universiti Telekom Sdn. Bhd. Due acknowledgement shall always be made of the use of any material contained in, or derived from, this report.
+\endgroup
+
+\clearpage
+\section*{Declaration}
+\addcontentsline{toc}{section}{Declaration}
+\begingroup
+\setlength{\parindent}{0pt} 
+I hereby declare that the work has been done by myself and no portion of the work contained in this report has been submitted in support of any application for any other degree or qualification of this or any other university or institution of learning.
+
+\noindent\includegraphics[width=0.4\linewidth]{signature.png}
+
+Name of candidate: Jordan Ling Shen Hang \\
+Faculty of Computing & Informatics \\
+Multimedia University \\
+Date: 06: 02: 2026 
+\endgroup
+
+
+
+\clearpage
 \section*{Abstract}
 With the rise of social networking the spread and volume of fake news has dramatically increased, to the point where fact checking every post is unrealistic. In attempts to solve this problem, researchers have proposed methods employing machine learning and deep learning to flag fake news. However these methods are often limited by lack of applicability as they fail to generalise beyond the datasets used. Furthermore, many of these methods employ black-box models, which reduces trust in the model's predictions. In order to address these issues, we propose a model based on adversarially fine-tuning a Bidirectional Encoder Representations from Transformers (BERT) model to increase generalisation, and the use of Local Interpretable Model-Agnostic Explanations (LIME) to explain the otherwise black-box BERT model. Results from the baseline models trained show that it is possible to differentiate fake and real news. And if the proposed model could be implemented, it would allow for high accuracy fake news detection, with explainability so a user could understand the model's outputs. 
 
 \clearpage
-\null % Forces a blank page to appear
-\clearpage
-
-\null % Forces a blank page to appear
-\clearpage
-
-\null % Forces a blank page to appear
-\clearpage
-
-\pagenumbering{roman}
-\setcounter{page}{6}
-
 \section*{Acknowledgements}
-\addcontentsline{toc}{section}{Acknowledgements}
 I would like to thank my supervisor, Associate Professor Dr. Chua Sook Ling for her guidance during this process.
 
 \clearpage
+\begingroup
+\titlespacing*{\section}{0pt}{0pt}{6pt}
+\section*{Table of Contents}
+\addcontentsline{toc}{section}{Table of Contents}
+\renewcommand{\contentsname}{}
 \tableofcontents
+\endgroup
 
 \clearpage
+\begingroup
+\titlespacing*{\section}{0pt}{0pt}{6pt}
+\section*{List of Figures}
+\addcontentsline{toc}{section}{List of Figures}
+\renewcommand{\listfigurename}{}
 \listoffigures
+\endgroup
 
 \clearpage
+\begingroup
+\titlespacing*{\section}{0pt}{0pt}{6pt}
+\section*{List of Tables}
+\addcontentsline{toc}{section}{List of Tables}
+\renewcommand{\listtablename}{}
 \listoftables
+\endgroup
 
 \clearpage
 \section*{List of Abbreviations}
@@ -300,7 +340,7 @@ The objectives of this project are:
 \subsection{Research Scope}
 This project aims to build a deep learning model for fake news detection by first conducting a thorough literature review on related works in order to construct a knowledge base of which will be used to construct a model for detecting fake news.
 
-After the literature review, a model to detect fake news will be developed using deep learning techniques. This process will involve gathering datasets, analysing and understanding the data and pre-processing datasets before constructing the architecture of the models and then training the various models.  %are we proposing new models?
+After the literature review, models to detect fake news will be developed using deep learning techniques. This process will involve gathering datasets, analysing and understanding the data and pre-processing datasets before constructing the architecture of the models and then training the various models.  %are we proposing new models?
 
 And lastly, after training the models. The models will be tested on the test sets which are subsets of the datasets used in order to determine their performance. 
 
@@ -1145,14 +1185,19 @@ Onto the remaining work for the second half of this FYP; Firstly, he baseline mo
 
 As for challenges faced during FYP1, there were two major challenges: difficulty understanding articles and computational power limitations. Firstly, initially when doing the literature review, it was difficult to understand all the jargon and concepts being used in these papers. This was gradually overcome through finding the definitions, understanding the concepts and experience after reading more papers. This challenge was largely overcome after the first few weeks starting the FYP as more papers were read and understanding of the research topic increased. The second issue, computational power limitations, was experienced when experimenting with the embedding algorithms and training the models. This was due to a lack of local computational power, and was overcome through the use of Google Colab's cloud computing resources. Although, clearly, the models were trained and results obtained, the limitation still exists due to Google Colab's free tier having certain limitations on the use of its high-performance cloud computing resources. 
 
+\clearpage
+\addcontentsline{toc}{section}{References}
+\printbibliography
 
 \appendix
 \section{Meeting Logs}
+\addcontentsline{toc}{section}{Appendix A: Meeting Logs}
 \label{app:meeting_logs}
 \includepdf[pages=-, pagecommand={\thispagestyle{fancy}}, offset=1cm 0cm]{Meeting_Logs_FYP1_T2530.pdf}
 
-\appendix
+% \appendix
 \section{Turnitin Similarity}
+\addcontentsline{toc}{section}{Appendix B: Turnitin Similarity}
 
 \begin{figure}[H]
     \centering
@@ -1160,8 +1205,5 @@ As for challenges faced during FYP1, there were two major challenges: difficulty
     \caption{Turnitin Similarity Score for this interim report}
     \label{fig:similarity-turnitin}
 \end{figure}
-
-
-\printbibliography
 
 \end{document}
