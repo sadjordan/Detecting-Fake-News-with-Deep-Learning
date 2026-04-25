@@ -106,6 +106,7 @@
 \usepackage{enumitem}
 \usepackage{xspace}
 \usepackage{graphicx}
+\usepackage{adjustbox}
 \usepackage{float}
 \usepackage{tabularx}
 \usepackage{booktabs}
@@ -1184,6 +1185,546 @@ Lastly, experiments on various embedding algorithms were conducted which aimed t
 Onto the remaining work for the second half of this FYP; Firstly, he baseline models of which 1-fold results are available require further validation in the form of cross-validation in order to confirm these results. Followed by the development of the proposed model, which will likely be more challenging than the baseline-model experiments due to the adversarial fine-tuning process, which will require some experimentation with the loss function to reach an optimal result. This will likely also require the development of a method of evaluation which can determine if the proposed model is more generalised relative to its baseline counterpart. And lastly, after the proposed model is developed and evaluated, the development of a simple application to allow for the demonstration and use of the proposed model is required. This will be relatively simple compared to the other tasks although the deployment may prove challenging depending on the computational demands of the proposed model which may affect the speed of this application.
 
 As for challenges faced during FYP1, there were two major challenges: difficulty understanding articles and computational power limitations. Firstly, initially when doing the literature review, it was difficult to understand all the jargon and concepts being used in these papers. This was gradually overcome through finding the definitions, understanding the concepts and experience after reading more papers. This challenge was largely overcome after the first few weeks starting the FYP as more papers were read and understanding of the research topic increased. The second issue, computational power limitations, was experienced when experimenting with the embedding algorithms and training the models. This was due to a lack of local computational power, and was overcome through the use of Google Colab's cloud computing resources. Although, clearly, the models were trained and results obtained, the limitation still exists due to Google Colab's free tier having certain limitations on the use of its high-performance cloud computing resources. 
+
+%fyp 2 results
+\clearpage
+\section{FYP2 Results}
+\subsection{BERT}
+\begin{landscape}
+\pagestyle{empty}
+\vspace*{\fill}
+\begin{center}
+\footnotesize
+\captionof{table}{BERT Fine-tuning Results}
+\label{tab:bert_results}
+\begin{tabular}{l cccc cccc}
+\toprule
+& \multicolumn{4}{c}{\textbf{5-Fold Cross-Validation Results}} & \multicolumn{4}{c}{\textbf{Test Set Results}} \\
+\cmidrule(lr){2-5} \cmidrule(lr){6-9}
+\textbf{Dataset} & Acc (Mean) & Acc (Std) & F1 (Mean) & F1 (Std) & Accuracy & Precision & Recall & F1 \\
+\midrule
+WELFake & 0.9920 & 0.0004 & 0.9911 & 0.0004 & 0.9898 & 0.9844 & 0.9933 & 0.9889 \\
+FakeNewsNet & 0.8500 & 0.0019 & 0.9022 & 0.0015 & 0.8499 & 0.8934 & 0.9100 & 0.9016 \\
+Fake News Detection & 0.9976 & 0.0004 & 0.9978 & 0.0004 & 0.9969 & 0.9950 & 0.9994 & 0.9972 \\
+ISOT & 0.9995 & 0.0003 & 0.9994 & 0.0003 & 0.9997 & 0.9993 & 1.0000 & 0.9996 \\
+Fake News Classification & 0.9903 & 0.0006 & 0.9910 & 0.0006 & 0.9974 & 0.9975 & 0.9978 & 0.9976 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\vspace*{\fill}
+\end{landscape}
+
+\begin{table}[H]
+\centering
+\caption{BERT Cross-Dataset Evaluation: Trained on WELFake}
+\label{tab:bert_cross_welfake}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Test Dataset} & \textbf{Accuracy} & \textbf{F1} \\
+\midrule
+FakeNewsNet & 0.7239 & 0.8373 \\
+Fake News Detection & 0.2098 & 0.3464 \\
+ISOT & 0.9995 & 0.9994 \\
+Fake News Classification & 0.0185 & 0.0355 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{BERT Cross-Dataset Evaluation: Trained on FakeNewsNet}
+\label{tab:bert_cross_fakenewsnet}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Test Dataset} & \textbf{Accuracy} & \textbf{F1} \\
+\midrule
+WELFake & 0.5616 & 0.4189 \\
+Fake News Detection & 0.5084 & 0.4356 \\
+ISOT & 0.6021 & 0.4042 \\
+Fake News Classification & 0.3996 & 0.2026 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{BERT Cross-Dataset Evaluation: Trained on Fake News Detection}
+\label{tab:bert_cross_fake_news_detection}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Test Dataset} & \textbf{Accuracy} & \textbf{F1} \\
+\midrule
+WELFake & 0.1227 & 0.0440 \\
+FakeNewsNet & 0.4574 & 0.5060 \\
+ISOT & 0.0007 & 0.0012 \\
+Fake News Classification & 0.9819 & 0.9830 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{BERT Cross-Dataset Evaluation: Trained on ISOT}
+\label{tab:bert_cross_isot}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Test Dataset} & \textbf{Accuracy} & \textbf{F1} \\
+\midrule
+WELFake & 0.8688 & 0.8717 \\
+FakeNewsNet & 0.7522 & 0.8583 \\
+Fake News Detection & 0.5084 & 0.6741 \\
+Fake News Classification & 0.0183 & 0.0359 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{BERT Cross-Dataset Evaluation: Trained on Fake News Classification}
+\label{tab:bert_cross_fake_news_classification}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Test Dataset} & \textbf{Accuracy} & \textbf{F1} \\
+\midrule
+WELFake & 0.1959 & 0.0149 \\
+FakeNewsNet & 0.3571 & 0.3282 \\
+Fake News Detection & 0.4889 & 0.1272 \\
+ISOT & 0.0006 & 0.0006 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Deep Learning}
+\begin{landscape}
+\pagestyle{empty}
+\vspace*{\fill}
+\begin{center}
+\footnotesize
+\captionof{table}{Word2Vec Deep Learning Results}
+\label{tab:word2vec_dl_results}
+\begin{tabular}{ll cccc cccc}
+\toprule
+& & \multicolumn{4}{c}{\textbf{5-Fold Cross-Validation Results}} & \multicolumn{4}{c}{\textbf{Test Set Results}} \\
+\cmidrule(lr){3-6} \cmidrule(lr){7-10}
+\textbf{Dataset} & \textbf{Model} & Acc (Mean) & Acc (Std) & F1 (Mean) & F1 (Std) & Accuracy & Precision & Recall & F1 \\
+\midrule
+\textbf{WELFake} & CNN & 0.9609 & 0.0017 & 0.9572 & 0.0024 & 0.9622 & 0.9502 & 0.9675 & 0.9587 \\
+ & LSTM & 0.9475 & 0.0037 & 0.9428 & 0.0042 & 0.9435 & 0.9045 & 0.9789 & 0.9402 \\
+ & CNN-LSTM & 0.9443 & 0.0020 & 0.9395 & 0.0020 & 0.9448 & 0.9309 & 0.9488 & 0.9397 \\
+\midrule
+\textbf{FakeNewsNet} & CNN & 0.8336 & 0.0025 & 0.8949 & 0.0020 & 0.8377 & 0.8582 & 0.9410 & 0.8977 \\
+ & LSTM & 0.7563 & 0.0002 & 0.8613 & 0.0001 & 0.7565 & 0.7565 & 1.0000 & 0.8613 \\
+ & CNN-LSTM & 0.7563 & 0.0002 & 0.8613 & 0.0001 & 0.7565 & 0.7565 & 1.0000 & 0.8613 \\
+\midrule
+\textbf{Fake News Detection} & CNN & 0.9903 & 0.0022 & 0.9911 & 0.0020 & 0.9887 & 0.9882 & 0.9913 & 0.9898 \\
+ & LSTM & 0.9830 & 0.0019 & 0.9845 & 0.0017 & 0.9832 & 0.9806 & 0.9889 & 0.9847 \\
+ & CNN-LSTM & 0.9821 & 0.0053 & 0.9837 & 0.0048 & 0.9809 & 0.9787 & 0.9866 & 0.9826 \\
+\midrule
+\textbf{ISOT} & CNN & 0.9985 & 0.0005 & 0.9983 & 0.0005 & 0.9978 & 0.9975 & 0.9978 & 0.9976 \\
+ & LSTM & 0.9956 & 0.0039 & 0.9952 & 0.0043 & 0.9976 & 0.9967 & 0.9980 & 0.9973 \\
+ & CNN-LSTM & 0.9987 & 0.0006 & 0.9985 & 0.0006 & 0.9985 & 0.9978 & 0.9989 & 0.9983 \\
+\midrule
+\textbf{Fake News Classification} & CNN & 0.9863 & 0.0012 & 0.9872 & 0.0011 & 0.9888 & 0.9920 & 0.9872 & 0.9896 \\
+ & LSTM & 0.9817 & 0.0020 & 0.9829 & 0.0019 & 0.9835 & 0.9965 & 0.9729 & 0.9845 \\
+ & CNN-LSTM & 0.9804 & 0.0030 & 0.9818 & 0.0027 & 0.9846 & 0.9967 & 0.9747 & 0.9856 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\vspace*{\fill}
+\end{landscape}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Word2Vec DL Cross-Dataset Evaluation: Trained on WELFake}
+\label{tab:w2v_dl_cross_welfake}
+\begin{tabular}{ll cccc}
+\toprule
+\textbf{Test Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
+\midrule
+\textbf{FakeNewsNet} & CNN & 0.6873 & 0.6214 & 0.6873 & 0.6465 \\
+ & LSTM & 0.7410 & 0.6245 & 0.7410 & 0.6537 \\
+ & CNN-LSTM & 0.5512 & 0.6384 & 0.5512 & 0.5809 \\
+\midrule
+\textbf{Fake News Detection} & CNN & 0.1169 & 0.1153 & 0.1169 & 0.1161 \\
+ & LSTM & 0.1308 & 0.1257 & 0.1308 & 0.1282 \\
+ & CNN-LSTM & 0.0621 & 0.0666 & 0.0621 & 0.0641 \\
+\midrule
+\textbf{ISOT} & CNN & 0.9942 & 0.9943 & 0.9942 & 0.9942 \\
+ & LSTM & 0.9941 & 0.9941 & 0.9941 & 0.9941 \\
+ & CNN-LSTM & 0.9843 & 0.9847 & 0.9843 & 0.9843 \\
+\midrule
+\textbf{Fake News Classification} & CNN & 0.0239 & 0.0257 & 0.0239 & 0.0247 \\
+ & LSTM & 0.0234 & 0.0253 & 0.0234 & 0.0243 \\
+ & CNN-LSTM & 0.0330 & 0.0336 & 0.0330 & 0.0331 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Word2Vec DL Cross-Dataset Evaluation: Trained on FakeNewsNet}
+\label{tab:w2v_dl_cross_fakenewsnet}
+\begin{tabular}{ll cccc}
+\toprule
+\textbf{Test Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
+\midrule
+\textbf{WELFake} & CNN & 0.4458 & 0.3935 & 0.4458 & 0.2945 \\
+ & LSTM & 0.4536 & 0.2057 & 0.4536 & 0.2831 \\
+ & CNN-LSTM & 0.4536 & 0.2057 & 0.4536 & 0.2831 \\
+\midrule
+\textbf{Fake News Detection} & CNN & 0.5542 & 0.5781 & 0.5542 & 0.4186 \\
+ & LSTM & 0.5484 & 0.3007 & 0.5484 & 0.3884 \\
+ & CNN-LSTM & 0.5484 & 0.3007 & 0.5484 & 0.3884 \\
+\midrule
+\textbf{ISOT} & CNN & 0.4487 & 0.3943 & 0.4487 & 0.3006 \\
+ & LSTM & 0.4579 & 0.2097 & 0.4579 & 0.2876 \\
+ & CNN-LSTM & 0.4579 & 0.2097 & 0.4579 & 0.2876 \\
+\midrule
+\textbf{Fake News Classification} & CNN & 0.5461 & 0.5742 & 0.5461 & 0.4092 \\
+ & LSTM & 0.5402 & 0.2919 & 0.5402 & 0.3790 \\
+ & CNN-LSTM & 0.5402 & 0.2919 & 0.5402 & 0.3790 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Word2Vec DL Cross-Dataset Evaluation: Trained on Fake News Detection}
+\label{tab:w2v_dl_cross_fake_news_detection}
+\begin{tabular}{ll cccc}
+\toprule
+\textbf{Test Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
+\midrule
+\textbf{WELFake} & CNN & 0.1651 & 0.1635 & 0.1651 & 0.1643 \\
+ & LSTM & 0.1721 & 0.1718 & 0.1721 & 0.1719 \\
+ & CNN-LSTM & 0.1688 & 0.1665 & 0.1688 & 0.1676 \\
+\midrule
+\textbf{FakeNewsNet} & CNN & 0.3079 & 0.6435 & 0.3079 & 0.2517 \\
+ & LSTM & 0.5240 & 0.6346 & 0.5240 & 0.5574 \\
+ & CNN-LSTM & 0.3970 & 0.6244 & 0.3970 & 0.4146 \\
+\midrule
+\textbf{ISOT} & CNN & 0.0040 & 0.0037 & 0.0040 & 0.0038 \\
+ & LSTM & 0.0087 & 0.0078 & 0.0087 & 0.0082 \\
+ & CNN-LSTM & 0.0085 & 0.0077 & 0.0085 & 0.0080 \\
+\midrule
+\textbf{Fake News Classification} & CNN & 0.9787 & 0.9788 & 0.9787 & 0.9787 \\
+ & LSTM & 0.9741 & 0.9742 & 0.9741 & 0.9742 \\
+ & CNN-LSTM & 0.9751 & 0.9753 & 0.9751 & 0.9751 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Word2Vec DL Cross-Dataset Evaluation: Trained on ISOT}
+\label{tab:w2v_dl_cross_isot}
+\begin{tabular}{ll cccc}
+\toprule
+\textbf{Test Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
+\midrule
+\textbf{WELFake} & CNN & 0.7856 & 0.8502 & 0.7856 & 0.7803 \\
+ & LSTM & 0.7967 & 0.8527 & 0.7967 & 0.7928 \\
+ & CNN-LSTM & 0.7874 & 0.8495 & 0.7874 & 0.7825 \\
+\midrule
+\textbf{FakeNewsNet} & CNN & 0.7544 & 0.6299 & 0.7544 & 0.6521 \\
+ & LSTM & 0.7532 & 0.6184 & 0.7532 & 0.6517 \\
+ & CNN-LSTM & 0.7489 & 0.6385 & 0.7489 & 0.6555 \\
+\midrule
+\textbf{Fake News Detection} & CNN & 0.4414 & 0.2726 & 0.4414 & 0.3363 \\
+ & LSTM & 0.2329 & 0.1872 & 0.2329 & 0.2075 \\
+ & CNN-LSTM & 0.3353 & 0.2343 & 0.3353 & 0.2757 \\
+\midrule
+\textbf{Fake News Classification} & CNN & 0.0184 & 0.0207 & 0.0184 & 0.0195 \\
+ & LSTM & 0.0186 & 0.0209 & 0.0186 & 0.0197 \\
+ & CNN-LSTM & 0.0184 & 0.0207 & 0.0184 & 0.0195 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Word2Vec DL Cross-Dataset Evaluation: Trained on Fake News Classification}
+\label{tab:w2v_dl_cross_fake_news_classification}
+\begin{tabular}{ll cccc}
+\toprule
+\textbf{Test Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
+\midrule
+\textbf{WELFake} & CNN & 0.2238 & 0.2074 & 0.2238 & 0.2147 \\
+ & LSTM & 0.2133 & 0.1847 & 0.2133 & 0.1975 \\
+ & CNN-LSTM & 0.2077 & 0.1781 & 0.2077 & 0.1915 \\
+\midrule
+\textbf{FakeNewsNet} & CNN & 0.2771 & 0.6478 & 0.2771 & 0.1816 \\
+ & LSTM & 0.2623 & 0.6576 & 0.2623 & 0.1440 \\
+ & CNN-LSTM & 0.2438 & 0.6645 & 0.2438 & 0.0958 \\
+\midrule
+\textbf{Fake News Detection} & CNN & 0.6400 & 0.7983 & 0.6400 & 0.6036 \\
+ & LSTM & 0.7908 & 0.8555 & 0.7908 & 0.7860 \\
+ & CNN-LSTM & 0.7529 & 0.8391 & 0.7529 & 0.7436 \\
+\midrule
+\textbf{ISOT} & CNN & 0.0009 & 0.0009 & 0.0009 & 0.0009 \\
+ & LSTM & 0.0022 & 0.0022 & 0.0022 & 0.0022 \\
+ & CNN-LSTM & 0.0014 & 0.0014 & 0.0014 & 0.0014 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\subsection{Machine Learning}
+\begin{landscape}
+\pagestyle{empty}
+\vspace*{\fill}
+\begin{center}
+\footnotesize
+\captionof{table}{Word2Vec Machine Learning Results}
+\label{tab:word2vec_ml_results}
+\begin{tabular}{ll cccc cccc}
+\toprule
+& & \multicolumn{4}{c}{\textbf{5-Fold Cross-Validation Results}} & \multicolumn{4}{c}{\textbf{Test Set Results}} \\
+\cmidrule(lr){3-6} \cmidrule(lr){7-10}
+\textbf{Dataset} & \textbf{Model} & Acc (Mean) & Acc (Std) & F1 (Mean) & F1 (Std) & Accuracy & Precision & Recall & F1 \\
+\midrule
+\textbf{WELFake} & SVC & 0.9464 & 0.0017 & 0.9413 & 0.0018 & 0.9491 & 0.9387 & 0.9498 & 0.9442 \\
+ & LogisticRegression & 0.9265 & 0.0014 & 0.9194 & 0.0015 & 0.9298 & 0.9170 & 0.9294 & 0.9231 \\
+ & XGBoost & 0.9278 & 0.0037 & 0.9198 & 0.0042 & 0.9298 & 0.9275 & 0.9169 & 0.9222 \\
+ & RandomForest & 0.8964 & 0.0030 & 0.8849 & 0.0037 & 0.8947 & 0.8906 & 0.8753 & 0.8829 \\
+ & KNN & 0.8652 & 0.0029 & 0.8387 & 0.0035 & 0.8667 & 0.9139 & 0.7794 & 0.8413 \\
+ & GaussianNB & 0.7066 & 0.0057 & 0.5972 & 0.0107 & 0.7055 & 0.7981 & 0.4695 & 0.5912 \\
+\midrule
+\textbf{FakeNewsNet} & SVC & 0.7857 & 0.0140 & 0.8522 & 0.0103 & 0.7940 & 0.8952 & 0.8242 & 0.8582 \\
+ & LogisticRegression & 0.7719 & 0.0113 & 0.8394 & 0.0079 & 0.7656 & 0.8972 & 0.7794 & 0.8342 \\
+ & XGBoost & 0.8201 & 0.0067 & 0.8881 & 0.0044 & 0.8267 & 0.8438 & 0.9461 & 0.8920 \\
+ & RandomForest & 0.8104 & 0.0028 & 0.8853 & 0.0017 & 0.8192 & 0.8250 & 0.9658 & 0.8899 \\
+ & KNN & 0.8057 & 0.0085 & 0.8782 & 0.0052 & 0.8057 & 0.8363 & 0.9241 & 0.8780 \\
+ & GaussianNB & 0.7457 & 0.0054 & 0.8270 & 0.0037 & 0.7594 & 0.8520 & 0.8254 & 0.8385 \\
+\midrule
+\textbf{Fake News Detection} & SVC & 0.9855 & 0.0021 & 0.9869 & 0.0019 & 0.9851 & 0.9818 & 0.9913 & 0.9865 \\
+ & LogisticRegression & 0.9824 & 0.0013 & 0.9839 & 0.0012 & 0.9836 & 0.9838 & 0.9863 & 0.9850 \\
+ & XGBoost & 0.9733 & 0.0024 & 0.9758 & 0.0022 & 0.9745 & 0.9713 & 0.9825 & 0.9769 \\
+ & RandomForest & 0.9521 & 0.0027 & 0.9570 & 0.0025 & 0.9525 & 0.9422 & 0.9731 & 0.9574 \\
+ & KNN & 0.9490 & 0.0017 & 0.9544 & 0.0015 & 0.9466 & 0.9336 & 0.9717 & 0.9523 \\
+ & GaussianNB & 0.8985 & 0.0059 & 0.9068 & 0.0057 & 0.8988 & 0.9184 & 0.8950 & 0.9066 \\
+\midrule
+\textbf{ISOT} & SVC & 0.9893 & 0.0025 & 0.9883 & 0.0028 & 0.9887 & 0.9910 & 0.9844 & 0.9877 \\
+ & LogisticRegression & 0.9868 & 0.0021 & 0.9856 & 0.0023 & 0.9866 & 0.9855 & 0.9852 & 0.9853 \\
+ & XGBoost & 0.9768 & 0.0018 & 0.9744 & 0.0020 & 0.9754 & 0.9810 & 0.9651 & 0.9730 \\
+ & RandomForest & 0.9572 & 0.0026 & 0.9524 & 0.0029 & 0.9561 & 0.9671 & 0.9361 & 0.9513 \\
+ & KNN & 0.9512 & 0.0019 & 0.9453 & 0.0024 & 0.9490 & 0.9682 & 0.9187 & 0.9428 \\
+ & GaussianNB & 0.9085 & 0.0041 & 0.9003 & 0.0042 & 0.9141 & 0.8984 & 0.9159 & 0.9071 \\
+\midrule
+\textbf{Fake News Classification} & SVC & 0.9738 & 0.0027 & 0.9756 & 0.0026 & 0.9766 & 0.9832 & 0.9733 & 0.9782 \\
+ & LogisticRegression & 0.9649 & 0.0024 & 0.9674 & 0.0023 & 0.9706 & 0.9720 & 0.9735 & 0.9728 \\
+ & XGBoost & 0.9613 & 0.0033 & 0.9641 & 0.0031 & 0.9646 & 0.9650 & 0.9697 & 0.9674 \\
+ & RandomForest & 0.9400 & 0.0036 & 0.9449 & 0.0033 & 0.9439 & 0.9424 & 0.9546 & 0.9485 \\
+ & KNN & 0.9304 & 0.0029 & 0.9367 & 0.0026 & 0.9336 & 0.9230 & 0.9569 & 0.9396 \\
+ & GaussianNB & 0.8971 & 0.0033 & 0.9036 & 0.0034 & 0.9003 & 0.9225 & 0.8903 & 0.9061 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\vspace*{\fill}
+\end{landscape}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Word2Vec ML Cross-Dataset Evaluation: Trained on WELFake}
+\label{tab:w2v_ml_cross_welfake}
+\begin{tabular}{ll cccc}
+\toprule
+\textbf{Test Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
+\midrule
+\textbf{FakeNewsNet} & SVC & 0.7540 & 0.6189 & 0.7540 & 0.6517 \\
+ & LogisticRegression & 0.6021 & 0.6277 & 0.6021 & 0.6137 \\
+ & XGBoost & 0.7028 & 0.6281 & 0.7028 & 0.6538 \\
+ & RandomForest & 0.6826 & 0.6257 & 0.6826 & 0.6479 \\
+ & KNN & 0.4211 & 0.6083 & 0.4211 & 0.4520 \\
+ & GaussianNB & 0.7564 & 0.5721 & 0.7564 & 0.6514 \\
+\midrule
+\textbf{Fake News Detection} & SVC & 0.0199 & 0.0187 & 0.0199 & 0.0191 \\
+ & LogisticRegression & 0.0409 & 0.0408 & 0.0409 & 0.0404 \\
+ & XGBoost & 0.0193 & 0.0173 & 0.0193 & 0.0181 \\
+ & RandomForest & 0.0201 & 0.0172 & 0.0201 & 0.0184 \\
+ & KNN & 0.0941 & 0.0736 & 0.0941 & 0.0815 \\
+ & GaussianNB & 0.2864 & 0.2414 & 0.2864 & 0.2426 \\
+\midrule
+\textbf{ISOT} & SVC & 0.9830 & 0.9832 & 0.9830 & 0.9829 \\
+ & LogisticRegression & 0.9690 & 0.9694 & 0.9690 & 0.9690 \\
+ & XGBoost & 0.9830 & 0.9834 & 0.9830 & 0.9830 \\
+ & RandomForest & 0.9807 & 0.9811 & 0.9807 & 0.9806 \\
+ & KNN & 0.9070 & 0.9166 & 0.9070 & 0.9058 \\
+ & GaussianNB & 0.7212 & 0.7558 & 0.7212 & 0.7038 \\
+\midrule
+\textbf{Fake News Classification} & SVC & 0.0345 & 0.0353 & 0.0345 & 0.0347 \\
+ & LogisticRegression & 0.0479 & 0.0480 & 0.0479 & 0.0476 \\
+ & XGBoost & 0.0339 & 0.0342 & 0.0339 & 0.0338 \\
+ & RandomForest & 0.0360 & 0.0359 & 0.0360 & 0.0357 \\
+ & KNN & 0.1091 & 0.0949 & 0.1091 & 0.0998 \\
+ & GaussianNB & 0.2890 & 0.2446 & 0.2890 & 0.2476 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Word2Vec ML Cross-Dataset Evaluation: Trained on FakeNewsNet}
+\label{tab:w2v_ml_cross_fakenewsnet}
+\begin{tabular}{ll cccc}
+\toprule
+\textbf{Test Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
+\midrule
+\textbf{WELFake} & SVC & 0.4628 & 0.4911 & 0.4628 & 0.4036 \\
+ & LogisticRegression & 0.4365 & 0.4364 & 0.4365 & 0.3540 \\
+ & XGBoost & 0.4638 & 0.5594 & 0.4638 & 0.3250 \\
+ & RandomForest & 0.4556 & 0.5410 & 0.4556 & 0.2934 \\
+ & KNN & 0.4703 & 0.5382 & 0.4703 & 0.3633 \\
+ & GaussianNB & 0.4507 & 0.2050 & 0.4507 & 0.2818 \\
+\midrule
+\textbf{Fake News Detection} & SVC & 0.5367 & 0.5167 & 0.5367 & 0.4930 \\
+ & LogisticRegression & 0.5610 & 0.5538 & 0.5610 & 0.5008 \\
+ & XGBoost & 0.5319 & 0.4387 & 0.5319 & 0.4029 \\
+ & RandomForest & 0.5422 & 0.3819 & 0.5422 & 0.3887 \\
+ & KNN & 0.5221 & 0.4639 & 0.5221 & 0.4295 \\
+ & GaussianNB & 0.5484 & 0.3007 & 0.5484 & 0.3884 \\
+\midrule
+\textbf{ISOT} & SVC & 0.4662 & 0.4888 & 0.4662 & 0.4191 \\
+ & LogisticRegression & 0.4374 & 0.4362 & 0.4374 & 0.3658 \\
+ & XGBoost & 0.4738 & 0.5781 & 0.4738 & 0.3439 \\
+ & RandomForest & 0.4637 & 0.6414 & 0.4637 & 0.3038 \\
+ & KNN & 0.4816 & 0.5464 & 0.4816 & 0.3896 \\
+ & GaussianNB & 0.4579 & 0.2097 & 0.4579 & 0.2876 \\
+\midrule
+\textbf{Fake News Classification} & SVC & 0.5308 & 0.5137 & 0.5308 & 0.4862 \\
+ & LogisticRegression & 0.5560 & 0.5544 & 0.5560 & 0.4938 \\
+ & XGBoost & 0.5242 & 0.4354 & 0.5242 & 0.3944 \\
+ & RandomForest & 0.5344 & 0.3827 & 0.5344 & 0.3797 \\
+ & KNN & 0.5159 & 0.4617 & 0.5159 & 0.4215 \\
+ & GaussianNB & 0.5402 & 0.5217 & 0.5402 & 0.3791 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Word2Vec ML Cross-Dataset Evaluation: Trained on Fake News Detection}
+\label{tab:w2v_ml_cross_fake_news_detection}
+\begin{tabular}{ll cccc}
+\toprule
+\textbf{Test Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
+\midrule
+\textbf{WELFake} & SVC & 0.1627 & 0.1642 & 0.1627 & 0.1635 \\
+ & LogisticRegression & 0.1597 & 0.1596 & 0.1597 & 0.1597 \\
+ & XGBoost & 0.1514 & 0.1520 & 0.1514 & 0.1517 \\
+ & RandomForest & 0.1752 & 0.1766 & 0.1752 & 0.1759 \\
+ & KNN & 0.1728 & 0.1755 & 0.1728 & 0.1741 \\
+ & GaussianNB & 0.2677 & 0.2668 & 0.2677 & 0.2672 \\
+\midrule
+\textbf{FakeNewsNet} & SVC & 0.5697 & 0.6196 & 0.5697 & 0.5905 \\
+ & LogisticRegression & 0.3928 & 0.6233 & 0.3928 & 0.4090 \\
+ & XGBoost & 0.3107 & 0.6421 & 0.3107 & 0.2580 \\
+ & RandomForest & 0.3716 & 0.6373 & 0.3716 & 0.3714 \\
+ & KNN & 0.3259 & 0.6248 & 0.3259 & 0.2946 \\
+ & GaussianNB & 0.6977 & 0.6153 & 0.6977 & 0.6453 \\
+\midrule
+\textbf{ISOT} & SVC & 0.0109 & 0.0099 & 0.0109 & 0.0103 \\
+ & LogisticRegression & 0.0119 & 0.0116 & 0.0119 & 0.0116 \\
+ & XGBoost & 0.0089 & 0.0086 & 0.0089 & 0.0087 \\
+ & RandomForest & 0.0174 & 0.0166 & 0.0174 & 0.0168 \\
+ & KNN & 0.0404 & 0.0369 & 0.0404 & 0.0382 \\
+ & GaussianNB & 0.1054 & 0.1068 & 0.1054 & 0.1053 \\
+\midrule
+\textbf{Fake News Classification} & SVC & 0.9736 & 0.9737 & 0.9736 & 0.9736 \\
+ & LogisticRegression & 0.9704 & 0.9705 & 0.9704 & 0.9704 \\
+ & XGBoost & 0.9742 & 0.9744 & 0.9742 & 0.9742 \\
+ & RandomForest & 0.9652 & 0.9652 & 0.9652 & 0.9652 \\
+ & KNN & 0.9435 & 0.9437 & 0.9435 & 0.9435 \\
+ & GaussianNB & 0.8848 & 0.8852 & 0.8848 & 0.8849 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Word2Vec ML Cross-Dataset Evaluation: Trained on ISOT}
+\label{tab:w2v_ml_cross_isot}
+\begin{tabular}{ll cccc}
+\toprule
+\textbf{Test Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
+\midrule
+\textbf{WELFake} & SVC & 0.8445 & 0.8650 & 0.8445 & 0.8442 \\
+ & LogisticRegression & 0.8407 & 0.8589 & 0.8407 & 0.8405 \\
+ & XGBoost & 0.8411 & 0.8582 & 0.8411 & 0.8410 \\
+ & RandomForest & 0.8260 & 0.8389 & 0.8260 & 0.8261 \\
+ & KNN & 0.8279 & 0.8376 & 0.8279 & 0.8282 \\
+ & GaussianNB & 0.7496 & 0.7650 & 0.7496 & 0.7494 \\
+\midrule
+\textbf{FakeNewsNet} & SVC & 0.7554 & 0.6163 & 0.7554 & 0.6515 \\
+ & LogisticRegression & 0.6508 & 0.6265 & 0.6508 & 0.6376 \\
+ & XGBoost & 0.6996 & 0.6257 & 0.6996 & 0.6518 \\
+ & RandomForest & 0.6831 & 0.6298 & 0.6831 & 0.6506 \\
+ & KNN & 0.6656 & 0.6305 & 0.6656 & 0.6456 \\
+ & GaussianNB & 0.4253 & 0.6597 & 0.4253 & 0.4434 \\
+\midrule
+\textbf{Fake News Detection} & SVC & 0.0089 & 0.0090 & 0.0089 & 0.0089 \\
+ & LogisticRegression & 0.0205 & 0.0227 & 0.0205 & 0.0215 \\
+ & XGBoost & 0.0102 & 0.0103 & 0.0102 & 0.0102 \\
+ & RandomForest & 0.0184 & 0.0183 & 0.0184 & 0.0182 \\
+ & KNN & 0.0401 & 0.0370 & 0.0401 & 0.0381 \\
+ & GaussianNB & 0.0887 & 0.0919 & 0.0887 & 0.0897 \\
+\midrule
+\textbf{Fake News Classification} & SVC & 0.0239 & 0.0254 & 0.0239 & 0.0245 \\
+ & LogisticRegression & 0.0273 & 0.0290 & 0.0273 & 0.0280 \\
+ & XGBoost & 0.0258 & 0.0272 & 0.0258 & 0.0264 \\
+ & RandomForest & 0.0335 & 0.0344 & 0.0335 & 0.0338 \\
+ & KNN & 0.0552 & 0.0542 & 0.0552 & 0.0542 \\
+ & GaussianNB & 0.1034 & 0.1060 & 0.1034 & 0.1042 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Word2Vec ML Cross-Dataset Evaluation: Trained on Fake News Classification}
+\label{tab:w2v_ml_cross_fake_news_classification}
+\begin{tabular}{ll cccc}
+\toprule
+\textbf{Test Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
+\midrule
+\textbf{WELFake} & SVC & 0.1499 & 0.1480 & 0.1499 & 0.1489 \\
+ & LogisticRegression & 0.1595 & 0.1618 & 0.1595 & 0.1606 \\
+ & XGBoost & 0.1552 & 0.1566 & 0.1552 & 0.1559 \\
+ & RandomForest & 0.1747 & 0.1758 & 0.1747 & 0.1752 \\
+ & KNN & 0.1784 & 0.1817 & 0.1784 & 0.1800 \\
+ & GaussianNB & 0.2492 & 0.2477 & 0.2492 & 0.2485 \\
+\midrule
+\textbf{FakeNewsNet} & SVC & 0.2496 & 0.6892 & 0.2496 & 0.1104 \\
+ & LogisticRegression & 0.3579 & 0.6445 & 0.3579 & 0.3459 \\
+ & XGBoost & 0.3196 & 0.6372 & 0.3196 & 0.2777 \\
+ & RandomForest & 0.3823 & 0.6389 & 0.3823 & 0.3878 \\
+ & KNN & 0.3435 & 0.6419 & 0.3435 & 0.3216 \\
+ & GaussianNB & 0.5919 & 0.6214 & 0.5919 & 0.6052 \\
+\midrule
+\textbf{Fake News Detection} & SVC & 0.9913 & 0.9913 & 0.9913 & 0.9913 \\
+ & LogisticRegression & 0.9765 & 0.9767 & 0.9765 & 0.9765 \\
+ & XGBoost & 0.9906 & 0.9906 & 0.9906 & 0.9906 \\
+ & RandomForest & 0.9832 & 0.9832 & 0.9832 & 0.9832 \\
+ & KNN & 0.9572 & 0.9577 & 0.9572 & 0.9571 \\
+ & GaussianNB & 0.9113 & 0.9117 & 0.9113 & 0.9114 \\
+\midrule
+\textbf{ISOT} & SVC & 0.0068 & 0.0064 & 0.0068 & 0.0065 \\
+ & LogisticRegression & 0.0144 & 0.0140 & 0.0144 & 0.0141 \\
+ & XGBoost & 0.0083 & 0.0079 & 0.0083 & 0.0080 \\
+ & RandomForest & 0.0158 & 0.0150 & 0.0158 & 0.0153 \\
+ & KNN & 0.0417 & 0.0384 & 0.0417 & 0.0396 \\
+ & GaussianNB & 0.0903 & 0.0921 & 0.0903 & 0.0907 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \clearpage
 \addcontentsline{toc}{section}{References}
