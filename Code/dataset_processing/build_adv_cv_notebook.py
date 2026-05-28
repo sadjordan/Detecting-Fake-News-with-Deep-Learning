@@ -32,7 +32,7 @@ import torch
 import os
 import random
 from torch import nn
-from torch.utils.data import Dataset, Subset
+from torch.utils.data import Dataset, Subset, DataLoader
 from sklearn.model_selection import train_test_split, StratifiedKFold
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from transformers import (
@@ -141,8 +141,9 @@ cells.append(code("""class AdversarialBERT(nn.Module):
 def adversarial_loss(logits_orig, logits_pert, labels, cls_orig, cls_pert, lambda_adv=0.5):
     ce = nn.CrossEntropyLoss()
     ce_loss = 0.5 * (ce(logits_orig, labels) + ce(logits_pert, labels))
-    target = torch.ones(cls_orig.size(0), device=cls_orig.device)
-    adv_loss = nn.CosineEmbeddingLoss()(cls_orig, cls_pert, target)
+    # Mathematically equivalent to CosineEmbeddingLoss with target=1, but avoids dynamic tensor instantiation on TPU
+    cosine_sim = nn.functional.cosine_similarity(cls_orig, cls_pert, dim=-1)
+    adv_loss = (1.0 - cosine_sim).mean()
     return ce_loss + (lambda_adv * adv_loss)"""))
 
 # ── Cell 6: Custom Trainer ──
@@ -157,26 +158,29 @@ cells.append(code("""class LambdaSchedulerCallback(TrainerCallback):
         trainer = kwargs.get('trainer') or self.trainer
         if trainer is None:
             return
-        if not hasattr(trainer, 'lambda_adv'):
-            trainer.lambda_adv = 0.0
+        if not hasattr(trainer, 'lambda_adv_tensor'):
+            return
         total_steps = state.max_steps
         current_step = state.global_step
         if total_steps <= 0:
             return
         warmup_steps = total_steps * self.warmup_ratio
         if warmup_steps <= 0:
-            trainer.lambda_adv = self.max_lambda
-            return
-        if current_step < warmup_steps:
-            trainer.lambda_adv = self.max_lambda * (current_step / warmup_steps)
+            new_lambda = self.max_lambda
+        elif current_step < warmup_steps:
+            new_lambda = self.max_lambda * (current_step / warmup_steps)
         else:
-            trainer.lambda_adv = self.max_lambda
+            new_lambda = self.max_lambda
+        
+        # Update the tensor in-place on TPU without JIT recompilation
+        trainer.lambda_adv_tensor.fill_(new_lambda)
 
 
 class AdversarialTrainer(Trainer):
     def __init__(self, *args, lambda_adv=0.5, **kwargs):
         super().__init__(*args, **kwargs)
-        self.lambda_adv = lambda_adv
+        # Store lambda_adv as a device tensor to prevent XLA JIT re-compilations when the float value changes
+        self.lambda_adv_tensor = torch.tensor(lambda_adv, device=self.args.device, dtype=torch.float)
 
     def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
         labels = inputs.get('labels')
@@ -200,7 +204,7 @@ class AdversarialTrainer(Trainer):
         logits_orig, logits_pert = combined_logits[:batch_size], combined_logits[batch_size:]
         cls_orig, cls_pert = combined_cls[:batch_size], combined_cls[batch_size:]
 
-        loss = adversarial_loss(logits_orig, logits_pert, labels, cls_orig, cls_pert, self.lambda_adv)
+        loss = adversarial_loss(logits_orig, logits_pert, labels, cls_orig, cls_pert, self.lambda_adv_tensor)
         return (loss, (loss, logits_orig)) if return_outputs else loss"""))
 
 # ── Cell 7: Helper Functions ──
@@ -370,37 +374,35 @@ cells.append(code("""def cross_validate_adversarial(full_train_texts, full_train
             best_model_state = {k: v.cpu() for k, v in model.state_dict().items()}
             best_fold_idx = fold
 
-        # Test set evaluation (uses ModelWrapper for compatibility)
-        class ModelWrapper(nn.Module):
-            def __init__(self, inner_model):
-                super().__init__()
-                self.inner_model = inner_model
-            def forward(self, input_ids, attention_mask, labels=None, **kwargs):
-                outputs = self.inner_model(input_ids=input_ids, attention_mask=attention_mask)
-                logits = outputs[0] if isinstance(outputs, (tuple, list)) else outputs.logits
-                loss = None
-                if labels is not None:
-                    loss = nn.CrossEntropyLoss()(logits, labels)
-                return SequenceClassifierOutput(loss=loss, logits=logits)
-
-        wrapped = ModelWrapper(model)
-        test_trainer = Trainer(
-            model=wrapped,
-            compute_metrics=compute_metrics_fn,
-            args=TrainingArguments(
-                output_dir="./temp_test_eval",
-                remove_unused_columns=False,
-                label_names=["labels"],
-                per_device_eval_batch_size=32,
-                report_to="none"
-            )
-        )
-        test_metrics = test_trainer.evaluate(eval_dataset=test_dataset)
+        # Test set evaluation using PyTorch native inference to avoid compiling new Trainer graphs
+        model.eval()
+        all_preds = []
+        all_targets = []
+        with torch.no_grad():
+            test_loader = DataLoader(test_dataset, batch_size=32)
+            for batch in test_loader:
+                input_ids = batch['input_ids'].to(device)
+                attention_mask = batch['attention_mask'].to(device)
+                labels = batch['labels']
+                
+                logits, _ = model(input_ids=input_ids, attention_mask=attention_mask)
+                preds = logits.argmax(-1).cpu().numpy()
+                all_preds.extend(preds)
+                all_targets.extend(labels.numpy())
+                
+        precision, recall, f1, _ = precision_recall_fscore_support(all_targets, all_preds, average='binary')
+        acc = accuracy_score(all_targets, all_preds)
+        test_metrics = {
+            'eval_accuracy': acc,
+            'eval_f1': f1,
+            'eval_precision': precision,
+            'eval_recall': recall
+        }
         fold_test_results.append(test_metrics)
         print(f"Fold {fold+1} Test     - Accuracy: {test_metrics['eval_accuracy']:.4f}, F1: {test_metrics['eval_f1']:.4f}, Precision: {test_metrics['eval_precision']:.4f}, Recall: {test_metrics['eval_recall']:.4f}")
 
         # Clean up memory immediately to prevent RAM OOM
-        del model, trainer, test_trainer, wrapped, train_dataset, val_dataset
+        del model, trainer, train_dataset, val_dataset
         import gc
         gc.collect()
         if not use_tpu and torch.cuda.is_available():
