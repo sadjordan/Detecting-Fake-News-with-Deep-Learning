@@ -1521,7 +1521,7 @@ Like the DL and BERT models, the performance of the ML models were exceptional, 
 
 The cross-dataset evaluation of the selected ML models again followed the pattern observed by the BERT and DL model's cross-dataset evaluation results. However, most notably for the ML models the results for Fake News Detection was much poorer than BERT and the DL models. For reference, BERT and CNN achieved an f1 score of 0.3640 and 0.1456 respectively, while the best ML model (for Fake News Detection): SVC, only achieved an F1-score of 0.0184. 
 
-As for the other datasets, the ML models were very slightly outperformed by the DL models. With the exception of Fake News Classification, but the results for that dataset are already quite poor and as a result is of little consequence. 
+As for the other datasets, the ML models were very slightly outperformed by the DL models, with such a small difference than randomness could have very well caused it. With the exception of Fake News Classification, but the results for that dataset are already quite poor and as a result is of little consequence. 
 
 \subsection{TPA-BERT}
 \begingroup
@@ -1556,6 +1556,8 @@ Fake News Classification & 0.9898/0.9938/0.9858/0.9890 \\
 \end{longtable}
 \endgroup
 
+The results for TPA-BERT were excellent, with results exceeding F1-scores of 0.95 with the exception of FakeNewsNet. When comparing the results against BERT, BERT again very slightly (<0.005 difference in f1 score) outperforms TPA-BERT. Overall these results is very typical when observed together with the other results. The adversarial training does seem to have very slightly impacted the performance of the model but not by much. 
+
 \begingroup
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.3}
@@ -1586,6 +1588,16 @@ ISOT & 0.9981/0.9994/0.9968/0.9982 \\
 Fake News Classification & 0.0359/0.0383/0.0338/0.0196 \\
 \end{longtable}
 \endgroup
+
+The cross-dataset evaluation for TPA-BERT followed the usual pattern described earlier. The results however, when compared against BERT were only slightly better (<0.008 difference in f1 score). Even then this small difference may be attributed to randomness. Regardless, these results indicate that the adversarial technique used in TPA-BERT failed to generalise the model sigificantly. 
+
+There could be several causes for this: lack of depth to the text perturbation technique, use of the CLS token, and the fact these perturbations are not 'natural'. The text perturbation techniques employed were: synonym substitution, random swapping and random deletion. These techniques most likely were unable to meaningfully change the overall semantic meaning of the textual input. This flows directly to the next point, use of the CLS token: the CLS token, as previously mentioned is a 768 dimensional representation of the input text (essentially a semantic summary of the input text). This CLS token makes the order of the text less relevant, as the classifier only uses this CLS token and thus overcomes the text perturbation. 
+
+Lastly, the perturbations do not produce meaningful variations. The random synonym substitution, swapping and deletion creates text which, while still legible, is not a meaningful variation of human writing. This means that while the model learned to adapt to the word 'scrambling', it didn't learn to actually handle genuine variations in human writing styles. This failure to handle genuine variation is most like partially why it failed to generalise. 
+
+However it could also be argued the whole approach is flawed. Even if Large Language Models to generate 'genuine variation', the semantics of the text will likely not change sigificantly and any models trained will still suffer from generalisation problems even if their horizons are slightly expanded. Nonetheless, this attempt has proven that while current approaches to fake news detection are more than capable of performing well when working with a dataset, the actual process of generalising a model to a degree where it can be reliably in real-world settings remains elusive. Although there are likely more successful attempts than the one described here like by \textcite{BERT-finetuning}, there remains significant work to be done in regards to generalisation. 
+
+\subsection{LIME Implementation}
 
 \clearpage
 \addcontentsline{toc}{section}{References}
