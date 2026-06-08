@@ -653,7 +653,9 @@ Word2Vec & \begin{itemize}[leftmargin=*, nosep]
 \end{table}
 
 \subsection{Modelling}
-Modelling depended on which kind of embedding was used. For BERT, fine-tuning was used to fine-tune a base BERT-uncased model into a 2-label classification model. For GloVe and Word2Vec, after the datasets were turned into embeddings, the now vectorised datasets were fitted to machine learning models and used to train several deep-learning models as well, specifically: CNN, LSTM and CNN-LSTM. 
+Modelling depended on which kind of embedding was used. For BERT, fine-tuning was used to fine-tune a base BERT-uncased model into a 2-label classification model. A similar process was done for TPA-BERT, the proposed model, with the addition of adversarial training steps. For GloVe and Word2Vec, after the datasets were turned into embeddings, the now vectorised datasets were fitted to machine learning models and used to train several deep-learning models as well, specifically: CNN, LSTM and CNN-LSTM. 
+
+All training was done with k=5 fold cross-validation, with an initial split of 85\% train and 15\% test (held on for the final evaluation of each fold). The 85\% train is split again later on into 80\% train and 20\% validation for each fold. All splits were stratified.
 
 \begin{table}[H]
 \centering
@@ -682,29 +684,6 @@ Word2Vec & \begin{itemize}[leftmargin=*, nosep]
 
 \subsubsection{Proposed Model}
 While the above describe the modelling process for the various embedding algorithms, it was the intention to use the results from the modelling process described above as baseline results for which a proposed model could be compared to. 
-
-The proposed model, Text Perturbation-based Adversarial BERT (TPA-BERT), sought to improve the generalisation when it comes to fake news detection, particularly against unseen data. This was to be done by directly perturbing the text, followed by adversarial training to minimise the difference in embeddings generated when given original and perturbed data. The intention is, by scrambling the text, and with the adversarial training minimising the differences in model output, TPA-BERT would generate embeddings which are more robust and learn to identify more 'in-depth' features for fake news detection.
-
-Going in more depth regarding the methodology: firstly, before any training begins the datasets are perturbed using NLTK's WordNet by loading each record and applying synonym substitution against 20\% of the row's words, followed by another 10\% of words which are randomly swapped (swapped between words in the same row) and lastly 10\% of words are randomly deleted. Secondly, the actual model training starts by loading the BERT model, and both the original and perturbed datasets and conducting stratified splits of the data (85\% train, 15\% test) which is followed by a 80\%-20\% train and validation split (on the 85\5 train set; remaining 15\% saved for final evaluation)for k=5 cross validation. Following this, the training begins with the model accepting input and beginning to learn from the adversarial loss function which combines the cross entropy loss and cosine similarity loss (the difference between the CLS tokens produced by the model for the original and perturbed data input). Note that the cosine similarity loss is linearly scaled from 0 to 0.5 over the first 10\% of training steps. Once training is complete, whether by completing all epochs, or by early-stopping (set at 3 steps) the model is evaluated on the held out test set. And to test the model's generalisation, the best model according to validation f1-score is chosen for cross-dataset evaluation (tested against all other datasets; for example: a model trained on WELFake is tested on FakeNewsNet, ISOT, Fake News Classification and Fake News Detection datasets). 
-
-$$\text{Loss} = \text{CE_Loss} + \lambda_{adv} \times \text{Cosine_Similarity_Loss}$$
-
-The proposed model is inspired by and similar to the process described by \textcite{BERT-finetuning}, however, unlike the model described by those authors, TPA-BERT perturbs the text directly, instead of at the embedding and feature level like in FGM-FRAT (the model described by the authors). The reason for this deviation is that perturbation at a text level is simple to implement, in addition to the decreased number of passes per step thus reducing computational demands. Furthermore, the proposed model also contains a LIME component which will complement the BERT component by giving explanations for the otherwise black box model to increase trust in the model. 
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\linewidth]{Proposed-model.drawio.png}
-    \caption{Figure depicts the proposed models' architecture}
-    \label{fig:proposed-model}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\linewidth]{BERT-finetuning.drawio.png}
-    \caption{Figure depicts the proposed fine-tuning process for the BERT component of the proposed model}
-    \label{fig:proposed-finetuning}
-\end{figure}
 
 
 \subsection{Evaluation}
@@ -774,6 +753,8 @@ To do this, BERT is trained through two objectives: Masked Language Modelling (M
 The next technique, NSP is exactly as it sounds. It tries to get BERT to guess if a sentence comes directly after another sentence \parencite{roberta}. So, let's say BERT is given two sentences: the previous example of "I love vanilla ice cream.", and "It tastes so sweet". BERT will have to guess if the latter sentence comes after the former. This was intended to get BERT to learn relationships between pairs of sentences.
 
 However it is important to note that the importance of NSP to BERT may be overstated, as \textcite{roberta} hypothesised after experiments with the NSP component of the loss function showed that removing the NSP loss function could match or even slightly improve performance on downstream tasks. 
+
+As for how BERT is employed for classification, a linear classifier is employed. This linear classifier takes the CLS token which is a 768 dimension representation of the input and outputs prediction scores which are passed through a softmax function to get the final classification. During fine-tuning, the difference between predicted probabilities and true labels is used to calculate the cross-entropy loss and the linear classifier as well as the BERT model weights are updated via backpropagation. 
 
 In conclusion, the bidirectional nature of BERT gives it an edge and the objectives used to train it, specifically MLM gave it an advantage when understanding context, allowing it to create more meaningful vectors. As a note, BERT does have many variants, including RoBERTa, developed by \textcite{roberta} who were cited earlier; this research uses the original BERT, developed by Google. 
 
@@ -922,7 +903,7 @@ Below are tables containing the training parameters for the models trained (note
 \end{table}
 
 \subsubsection{BERT Fine-tuning}
-Experiments using BERT involved fine-tuning a base BERT-uncased model for each dataset, meaning in total as five datasets were applied, 5 models were trained. Each dataset was split 70-15-15, 70\% training and 15\% validation and test.
+Experiments using BERT involved fine-tuning a base BERT-uncased model for each dataset, meaning in total as five datasets were applied, and with k=5 fold cross validation, in total 25 models were trained. Each dataset was split 85-15, 85\% training and 15\% test. The 85\% training set is further split 80-20, train and validation respectively, for each fold.
 
 The datasets were previously cleaned and processed as was explain previously, but in order for the data to be suitable to input to BERT, it undergoes further processing in the form of tokenisation using the base BERT-uncased tokeniser with the following settings: truncation = true, padding = true, max\_length = 128. 
 
@@ -935,36 +916,87 @@ train_encodings = tokeniser(
   )
 \end{lstlisting}
 
+The reason for capping the max_length at 128 instead of at 512 (max) were due to several factors. Firstly it was hoped that by limiting the maximum length it would reduce the amount of overfitting, improving generalisation. And secondly a lower max_length resulted in lower computational demands, especially on memory. 
+
 After tokenisation, the BERT-uncased model is loaded and the training arguments are set. Below is a code excerpt of the training arguments:
 
 \begin{lstlisting}[language=Python, caption={BERT Fine-tuning Configuration}]
 training_args = TrainingArguments(
-      output_dir='./results',
-      num_train_epochs=3,
-      per_device_train_batch_size=32,
-      per_device_eval_batch_size=64,
-      warmup_steps=500,
-      weight_decay=0.01,
-      logging_dir='./logs',
-      logging_steps=50,
-      eval_strategy="steps",
-      eval_steps=1000,
-      save_strategy="steps",
-      save_steps=1000,
-      save_total_limit=2,
-      load_best_model_at_end=True,
-      metric_for_best_model="f1",
-      greater_is_better=True,
-      optim="adamw_torch",
-      fp16=False,
-      dataloader_num_workers=0,
-      report_to="none",
-  )
+    output_dir=f'./results_fold_{fold+1}',
+    num_train_epochs=3,
+    per_device_train_batch_size=128,
+    per_device_eval_batch_size=128,
+    eval_strategy="steps",
+    eval_steps=128,
+    save_strategy="steps",
+    save_steps=128,
+    save_total_limit=2,
+    report_to="none",
+    optim="adamw_torch",
+    logging_dir='./logs',
+    logging_steps=128,
+    metric_for_best_model="f1",
+    load_best_model_at_end=True,
+    weight_decay=0.01,
+)
 \end{lstlisting}
 
-The number of epochs was set at 3, to avoid overfitting but just enough to allow for the weights to be updated to perform better and the batch size was set to 32 to allow for training to progress at a reasonable rate while also allowing for stable gradient updates.
+The number of epochs was set at 3, to avoid overfitting but just enough to allow for the weights to be updated to perform better and the batch size was set to 128 to allow for training to progress at a reasonable rate while also allowing for stable gradient updates. The high batch rate was primarily chosen due to limited computational resources, regardless as will be shown later the results remain quite high despite the high batch rate.
 
-At the end the best model is selected using F1-score, and this (best model) model will undergo the final evaluation using the test set.
+At the end the best model is selected using validation F1-score, and this (best model) model will undergo cross-dataset evaluation to determine its performance for completely unseen datasets.
+
+\subsubsection{Proposed Model}
+
+The proposed model, Text Perturbation-based Adversarial BERT (TPA-BERT), sought to improve the generalisation when it comes to fake news detection, particularly against unseen data. This was to be done by directly perturbing the text, followed by adversarial training to minimise the difference in embeddings generated when given original and perturbed data. The intention is, by scrambling the text, and with the adversarial training minimising the differences in model output, TPA-BERT would generate embeddings which are more robust and learn to identify more 'in-depth' features for fake news detection.
+
+Going in more depth regarding the methodology: firstly, before any training began, the datasets are perturbed using NLTK's WordNet by loading each record and applying synonym substitution against 20\% of each record's words, followed by another 10\% of words which are randomly swapped (swapped between words in the same row) and lastly 10\% of words are randomly deleted. Secondly, the BERT model is loaded, and both the original and perturbed datasets and conducting stratified splits of the data (85\% train, 15\% test) which is followed by a 80\%-20\% train and validation split (on the 85\5 train set; remaining 15\% saved for final evaluation)for k=5 cross validation. Following this, the training begins with the model accepting input capped at 128 tokens (per record) and beginning to learn from the adversarial loss function which combines the cross entropy loss and cosine similarity loss (the difference between the CLS tokens produced by the model for the original and perturbed data input). Note that the cosine similarity loss is linearly scaled from 0 to 0.5 over the first 10\% of training steps. Once training is complete, whether by completing all epochs, or by early-stopping (set at 3 steps) the model is evaluated on the held out test set. And to test the model's generalisation, the best model according to validation f1-score is chosen for cross-dataset evaluation (tested against all other datasets; for example: a model trained on WELFake is tested on FakeNewsNet, ISOT, Fake News Classification and Fake News Detection datasets). 
+
+$$\text{Loss} = \text{CE_Loss} + \lambda_{adv} \times \text{Cosine_Similarity_Loss}$$
+
+\begin{lstlisting}[language=Python, caption={BERT Fine-tuning Configuration}]
+training_kwargs = {
+    "output_dir": f'./results_adv_fold_{fold+1}',
+    "num_train_epochs": 3,
+    "per_device_train_batch_size": 32,
+    "per_device_eval_batch_size": 32,
+    "gradient_accumulation_steps": 2,
+    "save_strategy": "steps",
+    "save_steps": 128,
+    "save_total_limit": 1,
+    "bf16": use_tpu,
+    "gradient_checkpointing": not use_tpu,
+    "report_to": "none",
+    "optim": "adamw_torch",
+    "logging_dir": './logs',
+    "logging_steps": 128,
+    "metric_for_best_model": "f1",
+    "load_best_model_at_end": True,
+    "weight_decay": 0.01,
+    "remove_unused_columns": False,
+    "label_names": ["labels"],
+}
+\end{lstlisting}
+*Note that although eval_steps and eval_strategy are not in the parameter list, by default the strategy is "steps" and the steps are "128".
+
+There are several modifications to the parameters compared to the baseline BERT model. Most notably the training batch size which is now 32 instead of the 128 used by the baseline. There are a few reasons for this: firstly, the model also has to process the adversarial data which essentially doubles the data processed. And secondly, because of the aforementioned doubled data, the forward and backward passes now carry twice as much data. As a result, with double the data as well as the fact the forward and backward passes also have to deal with double the data, the effective batch size is 128. 
+
+The proposed model is inspired by and similar to the process described by \textcite{BERT-finetuning}, however, unlike the model described by those authors, TPA-BERT perturbs the text directly, instead of at the embedding and feature level like in FGM-FRAT (the model described by the authors). The reason for this deviation is that perturbation at a text level is simple to implement, in addition to the decreased number of passes per step thus reducing computational demands. Furthermore, the proposed model also contains a LIME component which will complement the BERT component by giving explanations for the otherwise black box model to increase trust in the model. 
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Proposed-model.drawio.png}
+    \caption{Figure depicts the proposed models' architecture}
+    \label{fig:proposed-model}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{BERT-finetuning.drawio.png}
+    \caption{Figure depicts the proposed fine-tuning process for the BERT component of the proposed model}
+    \label{fig:proposed-finetuning}
+\end{figure}
+
 \subsection{Preliminary Results}
 Please note that these preliminary results are not cross-validated. Cross-validation will be performed on all models during the second half of this final year project.
 
