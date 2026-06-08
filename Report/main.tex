@@ -45,6 +45,7 @@
 
 % --- HEADINGS CONFIGURATION ---
 % We use titlesec to override apa7's default section styling
+\let\subparagraph\relax
 \usepackage[explicit]{titlesec}
 \setcounter{secnumdepth}{3} % Enable numbering (1, 1.1, 1.1.1) which apa7 usually hides
 
@@ -1230,310 +1231,12 @@ As for challenges faced during FYP1, there were two major challenges: difficulty
 
 \subsection{BERT}
 
-\begin{table}[H]
-\centering
-\caption{BERT Results}
-\label{tab:bert_results}
-\begin{tabular}{lcccc}
-\toprule
-\textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
-\midrule
-WELFake & 0.9917 & 0.9920 & 0.9897 & 0.9908 \\
-FakeNewsNet & 0.8497 & 0.8768 & 0.9325 & 0.9037 \\
-Fake News Detection & 0.9976 & 0.9986 & 0.9971 & 0.9978 \\
-ISOT & 0.9996 & 0.9991 & 1.0000 & 0.9995 \\
-Fake News Classification & 0.9934 & 0.9948 & 0.9929 & 0.9938 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[H]
-\centering
-\caption{Cross Dataset Generalisation (BERT)}
-\label{tab:bert_cross_results}
-\begin{tabular}{llcccc}
-\toprule
-\textbf{Trained On} & \textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
-\midrule
-\multirow{4}{*}{WELFake} & FakeNewsNet & 0.6985 & - & - & 0.8166 \\
- & Fake News Detection & 0.2231 & - & - & 0.3640 \\
- & ISOT & 0.9992 & - & - & 0.9991 \\
- & Fake News Classification & 0.0188 & - & - & 0.0357 \\
-\midrule
-\multirow{4}{*}{FakeNewsNet} & WELFake & 0.5709 & - & - & 0.5071 \\
- & Fake News Detection & 0.4243 & - & - & 0.3687 \\
- & ISOT & 0.6210 & - & - & 0.5123 \\
- & Fake News Classification & 0.3813 & - & - & 0.2848 \\
-\midrule
-\multirow{4}{*}{Fake News Detection} & WELFake & 0.1351 & - & - & 0.0329 \\
- & FakeNewsNet & 0.3670 & - & - & 0.3315 \\
- & ISOT & 0.0002 & - & - & 0.0003 \\
- & Fake News Classification & 0.9822 & - & - & 0.9833 \\
-\midrule
-\multirow{4}{*}{ISOT} & WELFake & 0.8433 & - & - & 0.8515 \\
- & FakeNewsNet & 0.7558 & - & - & 0.8609 \\
- & Fake News Detection & 0.5414 & - & - & 0.7025 \\
- & Fake News Classification & 0.0186 & - & - & 0.0366 \\
-\midrule
-\multirow{4}{*}{Fake News Classification} & WELFake & 0.1414 & - & - & 0.0217 \\
- & FakeNewsNet & 0.2597 & - & - & 0.0550 \\
- & Fake News Detection & 0.4854 & - & - & 0.1162 \\
- & ISOT & 0.0005 & - & - & 0.0003 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-
-\subsection{Deep Learning}
-
-% \begin{landscape}
-% \pagestyle{empty}
-% \vspace*{\fill}
-% \begin{center}
-% \footnotesize
-\newpage
-
-\begin{table}[H]
-\centering
-\caption{Deep Learning Results}
-\label{tab:dl_results}
-\begin{tabular}{llcccc}
-\toprule
-\textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
-\midrule
-\multirow{3}{*}{WELFake} & CNN & 0.9610 & 0.9504 & 0.9645 & 0.9573 \\
- & LSTM & 0.9489 & 0.9354 & 0.9536 & 0.9442 \\
- & CNN-LSTM & 0.9474 & 0.9433 & 0.9408 & 0.9419 \\
-\midrule
-\multirow{3}{*}{FakeNewsNet} & CNN & 0.8395 & 0.8689 & 0.9280 & 0.8974 \\
- & LSTM & 0.7565 & 0.7565 & 1.0000 & 0.8614 \\
- & CNN-LSTM & 0.7565 & 0.7565 & 1.0000 & 0.8614 \\
-\midrule
-\multirow{3}{*}{Fake News Detection} & CNN & 0.9883 & 0.9881 & 0.9907 & 0.9894 \\
- & LSTM & 0.9824 & 0.9806 & 0.9876 & 0.9841 \\
- & CNN-LSTM & 0.9832 & 0.9839 & 0.9855 & 0.9847 \\
-\midrule
-\multirow{3}{*}{ISOT} & CNN & 0.9983 & 0.9976 & 0.9986 & 0.9981 \\
- & LSTM & 0.9959 & 0.9942 & 0.9969 & 0.9955 \\
- & CNN-LSTM & 0.9979 & 0.9975 & 0.9980 & 0.9977 \\
-\midrule
-\multirow{3}{*}{Fake News Classification} & CNN & 0.9901 & 0.9959 & 0.9858 & 0.9908 \\
- & LSTM & 0.9852 & 0.9910 & 0.9816 & 0.9862 \\
- & CNN-LSTM & 0.9862 & 0.9922 & 0.9822 & 0.9872 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-
-% \end{center}
-% \vspace*{\fill}
-% \end{landscape}
-
-\begin{table}[H]
-\centering
-\caption{Cross Dataset Generalisation (CNN and LSTM ONLY)}
-\label{tab:dl_cross_results}
-\begin{tabular}{lllcccc}
-\toprule
-\textbf{Trained On} & \textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
-\midrule
-\multirow{8}{*}{WELFake} & \multirow{2}{*}{FakeNewsNet} & CNN & 0.6932 & 0.6274 & 0.6932 & 0.6516 \\
- &  & LSTM & 0.7063 & 0.6329 & 0.7063 & 0.6573 \\
- & \multirow{2}{*}{Fake News Detection} & CNN & 0.1514 & 0.1403 & 0.1514 & 0.1456 \\
- &  & LSTM & 0.0269 & 0.0288 & 0.0269 & 0.0276 \\
- & \multirow{2}{*}{ISOT} & CNN & 0.9959 & 0.9959 & 0.9959 & 0.9959 \\
- &  & LSTM & 0.9901 & 0.9902 & 0.9901 & 0.9901 \\
- & \multirow{2}{*}{Fake News Classification} & CNN & 0.0222 & 0.0242 & 0.0222 & 0.0231 \\
- &  & LSTM & 0.0278 & 0.0292 & 0.0278 & 0.0283 \\
-\midrule
-\multirow{8}{*}{FakeNewsNet} & \multirow{2}{*}{WELFake} & CNN & 0.4784 & 0.5208 & 0.4784 & 0.4187 \\
- &  & LSTM & 0.4536 & 0.2057 & 0.4536 & 0.2831 \\
- & \multirow{2}{*}{Fake News Detection} & CNN & 0.5190 & 0.4909 & 0.5190 & 0.4729 \\
- &  & LSTM & 0.5484 & 0.3007 & 0.5484 & 0.3884 \\
- & \multirow{2}{*}{ISOT} & CNN & 0.4842 & 0.5177 & 0.4842 & 0.4380 \\
- &  & LSTM & 0.4579 & 0.2097 & 0.4579 & 0.2876 \\
- & \multirow{2}{*}{Fake News Classification} & CNN & 0.5126 & 0.4866 & 0.5126 & 0.4649 \\
- &  & LSTM & 0.5402 & 0.2919 & 0.5402 & 0.3790 \\
-\midrule
-\multirow{8}{*}{Fake News Detection} & \multirow{2}{*}{WELFake} & CNN & 0.1535 & 0.1528 & 0.1535 & 0.1531 \\
- &  & LSTM & 0.1645 & 0.1624 & 0.1645 & 0.1634 \\
- & \multirow{2}{*}{FakeNewsNet} & CNN & 0.3282 & 0.6554 & 0.3282 & 0.2886 \\
- &  & LSTM & 0.3730 & 0.6478 & 0.3730 & 0.3699 \\
- & \multirow{2}{*}{ISOT} & CNN & 0.0029 & 0.0025 & 0.0029 & 0.0027 \\
- &  & LSTM & 0.0045 & 0.0041 & 0.0045 & 0.0043 \\
- & \multirow{2}{*}{Fake News Classification} & CNN & 0.9797 & 0.9799 & 0.9797 & 0.9797 \\
- &  & LSTM & 0.9781 & 0.9783 & 0.9781 & 0.9782 \\
-\midrule
-\multirow{8}{*}{ISOT} & \multirow{2}{*}{WELFake} & CNN & 0.7876 & 0.8502 & 0.7876 & 0.7827 \\
- &  & LSTM & 0.7913 & 0.8500 & 0.7913 & 0.7869 \\
- & \multirow{2}{*}{FakeNewsNet} & CNN & 0.7549 & 0.6463 & 0.7549 & 0.6528 \\
- &  & LSTM & 0.7541 & 0.6156 & 0.7541 & 0.6515 \\
- & \multirow{2}{*}{Fake News Detection} & CNN & 0.4103 & 0.2624 & 0.4103 & 0.3196 \\
- &  & LSTM & 0.2693 & 0.2053 & 0.2693 & 0.2329 \\
- & \multirow{2}{*}{Fake News Classification} & CNN & 0.0183 & 0.0206 & 0.0183 & 0.0194 \\
- &  & LSTM & 0.0183 & 0.0205 & 0.0183 & 0.0193 \\
-\midrule
-\multirow{8}{*}{Fake News Classification} & \multirow{2}{*}{WELFake} & CNN & 0.2241 & 0.2027 & 0.2241 & 0.2122 \\
- &  & LSTM & 0.2169 & 0.1988 & 0.2169 & 0.2069 \\
- & \multirow{2}{*}{FakeNewsNet} & CNN & 0.2706 & 0.6289 & 0.2706 & 0.1692 \\
- &  & LSTM & 0.2748 & 0.6373 & 0.2748 & 0.1781 \\
- & \multirow{2}{*}{Fake News Detection} & CNN & 0.5946 & 0.7857 & 0.5946 & 0.5386 \\
- &  & LSTM & 0.7572 & 0.8403 & 0.7572 & 0.7486 \\
- & \multirow{2}{*}{ISOT} & CNN & 0.0006 & 0.0006 & 0.0006 & 0.0006 \\
- &  & LSTM & 0.0017 & 0.0016 & 0.0017 & 0.0017 \\
-\bottomrule
-\end{tabular}
-
-\vspace{1ex}
-\footnotesize{*due to the results from CNN and LSTM models generally outperforming the CNN-LSTM hybrid, their results have been omitted for brevity.}
-\end{table}
-
-
-\subsection{Machine Learning}
-
-% \begin{landscape}
-% \pagestyle{empty}
-% \vspace*{\fill}
-% \begin{center}
-
-\begin{table}[H]
-\centering
-\caption{Machine Learning Results}
-\label{tab:ml_results}
-\begin{tabular}{llcccc}
-\toprule
-\textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
-\midrule
-\multirow{6}{*}{WELFake} & SVC & 0.9501 & 0.9412 & 0.9492 & 0.9452 \\
- & LogisticRegression & 0.9319 & 0.9219 & 0.9286 & 0.9252 \\
- & XGBoost & 0.9304 & 0.9288 & 0.9169 & 0.9228 \\
- & RandomForest & 0.8961 & 0.8930 & 0.8758 & 0.8843 \\
- & KNN & 0.8725 & 0.9234 & 0.7839 & 0.8480 \\
- & GaussianNB & 0.6998 & 0.7932 & 0.4572 & 0.5800 \\
-\midrule
-\multirow{6}{*}{FakeNewsNet} & SVC & 0.8057 & 0.8965 & 0.8401 & 0.8674 \\
- & LogisticRegression & 0.7841 & 0.9031 & 0.8005 & 0.8487 \\
- & XGBoost & 0.8255 & 0.8437 & 0.9442 & 0.8911 \\
- & RandomForest & 0.8226 & 0.8251 & 0.9714 & 0.8923 \\
- & KNN & 0.8097 & 0.8382 & 0.9275 & 0.8806 \\
- & GaussianNB & 0.7643 & 0.8535 & 0.8311 & 0.8421 \\
-\midrule
-\multirow{6}{*}{Fake News Detection} & SVC & 0.9861 & 0.9830 & 0.9919 & 0.9874 \\
- & LogisticRegression & 0.9830 & 0.9825 & 0.9867 & 0.9846 \\
- & XGBoost & 0.9752 & 0.9698 & 0.9855 & 0.9776 \\
- & RandomForest & 0.9529 & 0.9422 & 0.9738 & 0.9577 \\
- & KNN & 0.9456 & 0.9330 & 0.9704 & 0.9514 \\
- & GaussianNB & 0.8971 & 0.9122 & 0.8989 & 0.9055 \\
-\midrule
-\multirow{6}{*}{ISOT} & SVC & 0.9878 & 0.9903 & 0.9830 & 0.9867 \\
- & LogisticRegression & 0.9869 & 0.9877 & 0.9838 & 0.9857 \\
- & XGBoost & 0.9753 & 0.9811 & 0.9647 & 0.9728 \\
- & RandomForest & 0.9559 & 0.9667 & 0.9359 & 0.9511 \\
- & KNN & 0.9479 & 0.9708 & 0.9137 & 0.9414 \\
- & GaussianNB & 0.9093 & 0.8935 & 0.9104 & 0.9019 \\
-\midrule
-\multirow{6}{*}{Fake News Classification} & SVC & 0.9759 & 0.9824 & 0.9727 & 0.9775 \\
- & LogisticRegression & 0.9701 & 0.9733 & 0.9713 & 0.9723 \\
- & XGBoost & 0.9638 & 0.9651 & 0.9679 & 0.9665 \\
- & RandomForest & 0.9449 & 0.9450 & 0.9535 & 0.9492 \\
- & KNN & 0.9336 & 0.9249 & 0.9546 & 0.9395 \\
- & GaussianNB & 0.8989 & 0.9195 & 0.8909 & 0.9050 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-% \end{center}
-% \vspace*{\fill}
-% \end{landscape}
-
-\begin{table}[H]
-\centering
-\caption{Cross Dataset Generalisation (SVC, Random Forest and XGBoost ONLY)}
-\label{tab:ml_cross_results}
-\begin{tabular}{lllcccc}
-\toprule
-\textbf{Trained On} & \textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
-\midrule
-\multirow{12}{*}{WELFake} & \multirow{3}{*}{FakeNewsNet} & SVC & 0.7536 & 0.6022 & 0.7536 & 0.6509 \\
- &  & Random Forest & 0.6855 & 0.6291 & 0.6855 & 0.6508 \\
- &  & XGBoost & 0.6963 & 0.6169 & 0.6963 & 0.6459 \\
- & \multirow{3}{*}{Fake News Detection} & SVC & 0.0192 & 0.0181 & 0.0192 & 0.0184 \\
- &  & Random Forest & 0.0190 & 0.0166 & 0.0190 & 0.0176 \\
- &  & XGBoost & 0.0183 & 0.0166 & 0.0183 & 0.0172 \\
- & \multirow{3}{*}{ISOT} & SVC & 0.9841 & 0.9843 & 0.9841 & 0.9841 \\
- &  & Random Forest & 0.9822 & 0.9825 & 0.9822 & 0.9821 \\
- &  & XGBoost & 0.9844 & 0.9847 & 0.9844 & 0.9844 \\
- & \multirow{3}{*}{Fake News Classification} & SVC & 0.0333 & 0.0342 & 0.0333 & 0.0335 \\
- &  & Random Forest & 0.0345 & 0.0347 & 0.0345 & 0.0343 \\
- &  & XGBoost & 0.0332 & 0.0336 & 0.0332 & 0.0332 \\
-\midrule
-\multirow{12}{*}{FakeNewsNet} & \multirow{3}{*}{WELFake} & SVC & 0.4696 & 0.4911 & 0.4696 & 0.4452 \\
- &  & Random Forest & 0.4595 & 0.5466 & 0.4595 & 0.3109 \\
- &  & XGBoost & 0.4575 & 0.4937 & 0.4575 & 0.3416 \\
- & \multirow{3}{*}{Fake News Detection} & SVC & 0.5361 & 0.5265 & 0.5361 & 0.5238 \\
- &  & Random Forest & 0.5354 & 0.4282 & 0.5354 & 0.3970 \\
- &  & XGBoost & 0.5423 & 0.5122 & 0.5423 & 0.4463 \\
- & \multirow{3}{*}{ISOT} & SVC & 0.4657 & 0.4800 & 0.4657 & 0.4519 \\
- &  & Random Forest & 0.4699 & 0.5908 & 0.4699 & 0.3280 \\
- &  & XGBoost & 0.4620 & 0.4925 & 0.4620 & 0.3583 \\
- & \multirow{3}{*}{Fake News Classification} & SVC & 0.5310 & 0.5223 & 0.5310 & 0.5177 \\
- &  & Random Forest & 0.5283 & 0.4273 & 0.5283 & 0.3884 \\
- &  & XGBoost & 0.5357 & 0.5106 & 0.5357 & 0.4378 \\
-\midrule
-\multirow{12}{*}{Fake News Detection} & \multirow{3}{*}{WELFake} & SVC & 0.1612 & 0.1630 & 0.1612 & 0.1621 \\
- &  & Random Forest & 0.1732 & 0.1747 & 0.1732 & 0.1739 \\
- &  & XGBoost & 0.1491 & 0.1504 & 0.1491 & 0.1498 \\
- & \multirow{3}{*}{FakeNewsNet} & SVC & 0.6121 & 0.6238 & 0.6121 & 0.6177 \\
- &  & Random Forest & 0.3778 & 0.6242 & 0.3778 & 0.3859 \\
- &  & XGBoost & 0.3324 & 0.6358 & 0.3324 & 0.3033 \\
- & \multirow{3}{*}{ISOT} & SVC & 0.0120 & 0.0108 & 0.0120 & 0.0113 \\
- &  & Random Forest & 0.0151 & 0.0144 & 0.0151 & 0.0146 \\
- &  & XGBoost & 0.0075 & 0.0069 & 0.0075 & 0.0071 \\
- & \multirow{3}{*}{Fake News Classification} & SVC & 0.9734 & 0.9735 & 0.9734 & 0.9734 \\
- &  & Random Forest & 0.9666 & 0.9667 & 0.9666 & 0.9666 \\
- &  & XGBoost & 0.9742 & 0.9743 & 0.9742 & 0.9742 \\
-\midrule
-\multirow{12}{*}{ISOT} & \multirow{3}{*}{WELFake} & SVC & 0.8469 & 0.8671 & 0.8469 & 0.8466 \\
- &  & Random Forest & 0.8317 & 0.8459 & 0.8317 & 0.8317 \\
- &  & XGBoost & 0.8460 & 0.8625 & 0.8460 & 0.8459 \\
- & \multirow{3}{*}{FakeNewsNet} & SVC & 0.7553 & 0.6243 & 0.7553 & 0.6517 \\
- &  & Random Forest & 0.6868 & 0.6294 & 0.6868 & 0.6513 \\
- &  & XGBoost & 0.7015 & 0.6218 & 0.7015 & 0.6498 \\
- & \multirow{3}{*}{Fake News Detection} & SVC & 0.0090 & 0.0091 & 0.0090 & 0.0090 \\
- &  & Random Forest & 0.0152 & 0.0152 & 0.0152 & 0.0151 \\
- &  & XGBoost & 0.0090 & 0.0091 & 0.0090 & 0.0089 \\
- & \multirow{3}{*}{Fake News Classification} & SVC & 0.0239 & 0.0254 & 0.0239 & 0.0245 \\
- &  & Random Forest & 0.0307 & 0.0317 & 0.0307 & 0.0310 \\
- &  & XGBoost & 0.0243 & 0.0257 & 0.0243 & 0.0249 \\
-\midrule
-\multirow{12}{*}{Fake News Classification} & \multirow{3}{*}{WELFake} & SVC & 0.1488 & 0.1469 & 0.1488 & 0.1478 \\
- &  & Random Forest & 0.1732 & 0.1737 & 0.1732 & 0.1735 \\
- &  & XGBoost & 0.1518 & 0.1529 & 0.1518 & 0.1523 \\
- & \multirow{3}{*}{FakeNewsNet} & SVC & 0.2504 & 0.6876 & 0.2504 & 0.1124 \\
- &  & Random Forest & 0.3797 & 0.6472 & 0.3797 & 0.3809 \\
- &  & XGBoost & 0.3326 & 0.6622 & 0.3326 & 0.2948 \\
- & \multirow{3}{*}{Fake News Detection} & SVC & 0.9917 & 0.9917 & 0.9917 & 0.9917 \\
- &  & Random Forest & 0.9857 & 0.9857 & 0.9857 & 0.9857 \\
- &  & XGBoost & 0.9918 & 0.9918 & 0.9918 & 0.9918 \\
- & \multirow{3}{*}{ISOT} & SVC & 0.0064 & 0.0061 & 0.0064 & 0.0062 \\
- &  & Random Forest & 0.0138 & 0.0132 & 0.0138 & 0.0134 \\
- &  & XGBoost & 0.0072 & 0.0068 & 0.0072 & 0.0070 \\
-\bottomrule
-\end{tabular}
-
-\vspace{1ex}
-\footnotesize{*Models were selected due to generally outperforming the other models and for brevity's sake.}
-\end{table}
-
-\subsection{New Results}
-% Add \usepackage{longtable} and \usepackage{multirow} to your preamble if not already present.
-
 \begingroup
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.3}
 \setlength\LTleft{0pt}
 \setlength\LTright{0pt}
-\begin{longtable}{@{} p{6.2cm} p{7.8cm} @{}}
+\begin{longtable}{@{} p{6.5cm} p{8.0cm} @{}}
 \caption{Baseline BERT Results} \label{tab:bert_results} \\
 \toprule
 \textbf{Dataset Name} & \textbf{F1/Precision/Recall/Accuracy} \\
@@ -1560,14 +1263,57 @@ Fake News Classification & 0.9938/0.9948/0.9929/0.9934 \\
 \end{longtable}
 \endgroup
 
-% -----------------------------------------------------
+The results from the baseline fine-tuned BERT models exhibited very high accuracy, recall and precision. As can be referred to in Table \ref{tab:bert_results}, it appears that the FakeNewsNet dataset was the most challenging dataset. All the other datasets proved to be no challenge for each of their fine-tuned BERT models. It is however notable that the F1-scores are in the range (with the exception of the FakeNewsNet dataset) exceed 0.99 which is very high, this may indicate that these datasets may have gathered the data for their positive and negative classes with a methodology that unknowingly introduced some level of data leakage. The alternative is that BERT is simply a very effective model, but the relatively lower performance of BERT on the FakeNewsNet dataset indicates the other datasets may be of lower quality or are less challenging. 
+
+Referencing the results from models trained on Word2Vec embeddings, it is clear that the FakeNewsNet dataset is challenging due to its class imbalance and potentially due to the fact that FakeNewsNet only contains the titles of the articles, not the rest of the content. 
+
+BERT has either matched or outperformed the already excellent results obtained from the machine learning models and deep learning models trained on GloVe and Word2Vec vector embeddings. This includes FakeNewsNet where it was able to obtain an F1-score of 0.9037, which was not able to be reached by any of the other machine learning or deep learning models trained on GloVe or Word2Vec embeddings. 
 
 \begingroup
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.3}
 \setlength\LTleft{0pt}
 \setlength\LTright{0pt}
-\begin{longtable}{@{} p{5.0cm} p{3.0cm} p{6.0cm} @{}}
+\begin{longtable}{@{} p{6.5cm} p{8.0cm} @{}}
+\caption{Cross Dataset Generalisation (BERT) - WELFake Only} \label{tab:bert_cross_results} \\
+\toprule
+\textbf{Dataset Name} & \textbf{F1/Precision/Recall/Accuracy} \\
+\midrule
+\endfirsthead
+
+\multicolumn{2}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
+\toprule
+\textbf{Dataset Name} & \textbf{F1/Precision/Recall/Accuracy} \\
+\midrule
+\endhead
+
+\bottomrule
+\multicolumn{2}{r}{{Continued on next page}} \\
+\endfoot
+
+\bottomrule
+\endlastfoot
+FakeNewsNet & 0.8165/0.7562/0.8872/0.6984 \\
+Fake News Detection & 0.3640/0.3302/0.4054/0.2231 \\
+ISOT & 0.9991/0.9998/0.9983/0.9992 \\
+Fake News Classification & 0.0357/0.0380/0.0336/0.0188 \\
+\end{longtable}
+\endgroup
+
+The best fold by validation f1-score was selected for cross dataset evaluation. The results show that the model trained on WELFake performed quite well for FakeNewsNet and ISOT, and much poorer for Fake News Detection and Fake News Classification datasets. 
+
+The model most likely performed better on the FakeNewsNet and ISOT datsets due to the similarities between WELFake and the aforementioned datasets. WELFake contains the article title (originally in its own column; appended at the beginning with the rest of the text during preprocessing) which may be why it performs well on the FakeNewsNet dataset. As for ISOT, it may be that these two datasets are very similar, and as a result the model was able to generalise well for ISOT. 
+
+As for the other two datasets: Fake News Detection and Fake News Classification, these datasets likely performed poorly due to being too different than WELFake. As a result the model was unable to generalise for these models thus causing the poor results. This is despite both datsets having 'title' columns initially. This may be because they also contained a 'text' column, which contained the rest of the article; this is in contrast to FakeNewsNet, which contained only the 'title' column. Furthermore, the methodology for collecting these datasets may have been substantially different than the methodology used to collect the WELFake dataset, causing the datasets to differ substantially.
+
+\subsection{Deep Learning}
+
+\begingroup
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.3}
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
+\begin{longtable}{@{} p{5.5cm} p{3.0cm} p{6.0cm} @{}}
 \caption{Deep Learning Baseline Results} \label{tab:dl_results} \\
 \toprule
 \textbf{Dataset Name} & \textbf{Model} & \textbf{F1/Precision/Recall/Accuracy} \\
@@ -1608,14 +1354,66 @@ Fake News Classification & 0.9938/0.9948/0.9929/0.9934 \\
 \end{longtable}
 \endgroup
 
-% -----------------------------------------------------
+The results for the deep learning models trained using the Word2Vec embeddings showed interesting results, especially pertaining to the datasets used and its performance on different models. 
+
+The results indicate that all the models had similar performances and were generally on par with one another, although CNNs very slightly outperformed the LSTMs and CNN-LSTMs. All models achieved results exceeding an f1 score of 0.94, with the exception of models trained on FakeNewsNet (which will be covered later). 
+
+The results for FakeNewsNet are rather interesting, as by looking at the recall we can see that the LSTM and CNN-LSTM models achieved perfect recall. This is most likely because there is a significant class imbalance in favour of the positive class. The LSTM and CNN-LSTM models seem to have fallen into the trap of always classifying any input as positive, which due to the class imbalance does mean that it actually performs quite well. The CNN model seems to have escaped this, as it does not have a perfect recall but has better precision, indicating it is actually classifying the negative class with some level of accuracy as well. 
+
+Generally though, when compared to BERT, it does seem that BERT outperforms the DL models trained. Although it is worth mentioning this difference ranges from small (f1 score improvement of ~0.3 for WELFake) to insigificant. Furthermore, BERT does not appear to have fallen into the trap of classifying only positives for FakeNewsNet like the LSTM and CNN-LSTM models fell into. Although the f1-score improvement is negligible (<0.01), it does show that BERT is able to produce embeddings which are more descriptive than Word2Vec. 
+
 
 \begingroup
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.3}
 \setlength\LTleft{0pt}
 \setlength\LTright{0pt}
-\begin{longtable}{@{} p{5.0cm} p{3.0cm} p{6.0cm} @{}}
+\begin{longtable}{@{} p{5.5cm} p{3.0cm} p{6.0cm} @{}}
+\caption{Cross Dataset Generalisation (CNN and LSTM Only) - Trained on WELFake Only} \label{tab:dl_cross_results} \\
+\toprule
+\textbf{Dataset Name} & \textbf{Model} & \textbf{F1/Precision/Recall/Accuracy} \\
+\midrule
+\endfirsthead
+
+\multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
+\toprule
+\textbf{Dataset Name} & \textbf{Model} & \textbf{F1/Precision/Recall/Accuracy} \\
+\midrule
+\endhead
+
+\bottomrule
+\multicolumn{3}{r}{{Continued on next page}} \\
+\endfoot
+
+\bottomrule
+\endlastfoot
+\multirow{2}{*}{FakeNewsNet} & CNN & 0.6516/0.6274/0.6932/0.6932 \\
+ & LSTM & 0.6573/0.6329/0.7063/0.7063 \\
+\midrule
+\multirow{2}{*}{Fake News Detection} & CNN & 0.1456/0.1403/0.1514/0.1514 \\
+ & LSTM & 0.0276/0.0288/0.0269/0.0269 \\
+\midrule
+\multirow{2}{*}{ISOT} & CNN & 0.9959/0.9959/0.9959/0.9959 \\
+ & LSTM & 0.9901/0.9902/0.9901/0.9901 \\
+\midrule
+\multirow{2}{*}{Fake News Classification} & CNN & 0.0231/0.0242/0.0222/0.0222 \\
+ & LSTM & 0.0283/0.0292/0.0278/0.0278 \\
+\bottomrule
+\end{longtable}
+\footnotesize{*due to the results from CNN and LSTM models generally outperforming the CNN-LSTM hybrid, their results have been omitted for brevity.}
+\endgroup
+
+Looking at the cross-dataset evaluation results, a similar pattern to the baseline BERT's cross-dataset evaluation emerges. With performance for ISOT and FakeNewsNet being excellnt when compared to performance for Fake News Detection and Fake News Classification. However, the cross-dataset evaluation results are significantly poorer compared to baseline BERT's cross-dataset evaluation results. With 
+
+
+\subsection{Machine Learning}
+
+\begingroup
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.3}
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
+\begin{longtable}{@{} p{5.5cm} p{3.0cm} p{6.0cm} @{}}
 \caption{Machine Learning Baseline Results} \label{tab:ml_results} \\
 \toprule
 \textbf{Dataset Name} & \textbf{Model} & \textbf{F1/Precision/Recall/Accuracy} \\
@@ -1635,50 +1433,93 @@ Fake News Classification & 0.9938/0.9948/0.9929/0.9934 \\
 \bottomrule
 \endlastfoot
 \multirow{6}{*}{WELFake} & SVC & 0.9452/0.9412/0.9492/0.9501 \\
- & LogisticRegression & 0.9252/0.9219/0.9286/0.9319 \\
+ & Logistic Regression & 0.9252/0.9219/0.9286/0.9319 \\
  & XGBoost & 0.9228/0.9288/0.9169/0.9304 \\
- & RandomForest & 0.8843/0.8930/0.8758/0.8961 \\
+ & Random Forest & 0.8843/0.8930/0.8758/0.8961 \\
  & KNN & 0.8480/0.9234/0.7839/0.8725 \\
- & GaussianNB & 0.5800/0.7932/0.4572/0.6998 \\
+ & Gaussian NB & 0.5800/0.7932/0.4572/0.6998 \\
 \midrule
 \multirow{6}{*}{FakeNewsNet} & SVC & 0.8674/0.8965/0.8401/0.8057 \\
- & LogisticRegression & 0.8487/0.9031/0.8005/0.7841 \\
+ & Logistic Regression & 0.8487/0.9031/0.8005/0.7841 \\
  & XGBoost & 0.8911/0.8437/0.9442/0.8255 \\
- & RandomForest & 0.8923/0.8251/0.9714/0.8226 \\
+ & Random Forest & 0.8923/0.8251/0.9714/0.8226 \\
  & KNN & 0.8806/0.8382/0.9275/0.8097 \\
- & GaussianNB & 0.8421/0.8535/0.8311/0.7643 \\
+ & Gaussian NB & 0.8421/0.8535/0.8311/0.7643 \\
 \midrule
 \multirow{6}{*}{Fake News Detection} & SVC & 0.9874/0.9830/0.9919/0.9861 \\
- & LogisticRegression & 0.9846/0.9825/0.9867/0.9830 \\
+ & Logistic Regression & 0.9846/0.9825/0.9867/0.9830 \\
  & XGBoost & 0.9776/0.9698/0.9855/0.9752 \\
- & RandomForest & 0.9577/0.9422/0.9738/0.9529 \\
+ & Random Forest & 0.9577/0.9422/0.9738/0.9529 \\
  & KNN & 0.9514/0.9330/0.9704/0.9456 \\
- & GaussianNB & 0.9055/0.9122/0.8989/0.8971 \\
+ & Gaussian NB & 0.9055/0.9122/0.8989/0.8971 \\
 \midrule
 \multirow{6}{*}{ISOT} & SVC & 0.9867/0.9903/0.9830/0.9878 \\
- & LogisticRegression & 0.9857/0.9877/0.9838/0.9869 \\
+ & Logistic Regression & 0.9857/0.9877/0.9838/0.9869 \\
  & XGBoost & 0.9728/0.9811/0.9647/0.9753 \\
- & RandomForest & 0.9511/0.9667/0.9359/0.9559 \\
+ & Random Forest & 0.9511/0.9667/0.9359/0.9559 \\
  & KNN & 0.9414/0.9708/0.9137/0.9479 \\
- & GaussianNB & 0.9019/0.8935/0.9104/0.9093 \\
+ & Gaussian NB & 0.9019/0.8935/0.9104/0.9093 \\
 \midrule
 \multirow{6}{*}{Fake News Classification} & SVC & 0.9775/0.9824/0.9727/0.9759 \\
- & LogisticRegression & 0.9723/0.9733/0.9713/0.9701 \\
+ & Logistic Regression & 0.9723/0.9733/0.9713/0.9701 \\
  & XGBoost & 0.9665/0.9651/0.9679/0.9638 \\
- & RandomForest & 0.9492/0.9450/0.9535/0.9449 \\
+ & Random Forest & 0.9492/0.9450/0.9535/0.9449 \\
  & KNN & 0.9395/0.9249/0.9546/0.9336 \\
- & GaussianNB & 0.9050/0.9195/0.8909/0.8989 \\
+ & Gaussian NB & 0.9050/0.9195/0.8909/0.8989 \\
 \end{longtable}
 \endgroup
-
-% -----------------------------------------------------
 
 \begingroup
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.3}
 \setlength\LTleft{0pt}
 \setlength\LTright{0pt}
-\begin{longtable}{@{} p{6.2cm} p{7.8cm} @{}}
+\begin{longtable}{@{} p{5.5cm} p{3.0cm} p{6.0cm} @{}}
+\caption{Cross Dataset Generalisation (SVC, Random Forest and XGBoost ONLY) - WELFake Only} \label{tab:ml_cross_results} \\
+\toprule
+\textbf{Dataset Name} & \textbf{Model} & \textbf{F1/Precision/Recall/Accuracy} \\
+\midrule
+\endfirsthead
+
+\multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
+\toprule
+\textbf{Dataset Name} & \textbf{Model} & \textbf{F1/Precision/Recall/Accuracy} \\
+\midrule
+\endhead
+
+\bottomrule
+\multicolumn{3}{r}{{Continued on next page}} \\
+\endfoot
+
+\bottomrule
+\endlastfoot
+\multirow{3}{*}{FakeNewsNet} & SVC & 0.6509/0.6022/0.7536/0.7536 \\
+ & Random Forest & 0.6508/0.6291/0.6855/0.6855 \\
+ & XGBoost & 0.6459/0.6169/0.6963/0.6963 \\
+\midrule
+\multirow{3}{*}{Fake News Detection} & SVC & 0.0184/0.0181/0.0192/0.0192 \\
+ & Random Forest & 0.0176/0.0166/0.0190/0.0190 \\
+ & XGBoost & 0.0172/0.0166/0.0183/0.0183 \\
+\midrule
+\multirow{3}{*}{ISOT} & SVC & 0.9841/0.9843/0.9841/0.9841 \\
+ & Random Forest & 0.9821/0.9825/0.9822/0.9822 \\
+ & XGBoost & 0.9844/0.9847/0.9844/0.9844 \\
+\midrule
+\multirow{3}{*}{Fake News Classification} & SVC & 0.0335/0.0342/0.0333/0.0333 \\
+ & Random Forest & 0.0343/0.0347/0.0345/0.0345 \\
+ & XGBoost & 0.0332/0.0336/0.0332/0.0332 \\
+\bottomrule
+\end{longtable}
+\footnotesize{*Models were selected due to generally outperforming the other models and for brevity's sake.}
+\endgroup
+
+\subsection{TPA-BERT}
+\begingroup
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.3}
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
+\begin{longtable}{@{} p{6.5cm} p{8.0cm} @{}}
 \caption{TPA-BERT Results} \label{tab:tpa_bert_results} \\
 \toprule
 \textbf{Dataset Name} & \textbf{F1/Precision/Recall/Accuracy} \\
@@ -1705,277 +1546,34 @@ Fake News Classification & 0.9898/0.9938/0.9858/0.9890 \\
 \end{longtable}
 \endgroup
 
-% -----------------------------------------------------
-
 \begingroup
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.3}
 \setlength\LTleft{0pt}
 \setlength\LTright{0pt}
-\begin{longtable}{@{} p{4.5cm} p{4.5cm} p{5.0cm} @{}}
-\caption{Cross Dataset Generalisation (BERT)} \label{tab:bert_cross_results} \\
+\begin{longtable}{@{} p{6.5cm} p{8.0cm} @{}}
+\caption{Cross Dataset Generalisation (TPA-BERT) - WELFake Only} \label{tab:tpa_bert_cross_results} \\
 \toprule
-\textbf{Trained On} & \textbf{Dataset Name} & \textbf{F1/Precision/Recall/Accuracy} \\
+\textbf{Dataset Name} & \textbf{F1/Precision/Recall/Accuracy} \\
 \midrule
 \endfirsthead
 
-\multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
+\multicolumn{2}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
 \toprule
-\textbf{Trained On} & \textbf{Dataset Name} & \textbf{F1/Precision/Recall/Accuracy} \\
+\textbf{Dataset Name} & \textbf{F1/Precision/Recall/Accuracy} \\
 \midrule
 \endhead
 
 \bottomrule
-\multicolumn{3}{r}{{Continued on next page}} \\
+\multicolumn{2}{r}{{Continued on next page}} \\
 \endfoot
 
 \bottomrule
 \endlastfoot
-\multirow{4}{*}{WELFake} & FakeNewsNet & 0.8165/0.7562/0.8872/0.6984 \\
- & Fake News Detection & 0.3640/0.3302/0.4054/0.2231 \\
- & ISOT & 0.9991/0.9998/0.9983/0.9992 \\
- & Fake News Classification & 0.0357/0.0380/0.0336/0.0188 \\
-\midrule
-\multirow{4}{*}{FakeNewsNet} & WELFake & 0.5071/0.5293/0.4866/0.5709 \\
- & Fake News Detection & 0.3687/0.4624/0.3065/0.4243 \\
- & ISOT & 0.5123/0.6235/0.4347/0.6210 \\
- & Fake News Classification & 0.2848/0.3793/0.2280/0.3813 \\
-\midrule
-\multirow{4}{*}{Fake News Detection} & WELFake & 0.0329/0.0333/0.0324/0.1350 \\
- & FakeNewsNet & 0.3308/0.8237/0.2069/0.3666 \\
- & ISOT & 0.0003/0.0003/0.0003/0.0002 \\
- & Fake News Classification & 0.9833/0.9982/0.9688/0.9822 \\
-\midrule
-\multirow{4}{*}{ISOT} & WELFake & 0.8517/0.7467/0.9909/0.8434 \\
- & FakeNewsNet & 0.8609/0.7565/0.9987/0.7558 \\
- & Fake News Detection & 0.7025/0.5452/0.9873/0.5414 \\
- & Fake News Classification & 0.0365/0.0389/0.0344/0.0186 \\
-\midrule
-\multirow{4}{*}{Fake News Classification} & WELFake & 0.0217/0.0224/0.0209/0.1415 \\
- & FakeNewsNet & 0.0548/0.7976/0.0284/0.2597 \\
- & Fake News Detection & 0.1159/0.9969/0.0615/0.4853 \\
- & ISOT & 0.0003/0.0002/0.0003/0.0005 \\
-\end{longtable}
-\endgroup
-
-% -----------------------------------------------------
-
-\begingroup
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.3}
-\setlength\LTleft{0pt}
-\setlength\LTright{0pt}
-\begin{longtable}{@{} p{3.5cm} p{3.5cm} p{2.5cm} p{4.5cm} @{}}
-\caption{Cross Dataset Generalisation (CNN and LSTM ONLY)} \label{tab:dl_cross_results} \\
-\toprule
-\textbf{Trained On} & \textbf{Dataset Name} & \textbf{Model} & \textbf{F1/Precision/Recall/Accuracy} \\
-\midrule
-\endfirsthead
-
-\multicolumn{4}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
-\toprule
-\textbf{Trained On} & \textbf{Dataset Name} & \textbf{Model} & \textbf{F1/Precision/Recall/Accuracy} \\
-\midrule
-\endhead
-
-\bottomrule
-\multicolumn{4}{r}{{Continued on next page}} \\
-\endfoot
-
-\bottomrule
-\endlastfoot
-\multirow{8}{*}{WELFake} & \multirow{2}{*}{FakeNewsNet} & CNN & 0.6516/0.6274/0.6932/0.6932 \\
- &  & LSTM & 0.6573/0.6329/0.7063/0.7063 \\
- & \multirow{2}{*}{Fake News Detection} & CNN & 0.1456/0.1403/0.1514/0.1514 \\
- &  & LSTM & 0.0276/0.0288/0.0269/0.0269 \\
- & \multirow{2}{*}{ISOT} & CNN & 0.9959/0.9959/0.9959/0.9959 \\
- &  & LSTM & 0.9901/0.9902/0.9901/0.9901 \\
- & \multirow{2}{*}{Fake News Classification} & CNN & 0.0231/0.0242/0.0222/0.0222 \\
- &  & LSTM & 0.0283/0.0292/0.0278/0.0278 \\
-\midrule
-\multirow{8}{*}{FakeNewsNet} & \multirow{2}{*}{WELFake} & CNN & 0.4187/0.5208/0.4784/0.4784 \\
- &  & LSTM & 0.2831/0.2057/0.4536/0.4536 \\
- & \multirow{2}{*}{Fake News Detection} & CNN & 0.4729/0.4909/0.5190/0.5190 \\
- &  & LSTM & 0.3884/0.3007/0.5484/0.5484 \\
- & \multirow{2}{*}{ISOT} & CNN & 0.4380/0.5177/0.4842/0.4842 \\
- &  & LSTM & 0.2876/0.2097/0.4579/0.4579 \\
- & \multirow{2}{*}{Fake News Classification} & CNN & 0.4649/0.4866/0.5126/0.5126 \\
- &  & LSTM & 0.3790/0.2919/0.5402/0.5402 \\
-\midrule
-\multirow{8}{*}{Fake News Detection} & \multirow{2}{*}{WELFake} & CNN & 0.1531/0.1528/0.1535/0.1535 \\
- &  & LSTM & 0.1634/0.1624/0.1645/0.1645 \\
- & \multirow{2}{*}{FakeNewsNet} & CNN & 0.2886/0.6554/0.3282/0.3282 \\
- &  & LSTM & 0.3699/0.6478/0.3730/0.3730 \\
- & \multirow{2}{*}{ISOT} & CNN & 0.0027/0.0025/0.0029/0.0029 \\
- &  & LSTM & 0.0043/0.0041/0.0045/0.0045 \\
- & \multirow{2}{*}{Fake News Classification} & CNN & 0.9797/0.9799/0.9797/0.9797 \\
- &  & LSTM & 0.9782/0.9783/0.9781/0.9781 \\
-\midrule
-\multirow{8}{*}{ISOT} & \multirow{2}{*}{WELFake} & CNN & 0.7827/0.8502/0.7876/0.7876 \\
- &  & LSTM & 0.7869/0.8500/0.7913/0.7913 \\
- & \multirow{2}{*}{FakeNewsNet} & CNN & 0.6528/0.6463/0.7549/0.7549 \\
- &  & LSTM & 0.6515/0.6156/0.7541/0.7541 \\
- & \multirow{2}{*}{Fake News Detection} & CNN & 0.3196/0.2624/0.4103/0.4103 \\
- &  & LSTM & 0.2329/0.2053/0.2693/0.2693 \\
- & \multirow{2}{*}{Fake News Classification} & CNN & 0.0194/0.0206/0.0183/0.0183 \\
- &  & LSTM & 0.0193/0.0205/0.0183/0.0183 \\
-\midrule
-\multirow{8}{*}{Fake News Classification} & \multirow{2}{*}{WELFake} & CNN & 0.2122/0.2027/0.2241/0.2241 \\
- &  & LSTM & 0.2069/0.1988/0.2169/0.2169 \\
- & \multirow{2}{*}{FakeNewsNet} & CNN & 0.1692/0.6289/0.2706/0.2706 \\
- &  & LSTM & 0.1781/0.6373/0.2748/0.2748 \\
- & \multirow{2}{*}{Fake News Detection} & CNN & 0.5386/0.7857/0.5946/0.5946 \\
- &  & LSTM & 0.7486/0.8403/0.7572/0.7572 \\
- & \multirow{2}{*}{ISOT} & CNN & 0.0006/0.0006/0.0006/0.0006 \\
- &  & LSTM & 0.0017/0.0016/0.0017/0.0017 \\
-\bottomrule
-\end{longtable}
-\footnotesize{*due to the results from CNN and LSTM models generally outperforming the CNN-LSTM hybrid, their results have been omitted for brevity.}
-\endgroup
-
-% -----------------------------------------------------
-
-\begingroup
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.3}
-\setlength\LTleft{0pt}
-\setlength\LTright{0pt}
-\begin{longtable}{@{} p{3.5cm} p{3.5cm} p{2.5cm} p{4.5cm} @{}}
-\caption{Cross Dataset Generalisation (SVC, Random Forest and XGBoost ONLY)} \label{tab:ml_cross_results} \\
-\toprule
-\textbf{Trained On} & \textbf{Dataset Name} & \textbf{Model} & \textbf{F1/Precision/Recall/Accuracy} \\
-\midrule
-\endfirsthead
-
-\multicolumn{4}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
-\toprule
-\textbf{Trained On} & \textbf{Dataset Name} & \textbf{Model} & \textbf{F1/Precision/Recall/Accuracy} \\
-\midrule
-\endhead
-
-\bottomrule
-\multicolumn{4}{r}{{Continued on next page}} \\
-\endfoot
-
-\bottomrule
-\endlastfoot
-\multirow{12}{*}{WELFake} & \multirow{3}{*}{FakeNewsNet} & SVC & 0.6509/0.6022/0.7536/0.7536 \\
- &  & Random Forest & 0.6508/0.6291/0.6855/0.6855 \\
- &  & XGBoost & 0.6459/0.6169/0.6963/0.6963 \\
- & \multirow{3}{*}{Fake News Detection} & SVC & 0.0184/0.0181/0.0192/0.0192 \\
- &  & Random Forest & 0.0176/0.0166/0.0190/0.0190 \\
- &  & XGBoost & 0.0172/0.0166/0.0183/0.0183 \\
- & \multirow{3}{*}{ISOT} & SVC & 0.9841/0.9843/0.9841/0.9841 \\
- &  & Random Forest & 0.9821/0.9825/0.9822/0.9822 \\
- &  & XGBoost & 0.9844/0.9847/0.9844/0.9844 \\
- & \multirow{3}{*}{Fake News Classification} & SVC & 0.0335/0.0342/0.0333/0.0333 \\
- &  & Random Forest & 0.0343/0.0347/0.0345/0.0345 \\
- &  & XGBoost & 0.0332/0.0336/0.0332/0.0332 \\
-\midrule
-\multirow{12}{*}{FakeNewsNet} & \multirow{3}{*}{WELFake} & SVC & 0.4452/0.4911/0.4696/0.4696 \\
- &  & Random Forest & 0.3109/0.5466/0.4595/0.4595 \\
- &  & XGBoost & 0.3416/0.4937/0.4575/0.4575 \\
- & \multirow{3}{*}{Fake News Detection} & SVC & 0.5238/0.5265/0.5361/0.5361 \\
- &  & Random Forest & 0.3970/0.4282/0.5354/0.5354 \\
- &  & XGBoost & 0.4463/0.5122/0.5423/0.5423 \\
- & \multirow{3}{*}{ISOT} & SVC & 0.4519/0.4800/0.4657/0.4657 \\
- &  & Random Forest & 0.3280/0.5908/0.4699/0.4699 \\
- &  & XGBoost & 0.3583/0.4925/0.4620/0.4620 \\
- & \multirow{3}{*}{Fake News Classification} & SVC & 0.5177/0.5223/0.5310/0.5310 \\
- &  & Random Forest & 0.3884/0.4273/0.5283/0.5283 \\
- &  & XGBoost & 0.4378/0.5106/0.5357/0.5357 \\
-\midrule
-\multirow{12}{*}{Fake News Detection} & \multirow{3}{*}{WELFake} & SVC & 0.1621/0.1630/0.1612/0.1612 \\
- &  & Random Forest & 0.1739/0.1747/0.1732/0.1732 \\
- &  & XGBoost & 0.1498/0.1504/0.1491/0.1491 \\
- & \multirow{3}{*}{FakeNewsNet} & SVC & 0.6177/0.6238/0.6121/0.6121 \\
- &  & Random Forest & 0.3859/0.6242/0.3778/0.3778 \\
- &  & XGBoost & 0.3033/0.6358/0.3324/0.3324 \\
- & \multirow{3}{*}{ISOT} & SVC & 0.0113/0.0108/0.0120/0.0120 \\
- &  & Random Forest & 0.0146/0.0144/0.0151/0.0151 \\
- &  & XGBoost & 0.0071/0.0069/0.0075/0.0075 \\
- & \multirow{3}{*}{Fake News Classification} & SVC & 0.9734/0.9735/0.9734/0.9734 \\
- &  & Random Forest & 0.9666/0.9667/0.9666/0.9666 \\
- &  & XGBoost & 0.9742/0.9743/0.9742/0.9742 \\
-\midrule
-\multirow{12}{*}{ISOT} & \multirow{3}{*}{WELFake} & SVC & 0.8466/0.8671/0.8469/0.8469 \\
- &  & Random Forest & 0.8317/0.8459/0.8317/0.8317 \\
- &  & XGBoost & 0.8459/0.8625/0.8460/0.8460 \\
- & \multirow{3}{*}{FakeNewsNet} & SVC & 0.6517/0.6243/0.7553/0.7553 \\
- &  & Random Forest & 0.6513/0.6294/0.6868/0.6868 \\
- &  & XGBoost & 0.6498/0.6218/0.7015/0.7015 \\
- & \multirow{3}{*}{Fake News Detection} & SVC & 0.0090/0.0091/0.0090/0.0090 \\
- &  & Random Forest & 0.0151/0.0152/0.0152/0.0152 \\
- &  & XGBoost & 0.0089/0.0091/0.0090/0.0090 \\
- & \multirow{3}{*}{Fake News Classification} & SVC & 0.0245/0.0254/0.0239/0.0239 \\
- &  & Random Forest & 0.0310/0.0317/0.0307/0.0307 \\
- &  & XGBoost & 0.0249/0.0257/0.0243/0.0243 \\
-\midrule
-\multirow{12}{*}{Fake News Classification} & \multirow{3}{*}{WELFake} & SVC & 0.1478/0.1469/0.1488/0.1488 \\
- &  & Random Forest & 0.1735/0.1737/0.1732/0.1732 \\
- &  & XGBoost & 0.1523/0.1529/0.1518/0.1518 \\
- & \multirow{3}{*}{FakeNewsNet} & SVC & 0.1124/0.6876/0.2504/0.2504 \\
- &  & Random Forest & 0.3809/0.6472/0.3797/0.3797 \\
- &  & XGBoost & 0.2948/0.6622/0.3326/0.3326 \\
- & \multirow{3}{*}{Fake News Detection} & SVC & 0.9917/0.9917/0.9917/0.9917 \\
- &  & Random Forest & 0.9857/0.9857/0.9857/0.9857 \\
- &  & XGBoost & 0.9918/0.9918/0.9918/0.9918 \\
- & \multirow{3}{*}{ISOT} & SVC & 0.0062/0.0061/0.0064/0.0064 \\
- &  & Random Forest & 0.0134/0.0132/0.0138/0.0138 \\
- &  & XGBoost & 0.0070/0.0068/0.0072/0.0072 \\
-\bottomrule
-\end{longtable}
-\footnotesize{*Models were selected due to generally outperforming the other models and for brevity's sake.}
-\endgroup
-
-% -----------------------------------------------------
-
-\begingroup
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.3}
-\setlength\LTleft{0pt}
-\setlength\LTright{0pt}
-\begin{longtable}{@{} p{4.5cm} p{4.5cm} p{5.0cm} @{}}
-\caption{Cross Dataset Generalisation (TPA-BERT)} \label{tab:tpa_bert_cross_results} \\
-\toprule
-\textbf{Trained On} & \textbf{Dataset Name} & \textbf{F1/Precision/Recall/Accuracy} \\
-\midrule
-\endfirsthead
-
-\multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
-\toprule
-\textbf{Trained On} & \textbf{Dataset Name} & \textbf{F1/Precision/Recall/Accuracy} \\
-\midrule
-\endhead
-
-\bottomrule
-\multicolumn{3}{r}{{Continued on next page}} \\
-\endfoot
-
-\bottomrule
-\endlastfoot
-\multirow{2}{*}{WELFake} & FakeNewsNet & 0.8191/0.7520/0.8995/0.6996 \\
- & Fake News Detection & 0.3562/0.3246/0.3946/0.2178 \\
-\midrule
-\multirow{4}{*}{FakeNewsNet} & WELFake & 0.5837/0.4691/0.7723/0.5003 \\
- & Fake News Detection & 0.6229/0.5450/0.7268/0.5174 \\
- & ISOT & 0.5855/0.4873/0.7332/0.5246 \\
- & Fake News Classification & 0.5728/0.5101/0.6530/0.4738 \\
-\midrule
-\multirow{4}{*}{Fake News Detection} & WELFake & 0.0515/0.0514/0.0517/0.1371 \\
- & FakeNewsNet & 0.3132/0.8249/0.1933/0.3588 \\
- & ISOT & 0.0027/0.0025/0.0029/0.0020 \\
- & Fake News Classification & 0.9817/0.9939/0.9698/0.9805 \\
-\midrule
-\multirow{4}{*}{ISOT} & WELFake & 0.8346/0.7250/0.9832/0.8232 \\
- & FakeNewsNet & 0.8588/0.7557/0.9943/0.7526 \\
- & Fake News Detection & 0.6428/0.5119/0.8636/0.4736 \\
- & Fake News Classification & 0.0363/0.0386/0.0342/0.0185 \\
-\midrule
-\multirow{4}{*}{Fake News Classification} & WELFake & 0.0249/0.0268/0.0233/0.1736 \\
- & FakeNewsNet & 0.1015/0.8503/0.0540/0.2773 \\
- & Fake News Detection & 0.3958/0.9996/0.2468/0.5869 \\
- & ISOT & 0.0002/0.0001/0.0002/0.0005 \\
+FakeNewsNet & 0.8191/0.7520/0.8995/0.6996 \\
+Fake News Detection & 0.3562/0.3246/0.3946/0.2178 \\
+ISOT & 0.9981/0.9994/0.9968/0.9982 \\
+Fake News Classification & 0.0359/0.0383/0.0338/0.0196 \\
 \end{longtable}
 \endgroup
 
