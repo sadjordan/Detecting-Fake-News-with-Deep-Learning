@@ -1354,9 +1354,7 @@ As for the other two datasets: Fake News Detection and Fake News Classification,
 \end{longtable}
 \endgroup
 
-The results for the deep learning models trained using the Word2Vec embeddings showed interesting results, especially pertaining to the datasets used and its performance on different models. 
-
-The results indicate that all the models had similar performances and were generally on par with one another, although CNNs very slightly outperformed the LSTMs and CNN-LSTMs. All models achieved results exceeding an f1 score of 0.94, with the exception of models trained on FakeNewsNet (which will be covered later). 
+The results for the deep learning models trained using the Word2Vec embeddings indicate that all the models had similar performances and were generally on par with one another, although CNNs very slightly outperformed the LSTMs and CNN-LSTMs. All models achieved results exceeding an f1 score of 0.94, with the exception of models trained on FakeNewsNet (which will be covered later). 
 
 The results for FakeNewsNet are rather interesting, as by looking at the recall we can see that the LSTM and CNN-LSTM models achieved perfect recall. This is most likely because there is a significant class imbalance in favour of the positive class. The LSTM and CNN-LSTM models seem to have fallen into the trap of always classifying any input as positive, which due to the class imbalance does mean that it actually performs quite well. The CNN model seems to have escaped this, as it does not have a perfect recall but has better precision, indicating it is actually classifying the negative class with some level of accuracy as well. 
 
@@ -1403,7 +1401,11 @@ Generally though, when compared to BERT, it does seem that BERT outperforms the 
 \footnotesize{*due to the results from CNN and LSTM models generally outperforming the CNN-LSTM hybrid, their results have been omitted for brevity.}
 \endgroup
 
-Looking at the cross-dataset evaluation results, a similar pattern to the baseline BERT's cross-dataset evaluation emerges. With performance for ISOT and FakeNewsNet being excellnt when compared to performance for Fake News Detection and Fake News Classification. However, the cross-dataset evaluation results are significantly poorer compared to baseline BERT's cross-dataset evaluation results. With 
+Looking at the cross-dataset evaluation results, a similar pattern to the BERT's cross-dataset evaluation emerges. With performance for ISOT and FakeNewsNet being excellnt when compared to performance for Fake News Detection and Fake News Classification. 
+
+However, the cross-dataset evaluation results are significantly poorer compared to BERT's cross-dataset evaluation results. With the differences being most notable when looking at the results for the FakeNewsNet and Fake News Detection datasets. The difference in f1-score for FakeNewsNet and Fake News Classification cross-dataset evaluation results between BERT and the CNN model was 0.1649 and 0.2184 respectively.
+
+To conclude, while deep learning models trained on Word2Vec embeddings can perform almost as well as BERT, the results for cross-dataset evaluation show a clear superiority of BERT over Word2Vec. 
 
 
 \subsection{Machine Learning}
@@ -1469,6 +1471,10 @@ Looking at the cross-dataset evaluation results, a similar pattern to the baseli
 \end{longtable}
 \endgroup
 
+The machine learning models generally did very well on all datasets save for FakeNewsNet (for reasons discussed earlier in the DL section). When compared against BERT, BERT outperformed the ML results at a degree similar to how it outperformed the DL results; and when compared against DL results, the DL models (or CNN, which was the best DL model) only very slightly outperformed the best ML models for each dataset.
+
+Like the DL and BERT models, the performance of the ML models were exceptional, with the exception of FakeNewsNet. Interestingly however, unlike the DL models, the ML models (all 6 of them) did not have perfet recall. This indicates that the selected ML models have architectures which make them less supseptible to class imbalances, something which was not taken into account during the implementation of the DL models. 
+
 \begingroup
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.3}
@@ -1512,6 +1518,10 @@ Looking at the cross-dataset evaluation results, a similar pattern to the baseli
 \end{longtable}
 \footnotesize{*Models were selected due to generally outperforming the other models and for brevity's sake.}
 \endgroup
+
+The cross-dataset evaluation of the selected ML models again followed the pattern observed by the BERT and DL model's cross-dataset evaluation results. However, most notably for the ML models the results for Fake News Detection was much poorer than BERT and the DL models. For reference, BERT and CNN achieved an f1 score of 0.3640 and 0.1456 respectively, while the best ML model (for Fake News Detection): SVC, only achieved an F1-score of 0.0184. 
+
+As for the other datasets, the ML models were very slightly outperformed by the DL models. With the exception of Fake News Classification, but the results for that dataset are already quite poor and as a result is of little consequence. 
 
 \subsection{TPA-BERT}
 \begingroup
