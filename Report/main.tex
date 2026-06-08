@@ -196,7 +196,7 @@ Date: 06: 02: 2026
 
 \clearpage
 \section*{Abstract}
-With the rise of social networking the spread and volume of fake news has dramatically increased, to the point where fact checking every post is unrealistic. In attempts to solve this problem, researchers have proposed methods employing machine learning and deep learning to flag fake news. However these methods are often limited by lack of applicability as they fail to generalise beyond the datasets used. Furthermore, many of these methods employ black-box models, which reduces trust in the model's predictions. In order to address these issues, we propose a model based on adversarially fine-tuning a Bidirectional Encoder Representations from Transformers (BERT) model to increase generalisation, and the use of Local Interpretable Model-Agnostic Explanations (LIME) to explain the otherwise black-box BERT model. Results from the baseline models trained show that it is possible to differentiate fake and real news. And if the proposed model could be implemented, it would allow for high accuracy fake news detection, with explainability so a user could understand the model's outputs. 
+With the rise of social networking the spread and volume of fake news has dramatically increased, to the point where fact checking every post is unrealistic. In attempts to solve this problem, researchers have proposed methods employing machine learning and deep learning to flag fake news. However, these methods are often limited by lack of applicability as they fail to generalise beyond the datasets used. Furthermore, many of these methods employ black-box models, which reduces trust in the model's predictions. In order to address these issues, we proposed a model based on adversarially fine-tuning a Bidirectional Encoder Representations from Transformers (BERT) model to increase generalisation, and the use of Local Interpretable Model-Agnostic Explanations (LIME) to explain the otherwise black-box BERT model. Results indicated that while this technique failed to effectively generalise the model, the LIME implementation was successful and highlighted the reasons for the model's output.
 
 \clearpage
 \section*{Acknowledgements}
@@ -766,7 +766,7 @@ Local Interpretable Model-Agnostic Explanations or LIME is a technique used to e
 To put the above into an example, let's say there is a XGBoost model being used to determine if a person has diabetes. Let's also say that this model only takes 3 features as input: weight, height and age. When given the input [90, 169, 56], it predicts true. To explain this, LIME will then generate variations around this input data, so called 'perturbed data points', for example [89, 167, 58]. These variations of the original data points are then passed to the XGBoost model as input and the output is noted. A dataset is then constructed based on the perturbed data points, the black-box's output, and the proximity of the perturbed data points to the original data point. This weighted dataset is fit onto a linear regression model and this model, as it is interpretable and not a black-box, is used to explain the black-box's prediction.
 
 \clearpage
-\section{Implementation Plan}
+\section{Implementation}
 
 \subsection{Experiments}
 
@@ -998,238 +998,8 @@ The proposed model is inspired by and similar to the process described by \textc
     \label{fig:proposed-finetuning}
 \end{figure}
 
-\subsection{Preliminary Results}
-Please note that these preliminary results are not cross-validated. Cross-validation will be performed on all models during the second half of this final year project.
-
-\subsubsection{GloVe Embedding}
-Experimentation with GloVe embeddings showed that ML models trained using GloVe embeddings performed well, however, with the exception of ML models trained on the FakeNewsNet dataset. Results for the ML models range from 0.85 - 0.98 (F1-score) with FakeNewsNet excluded and an anomalous result from the Gaussian Naive Bayes model for the WELFake dataset excluded as well. Elaborating on the anomalous result, it shows that the Gaussian NB model for WELFake performing poorly relative to other ML models across all datasets, this seems to be an outlier which also appears in Word2Vec's results, indicating something about the dataset which is not particularly compatible with Gaussian Naive Bayes. 
-
-For the DL models, the CNN models performed poorly on all datasets, with F1-scores in the range of 0.44 - 0.60 (excluding FakeNewsNet). Likely because CNN's are not optimal for sequential data, something which LSTMs are generally better at. For the CNN-LSTM models, it is clear that the hybridisation does not solve the drawbacks experienced by the CNN model with results between 0.61 - 0.68 (excluding FakeNewsNet). And lastly, LSTMs performed substantially better than its hybrid and CNN counterparts, with scores ranging from 0.93 - 0.98. This is likely because LSTMs are able to capture long-term dependencies and "remember" key discernible differences that CNNs are not able to.
-
-Lastly, the unique performance of models on FakeNewsNet warrants additional discussion. For the ML models, while overall accuracy is high, this is compounded by the fact that the models actually perform very poorly on the negative class, with F1-scores for the negative class between 0.32 - 0.54 (results in Table \ref{tab:glove_ml} do not differentiate by class, this assessment was made observing the classification reports generated during experimentation). This trend can also be seen in the DL models, with the CNN and CNN-LSTM models failing to predict the negative class entirely (explaining their exact same results) and the LSTM model having an F1-score of 0.59 for the negative class, compared to 0.88 for the positive class (overall F1-score of 0.82). This can be attributed to the class imbalance of the dataset, which has three times the number of positive samples than negative samples. And potentially the content of the dataset as well, as the dataset only has the title feature. 
-
-\begin{table}[H]
-\centering
-\small
-\caption{Machine Learning Model Performance (GloVe Embeddings)}
-\label{tab:glove_ml}
-\begin{tabular}{llcccc}
-\toprule
-\textbf{Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
-\midrule
-\textbf{WELFake} & Gaussian NB & 0.69 & 0.70 & 0.69 & 0.67 \\
- & KNN & 0.85 & 0.86 & 0.85 & 0.85 \\
- & Logistic Regression & 0.90 & 0.90 & 0.90 & 0.90 \\
- & Random Forest & 0.87 & 0.87 & 0.87 & 0.87 \\
- & SVM & 0.93 & 0.93 & 0.93 & 0.93 \\
- & XGBoost & 0.91 & 0.91 & 0.91 & 0.91 \\
-\midrule
-\textbf{ISOT} & Gaussian NB & 0.87 & 0.87 & 0.87 & 0.87 \\
- & KNN & 0.93 & 0.93 & 0.93 & 0.93 \\
- & Logistic Regression & 0.97 & 0.97 & 0.97 & 0.97 \\
- & Random Forest & 0.93 & 0.93 & 0.93 & 0.93 \\
- & SVM & 0.98 & 0.98 & 0.98 & 0.98 \\
- & XGBoost & 0.96 & 0.96 & 0.96 & 0.96 \\
-\midrule
-\textbf{Fake News Detection} & Gaussian NB & 0.87 & 0.87 & 0.87 & 0.87 \\
- & KNN & 0.93 & 0.93 & 0.93 & 0.93 \\
- & Logistic Regression & 0.97 & 0.97 & 0.97 & 0.97 \\
- & Random Forest & 0.94 & 0.94 & 0.94 & 0.93 \\
- & SVM & 0.98 & 0.98 & 0.98 & 0.98 \\
- & XGBoost & 0.96 & 0.96 & 0.96 & 0.96 \\
-\midrule
-\textbf{Fake News Classification} & Gaussian NB & 0.88 & 0.88 & 0.88 & 0.88 \\
- & KNN & 0.92 & 0.92 & 0.92 & 0.92 \\
- & Logistic Regression & 0.95 & 0.95 & 0.95 & 0.95 \\
- & Random Forest & 0.92 & 0.92 & 0.92 & 0.92 \\
- & SVM & 0.96 & 0.96 & 0.96 & 0.96 \\
- & XGBoost & 0.95 & 0.95 & 0.95 & 0.95 \\
-\midrule
-\textbf{FakeNewsNet} & Gaussian NB & 0.70 & 0.76 & 0.70 & 0.72 \\
- & KNN & 0.80 & 0.79 & 0.80 & 0.80 \\
- & Logistic Regression & 0.80 & 0.79 & 0.80 & 0.79 \\
- & Random Forest & 0.79 & 0.76 & 0.79 & 0.74 \\
- & SVM & 0.83 & 0.81 & 0.83 & 0.81 \\
- & XGBoost & 0.81 & 0.79 & 0.81 & 0.79 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[H]
-\centering
-\small
-\caption{Deep Learning Model Performance (GloVe Embeddings)}
-\label{tab:glove_dl}
-\begin{tabular}{llcccc}
-\toprule
-\textbf{Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
-\midrule
-\textbf{WELFake} & CNN & 0.5690 & 0.69 & 0.57 & 0.44 \\
- & CNN-LSTM & 0.6344 & 0.65 & 0.63 & 0.61 \\
- & LSTM & 0.9310 & 0.93 & 0.93 & 0.93 \\
-\midrule
-\textbf{ISOT} & CNN & 0.5887 & 0.64 & 0.59 & 0.51 \\
- & CNN-LSTM & 0.6758 & 0.68 & 0.68 & 0.67 \\
- & LSTM & 0.9763 & 0.98 & 0.98 & 0.98 \\
-\midrule
-\textbf{Fake News Detection} & CNN & 0.6292 & 0.64 & 0.63 & 0.60 \\
- & CNN-LSTM & 0.6561 & 0.71 & 0.66 & 0.62 \\
- & LSTM & 0.9770 & 0.98 & 0.98 & 0.98 \\
-\midrule
-\textbf{Fake News Classification} & CNN & 0.5920 & 0.63 & 0.59 & 0.52 \\
- & CNN-LSTM & 0.6804 & 0.68 & 0.68 & 0.68 \\
- & LSTM & 0.9614 & 0.96 & 0.96 & 0.96 \\
-\midrule
-\textbf{FakeNewsNet} & CNN & 0.7645 & 0.58 & 0.76 & 0.66 \\
- & CNN-LSTM & 0.7645 & 0.58 & 0.76 & 0.66 \\
- & LSTM & 0.8194 & 0.81 & 0.82 & 0.82 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-
-\subsubsection{Word2Vec}
-The results for the models trained using the Word2Vec embeddings showed interest results, especially pertaining to the datasets used and its performance on different models. And if comparing to GloVe embedding results, it seems that the results for Word2Vec performed on-par if not slighly better in some cases.
-
-Firstly, the machine learning models generally did very well on all datasets save for FakeNewsNet, indicating the dataset is more challenging than its peers. Notably the Gaussian Naive Bayes model performed relatively poorly on the WELFake dataset with an F1-score of 0.69 while other ML models (across all datasets) had F1-scores at or exceeding 0.87 (except for FakeNewsNet), going as high as 0.99. This seems to be an outlier which also appears in the GloVe embedding results, the cause of which was elaborated on in the GloVe embedding results discussion section.
-
-As for the DL approaches, the results indicate that the CNN's did not perform well with F1-scores betweem 0.43 and 0.68 (FakeNewsNet excluded). This may be because CNNs are not usually preferred for sequential data. And while CNN-LSTMs performed better than LSTMs (except for FakeNewsNet) with F1-scores between 0.65 and 0.70 (FakeNewsNet excluded), it seems the CNN component is holding the model back as LSTMs performed significantly better than the CNN-LSTM hybrid. The final DL approach employed were LSTMs, which performed by far the best with F1-scores between 0.95 and 0.99 (excluding FakeNewsNet). This is likely because LSTMs are less vulnerable to the vanishing gradient problem and are able to remember long-term depencies in the data. 
-
-Finally, it is worth discussing the results for FakeNewsNet, which didn't really follow the trends in the other four datasets. FakeNewsNet, which as previously mentioned seems to be a more challenging dataset, saw high accuracies by the ML models but when this is broken down into the positive and negative class, it is clear that the models excel at detecting the positive class possibly due to the class imbalance. This trend can also be applied to the DL models and their results, which saw the CNN and CNN-LSTM models completely fail to classify the negative class and instead just predict the positive class likely due to the imbalance (this can be seen in their identical results). Only the LSTM model was able to predict the negative class but this was limited to an F1-score of 0.60. It could be argued that the FakeNewsNet dataset is challenging not because of its content but because of its class imbalance. The impact of this class imbalance could be reduced by modifying the training configuration for the DL models.
-
-\begin{table}[H]
-\centering
-\small
-\caption{Machine Learning Model Performance (Word2Vec Embeddings)}
-\label{tab:word2vec_ml}
-\begin{tabular}{llcccc}
-\toprule
-\textbf{Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
-\midrule
-\textbf{WELFake} & Gaussian NB & 0.71 & 0.73 & 0.71 & 0.69 \\
- & KNN & 0.87 & 0.88 & 0.87 & 0.87 \\
- & Logistic Regression & 0.93 & 0.93 & 0.93 & 0.93 \\
- & Random Forest & 0.90 & 0.90 & 0.90 & 0.90 \\
- & SVM & 0.95 & 0.95 & 0.95 & 0.95 \\
- & XGBoost & 0.93 & 0.93 & 0.93 & 0.93 \\
-\midrule
-\textbf{ISOT} & Gaussian NB & 0.91 & 0.91 & 0.91 & 0.91 \\
- & KNN & 0.95 & 0.95 & 0.95 & 0.95 \\
- & Logistic Regression & 0.98 & 0.98 & 0.98 & 0.98 \\
- & Random Forest & 0.95 & 0.95 & 0.95 & 0.95 \\
- & SVM & 0.99 & 0.99 & 0.99 & 0.99 \\
- & XGBoost & 0.97 & 0.97 & 0.97 & 0.97 \\
-\midrule
-\textbf{Fake News Detection} & Gaussian NB & 0.90 & 0.90 & 0.90 & 0.90 \\
- & KNN & 0.95 & 0.95 & 0.95 & 0.95 \\
- & Logistic Regression & 0.98 & 0.98 & 0.98 & 0.98 \\
- & Random Forest & 0.96 & 0.96 & 0.96 & 0.96 \\
- & SVM & 0.99 & 0.99 & 0.99 & 0.99 \\
- & XGBoost & 0.98 & 0.98 & 0.98 & 0.98 \\
-\midrule
-\textbf{Fake News Classification} & Gaussian NB & 0.90 & 0.90 & 0.90 & 0.90 \\
- & KNN & 0.93 & 0.93 & 0.93 & 0.93 \\
- & Logistic Regression & 0.96 & 0.96 & 0.96 & 0.96 \\
- & Random Forest & 0.94 & 0.94 & 0.94 & 0.94 \\
- & SVM & 0.97 & 0.97 & 0.97 & 0.97 \\
- & XGBoost & 0.96 & 0.96 & 0.96 & 0.96 \\
-\midrule
-\textbf{FakeNewsNet} & Gaussian NB & 0.76 & 0.78 & 0.76 & 0.76 \\
- & KNN & 0.81 & 0.80 & 0.81 & 0.80 \\
- & Logistic Regression & 0.83 & 0.81 & 0.83 & 0.81 \\
- & Random Forest & 0.82 & 0.80 & 0.82 & 0.79 \\
- & SVM & 0.83 & 0.82 & 0.83 & 0.81 \\
- & XGBoost & 0.82 & 0.81 & 0.82 & 0.81 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[H]
-\centering
-\small
-\caption{Deep Learning Model Performance (Word2Vec Embeddings)}
-\label{tab:word2vec_dl}
-\begin{tabular}{llcccc}
-\toprule
-\textbf{Dataset} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
-\midrule
-\textbf{WELFake} & CNN & 0.5673 & 0.71 & 0.57 & 0.43 \\
- & CNN-LSTM & 0.6457 & 0.65 & 0.65 & 0.65 \\
- & LSTM & 0.9540 & 0.95 & 0.95 & 0.95 \\
-\midrule
-\textbf{ISOT} & CNN & 0.6726 & 0.68 & 0.67 & 0.66 \\
- & CNN-LSTM & 0.7005 & 0.70 & 0.70 & 0.70 \\
- & LSTM & 0.9875 & 0.99 & 0.99 & 0.99 \\
-\midrule
-\textbf{Fake News Detection} & CNN & 0.6860 & 0.68 & 0.69 & 0.68 \\
- & CNN-LSTM & 0.6859 & 0.69 & 0.69 & 0.68 \\
- & LSTM & 0.9893 & 0.99 & 0.99 & 0.99 \\
-\midrule
-\textbf{Fake News Classification} & CNN & 0.6508 & 0.66 & 0.65 & 0.63 \\
- & CNN-LSTM & 0.6827 & 0.69 & 0.68 & 0.67 \\
- & LSTM & 0.9708 & 0.97 & 0.97 & 0.97 \\
-\midrule
-\textbf{FakeNewsNet} & CNN & 0.7645 & 0.58 & 0.76 & 0.66 \\
- & CNN-LSTM & 0.7645 & 0.58 & 0.76 & 0.66 \\
- & LSTM & 0.8260 & 0.82 & 0.83 & 0.82 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\subsubsection{BERT Fine-tuning}
-The results from the baseline fine-tuned BERT models exhibited very high accuracy, recall and precision. As can be referred to in Table \ref{tab:bert_test}, it appears that the FakeNewsNet dataset was the most challenging dataset. All the other datasets proved to be no challenge for each of their fine-tuned BERT models. It is however notable that the F1-scores are in the range (with the exception of the FakeNewsNet dataset) exceed 0.98, this may indicate that these datasets may have gathered the data for their positive and negative classes with a methodology that unknowingly introduced some level of data leakage. The alternative is that BERT is simply a very effective model, but the relatively lower performance of BERT on the FakeNewsNet dataset indicates the other datasets may be of lower quality or are less challenging. 
-
-Referencing the results from GloVe and Word2Vec, it is clear that the FakeNewsNet dataset is challenging due to its class imbalance and potentially due to the fact that FakeNewsNet only contains the titles of the articles, not the rest of the content. 
-
-BERT has either matched or outperformed the already excellent results obtained from the machine learning models and deep learning models trained on GloVe and Word2Vec vector embeddings. This includes FakeNewsNet where it was able to obtain an F1-score of 0.9016, which was not able to be reached by any of the other machine learning or deep learning models trained on GloVe or Word2Vec embeddings. 
-
-\begin{table}[H]
-\centering
-\caption{BERT Fine-tuning Results (Evaluated using test set)}
-\label{tab:bert_test}
-\begin{tabular}{lcccc}
-\toprule
-\textbf{Dataset} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
-\midrule
-WELFake & 0.9898 & 0.9844 & 0.9933 & 0.9889 \\
-FakeNewsNet & 0.8499 & 0.8934 & 0.91 & 0.9016 \\
-Fake News Detection & 0.9969 & 0.9950 & 0.9994 & 0.9972 \\
-ISOT & 0.9997 & 0.9993 & 1.00 & 0.9996 \\
-Fake News Classification & 0.9974 & 0.9975 & 0.9978 & 0.9976 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-
-\subsection{Gantt chart for FYP2}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\linewidth]{FYP2-Gantt_Chart.png}
-    \caption{Figure depicts planned timeline for FYP2 for MMU Term 2610}
-    \label{fig:FYP2-GANTT_CHART}
-\end{figure}
-
-\clearpage
-\section{Conclusion}
-Thus far for this research, pursuant to the research objectives: completed a thorough literature review of related works, gathered relevant datasets, drafted up a proposed model and conducted experiments with various embedding algorithms and through which preliminary results were obtained. The remaining work for this Final Year Project (FYP) are: cross-validation of baseline models (1-fold results are in preliminary results), implementation and evaluation of the proposed model and lastly, the creation of a simple application through which the proposed model can be used to test if a given piece of news is real or fake.
-
-For the literature review, 16 articles were reviewed, through which substantial insight was gained into the research around fake news detection. Insight was gained into the use of various embedding algorithms such as BERT, GloVe and Doc2Vec for text, as well as other techniques such as VGG19 for image processing. Furthermore, the various approaches undertaken by the authors of the read papers were noted, and informed the development of the proposed model for this research. These approaches varied from machine learning, to multi-layered models employing embedding algorithms, deep learning and graphical models amongst other algorithms. Most interestingly, many state-of-the-art models were black-boxes, which motivated the reading of articles discussing explainable AI techniques, such as LIME. To conclude, the literature review was critical to the development of a substantial knowledge base which supported this FYP and efforts toward the research goals.
-
-Relevant datasets were gathered from Kaggle, research papers and HuggingFace. Originally seven datasets were gathered, but two of them proved to be incompatible and were not used. The five chosen datasets were previously described in detail in Chapter 3. These datasets were then cleaned and preprocessed, allowing for their use in the later experiments with the various embedding algorithms.
-
-The proposed model was constructed based on approaches to fake news detection in the articles reviewed in the literature review. This proposed model is to be primarily based upon a BERT model, fine-tuned using an adversarial technique of which it's goal is to create embeddings which can enable for a more generalised model. This fine-tuned BERT model will then have its outputs explained using a LIME component. This proposed model seeks to be more practical and usable compared to other models which output misleading predictions when the input is even slightly different than the dataset it was trained on. And it aims to address the issue of trust as well, through the implementation of LIME which will explain the proposed model's predictions.
-
-Lastly, experiments on various embedding algorithms were conducted which aimed to gain insight into how these different algorithms actually perform. The experimental data showed that while some models trained on GloVe and Word2Vec embeddings were able to perform well, they were either matched or outperformed by BERT. This highlights the superiority of BERT, and was a key reason in the decision to use BERT as a component of the proposed model. These experiments, aside from obtaining preliminary results, also allowed for the gaining of hand-on knowledge related to applying these embedding algorithms which will be cruicial when developing the more complex proposed model.
-
-Onto the remaining work for the second half of this FYP; Firstly, he baseline models of which 1-fold results are available require further validation in the form of cross-validation in order to confirm these results. Followed by the development of the proposed model, which will likely be more challenging than the baseline-model experiments due to the adversarial fine-tuning process, which will require some experimentation with the loss function to reach an optimal result. This will likely also require the development of a method of evaluation which can determine if the proposed model is more generalised relative to its baseline counterpart. And lastly, after the proposed model is developed and evaluated, the development of a simple application to allow for the demonstration and use of the proposed model is required. This will be relatively simple compared to the other tasks although the deployment may prove challenging depending on the computational demands of the proposed model which may affect the speed of this application.
-
-As for challenges faced during FYP1, there were two major challenges: difficulty understanding articles and computational power limitations. Firstly, initially when doing the literature review, it was difficult to understand all the jargon and concepts being used in these papers. This was gradually overcome through finding the definitions, understanding the concepts and experience after reading more papers. This challenge was largely overcome after the first few weeks starting the FYP as more papers were read and understanding of the research topic increased. The second issue, computational power limitations, was experienced when experimenting with the embedding algorithms and training the models. This was due to a lack of local computational power, and was overcome through the use of Google Colab's cloud computing resources. Although, clearly, the models were trained and results obtained, the limitation still exists due to Google Colab's free tier having certain limitations on the use of its high-performance cloud computing resources. 
-
-%fyp 2 results
-\clearpage
-\section{FYP2 Results}
-
-\subsection{BERT}
+\subsection{Results}
+\subsubsection{BERT}
 
 \begingroup
 \setlength{\tabcolsep}{3pt}
@@ -1306,7 +1076,7 @@ The model most likely performed better on the FakeNewsNet and ISOT datsets due t
 
 As for the other two datasets: Fake News Detection and Fake News Classification, these datasets likely performed poorly due to being too different than WELFake. As a result the model was unable to generalise for these models thus causing the poor results. This is despite both datsets having 'title' columns initially. This may be because they also contained a 'text' column, which contained the rest of the article; this is in contrast to FakeNewsNet, which contained only the 'title' column. Furthermore, the methodology for collecting these datasets may have been substantially different than the methodology used to collect the WELFake dataset, causing the datasets to differ substantially.
 
-\subsection{Deep Learning}
+\subsubsection{Deep Learning}
 
 \begingroup
 \setlength{\tabcolsep}{3pt}
@@ -1408,7 +1178,7 @@ However, the cross-dataset evaluation results are significantly poorer compared 
 To conclude, while deep learning models trained on Word2Vec embeddings can perform almost as well as BERT, the results for cross-dataset evaluation show a clear superiority of BERT over Word2Vec. 
 
 
-\subsection{Machine Learning}
+\subsubsection{Machine Learning}
 
 \begingroup
 \setlength{\tabcolsep}{3pt}
@@ -1523,7 +1293,7 @@ The cross-dataset evaluation of the selected ML models again followed the patter
 
 As for the other datasets, the ML models were very slightly outperformed by the DL models, with such a small difference than randomness could have very well caused it. With the exception of Fake News Classification, but the results for that dataset are already quite poor and as a result is of little consequence. 
 
-\subsection{TPA-BERT}
+\subsubsection{TPA-BERT}
 \begingroup
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.3}
@@ -1598,6 +1368,24 @@ Lastly, the perturbations do not produce meaningful variations. The random synon
 However it could also be argued the whole approach is flawed. Even if Large Language Models to generate 'genuine variation', the semantics of the text will likely not change sigificantly and any models trained will still suffer from generalisation problems even if their horizons are slightly expanded. Nonetheless, this attempt has proven that while current approaches to fake news detection are more than capable of performing well when working with a dataset, the actual process of generalising a model to a degree where it can be reliably in real-world settings remains elusive. Although there are likely more successful attempts than the one described here like by \textcite{BERT-finetuning}, there remains significant work to be done in regards to generalisation. 
 
 \subsection{LIME Implementation}
+TBD
+
+
+\clearpage
+\section{Conclusion}
+Thus far for this research, pursuant to the research objectives: completed a thorough literature review of related works, gathered relevant datasets, drafted up a proposed model and conducted experiments with various embedding algorithms and through which preliminary results were obtained. The remaining work for this Final Year Project (FYP) are: cross-validation of baseline models (1-fold results are in preliminary results), implementation and evaluation of the proposed model and lastly, the creation of a simple application through which the proposed model can be used to test if a given piece of news is real or fake.
+
+For the literature review, 16 articles were reviewed, through which substantial insight was gained into the research around fake news detection. Insight was gained into the use of various embedding algorithms such as BERT, GloVe and Doc2Vec for text, as well as other techniques such as VGG19 for image processing. Furthermore, the various approaches undertaken by the authors of the read papers were noted, and informed the development of the proposed model for this research. These approaches varied from machine learning, to multi-layered models employing embedding algorithms, deep learning and graphical models amongst other algorithms. Most interestingly, many state-of-the-art models were black-boxes, which motivated the reading of articles discussing explainable AI techniques, such as LIME. To conclude, the literature review was critical to the development of a substantial knowledge base which supported this FYP and efforts toward the research goals.
+
+Relevant datasets were gathered from Kaggle, research papers and HuggingFace. Originally seven datasets were gathered, but two of them proved to be incompatible and were not used. The five chosen datasets were previously described in detail in Chapter 3. These datasets were then cleaned and preprocessed, allowing for their use in the later experiments with the various embedding algorithms.
+
+The proposed model was constructed based on approaches to fake news detection in the articles reviewed in the literature review. This proposed model is to be primarily based upon a BERT model, fine-tuned using an adversarial technique of which it's goal is to create embeddings which can enable for a more generalised model. This fine-tuned BERT model will then have its outputs explained using a LIME component. This proposed model seeks to be more practical and usable compared to other models which output misleading predictions when the input is even slightly different than the dataset it was trained on. And it aims to address the issue of trust as well, through the implementation of LIME which will explain the proposed model's predictions.
+
+Lastly, experiments on various embedding algorithms were conducted which aimed to gain insight into how these different algorithms actually perform. The experimental data showed that while some models trained on GloVe and Word2Vec embeddings were able to perform well, they were either matched or outperformed by BERT. This highlights the superiority of BERT, and was a key reason in the decision to use BERT as a component of the proposed model. These experiments, aside from obtaining preliminary results, also allowed for the gaining of hand-on knowledge related to applying these embedding algorithms which will be cruicial when developing the more complex proposed model.
+
+Onto the remaining work for the second half of this FYP; Firstly, he baseline models of which 1-fold results are available require further validation in the form of cross-validation in order to confirm these results. Followed by the development of the proposed model, which will likely be more challenging than the baseline-model experiments due to the adversarial fine-tuning process, which will require some experimentation with the loss function to reach an optimal result. This will likely also require the development of a method of evaluation which can determine if the proposed model is more generalised relative to its baseline counterpart. And lastly, after the proposed model is developed and evaluated, the development of a simple application to allow for the demonstration and use of the proposed model is required. This will be relatively simple compared to the other tasks although the deployment may prove challenging depending on the computational demands of the proposed model which may affect the speed of this application.
+
+As for challenges faced during FYP1, there were two major challenges: difficulty understanding articles and computational power limitations. Firstly, initially when doing the literature review, it was difficult to understand all the jargon and concepts being used in these papers. This was gradually overcome through finding the definitions, understanding the concepts and experience after reading more papers. This challenge was largely overcome after the first few weeks starting the FYP as more papers were read and understanding of the research topic increased. The second issue, computational power limitations, was experienced when experimenting with the embedding algorithms and training the models. This was due to a lack of local computational power, and was overcome through the use of Google Colab's cloud computing resources. Although, clearly, the models were trained and results obtained, the limitation still exists due to Google Colab's free tier having certain limitations on the use of its high-performance cloud computing resources. 
 
 \clearpage
 \addcontentsline{toc}{section}{References}
