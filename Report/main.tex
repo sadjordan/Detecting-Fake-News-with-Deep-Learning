@@ -770,139 +770,6 @@ To put the above into an example, let's say there is a XGBoost model being used 
 
 \subsection{Experiments}
 
-\subsubsection{GloVe Embedding}
-Experiments involving GloVe saw the text in the datasets turned into GloVe embeddings. But first the text in each dataset were turned into lower-case, before being turned into embeddings using weights found in the file 'dolma\_300\_2024\_1.2M.100\_combined.txt'. Each respective dataset and its now converted text was then used to train several machine learning models (KNN, Gaussian NB, Logistic Regression, SVC, XGBoost, Random Forest) and deep learning models (CNN, CNN-LSTM, LSTM). 
-
-Below are tables containing the training parameters for the models trained (both machine learning and deep learning models): 
-
-\begin{table}[H]
-    \centering
-    \caption{Machine Learning Model Training Hyperparameters}
-    \label{tab:ml_model_params}
-    \begin{tabular}{l l}
-        \hline
-        \textbf{Model} & \textbf{Training Arguments} \\
-        \hline
-        K-Nearest Neighbors (KNN) & \texttt{n\_neighbors=5} \\
-        Gaussian Naive Bayes & Default parameters \\
-        Logistic Regression & \texttt{max\_iter=1000} \\
-        Support Vector Classifier (SVC) & Default parameters \\
-        XGBoost & \texttt{use\_label\_encoder=False}, \texttt{eval\_metric='logloss'} \\
-        Random Forest Classifier & \texttt{n\_estimators=100}, \texttt{random\_state=42} \\
-        \hline
-    \end{tabular}
-\end{table}
-
-\begin{table}[ht]
-    \centering
-    \caption{Deep Learning Model Hyperparameters}
-    \label{tab:dl_model_params}
-    \begin{tabular}{l l l}
-        \hline
-        \textbf{Model} & \textbf{Parameter} & \textbf{Value} \\
-        \hline
-        \multicolumn{3}{c}{\textbf{Common Training settings}} \\
-        & Epochs & 10 \\
-        & Batch Size & 32 \\
-        & Learning Rate & 0.001 \\
-        & Optimizer & Adam \\
-        & Loss Function & BCELoss \\
-        & Validation Split & 0.2 \\
-        \hline
-        \multirow{4}{*}{CNN} & Number of Filters & 100 \\
-        & Filter Sizes & [3, 4, 5] \\
-        & Dropout & 0.5 \\
-        & Activation & ReLU (Hidden), Sigmoid (Output) \\
-        \hline
-        \multirow{4}{*}{LSTM} & Hidden Dimension & 128 \\
-        & Number of Layers & 2 \\
-        & Dropout & 0.5 \\
-        & Activation & ReLU (Hidden), Sigmoid (Output) \\
-        \hline
-        \multirow{6}{*}{CNN-LSTM} & CNN Filters & 64 \\
-        & CNN Filter Sizes & [3, 4, 5] \\
-        & LSTM Hidden Dims & 128 \\
-        & LSTM Layers & 1 \\
-        & Dropout & 0.5 \\
-        & Activation & ReLU (Hidden), Sigmoid (Output) \\
-        \hline
-    \end{tabular}
-\end{table}
-
-\subsubsection{Word2Vec}
-Word2Vec experimentation saw the text (from previous processing steps) undergo some final processing which involved turning the text into all lower-case and the text undergoing lemmatisation using the Python library NLTK's \textit{WordNetLemmatizer}. After this, the processed text was used to train the Word2Vec model for each dataset (as there are 5 datasets, there will be 5 different Word2Vec embedding models).
-
-The training arguments for the Word2Vec models can be found below (note the exact code can not be found in the notebook used for Word2Vec training, but these are the exact arguments used and this snippet was made for simplified viewing of the arguments): 
-\begin{lstlisting}[language=Python, caption={Word2Vec Models' Training Configuration}]
-model = Word2Vec(
-        sentences=tokenized_texts,
-        vector_size=100,
-        window=5,
-        min_count=2,
-        workers=4,
-        epochs=10,
-        sg=1  # 1 for skip-gram, 0 for CBOW
-    )
-\end{lstlisting}
-
-After the each Word2Vec model is trained, the models are employed to convert each dataset into embedding-form which can be understood by machine learning and deep learning models. After this process, each respective dataset and its embeddings were then used to train several machine learning models (KNN, Gaussian NB, Logistic Regression, SVC, XGBoost, Random Forest) and deep learning models (CNN, CNN-LSTM, LSTM). 
-
-Below are tables containing the training parameters for the models trained (note, these parameters are the same as the ones used for the GloVe embedding experiments): 
-
-\begin{table}[H]
-    \centering
-    \caption{Machine Learning Model Training Hyperparameters}
-    \label{tab:ml_model_params}
-    \begin{tabular}{l l}
-        \hline
-        \textbf{Model} & \textbf{Training Arguments} \\
-        \hline
-        K-Nearest Neighbors (KNN) & \texttt{n\_neighbors=5} \\
-        Gaussian Naive Bayes & Default parameters \\
-        Logistic Regression & \texttt{max\_iter=1000} \\
-        Support Vector Classifier (SVC) & Default parameters \\
-        XGBoost & \texttt{use\_label\_encoder=False}, \texttt{eval\_metric='logloss'} \\
-        Random Forest Classifier & \texttt{n\_estimators=100}, \texttt{random\_state=42} \\
-        \hline
-    \end{tabular}
-\end{table}
-
-\begin{table}[ht]
-    \centering
-    \caption{Deep Learning Model Hyperparameters}
-    \label{tab:dl_model_params}
-    \begin{tabular}{l l l}
-        \hline
-        \textbf{Model} & \textbf{Parameter} & \textbf{Value} \\
-        \hline
-        \multicolumn{3}{c}{\textbf{Common Training settings}} \\
-        & Epochs & 10 \\
-        & Batch Size & 32 \\
-        & Learning Rate & 0.001 \\
-        & Optimizer & Adam \\
-        & Loss Function & BCELoss \\
-        & Validation Split & 0.2 \\
-        \hline
-        \multirow{4}{*}{CNN} & Number of Filters & 100 \\
-        & Filter Sizes & [3, 4, 5] \\
-        & Dropout & 0.5 \\
-        & Activation & ReLU (Hidden), Sigmoid (Output) \\
-        \hline
-        \multirow{4}{*}{LSTM} & Hidden Dimension & 128 \\
-        & Number of Layers & 2 \\
-        & Dropout & 0.5 \\
-        & Activation & ReLU (Hidden), Sigmoid (Output) \\
-        \hline
-        \multirow{6}{*}{CNN-LSTM} & CNN Filters & 64 \\
-        & CNN Filter Sizes & [3, 4, 5] \\
-        & LSTM Hidden Dims & 128 \\
-        & LSTM Layers & 1 \\
-        & Dropout & 0.5 \\
-        & Activation & ReLU (Hidden), Sigmoid (Output) \\
-        \hline
-    \end{tabular}
-\end{table}
-
 \subsubsection{BERT Fine-tuning}
 Experiments using BERT involved fine-tuning a base BERT-uncased model for each dataset, meaning in total as five datasets were applied, and with k=5 fold cross validation, in total 25 models were trained. Each dataset was split 85-15, 85\% training and 15\% test. The 85\% training set is further split 80-20, train and validation respectively, for each fold.
 
@@ -946,13 +813,92 @@ The number of epochs was set at 3, to avoid overfitting but just enough to allow
 
 At the end the best model is selected using validation F1-score, and this (best model) model will undergo cross-dataset evaluation to determine its performance for completely unseen datasets.
 
+\subsubsection{Word2Vec Deep Learning and Machine Learning}
+Word2Vec experimentation saw the text (from previous processing steps) undergo some final processing which involved turning the text into all lower-case and the text undergoing lemmatisation using the Python library NLTK's \textit{WordNetLemmatizer}. After this, the processed text was used to train the Word2Vec model for each dataset (as there are 5 datasets, there will be 5 different Word2Vec embedding models).
+
+The training arguments for the Word2Vec models can be found below (note the exact code can not be found in the notebook used for Word2Vec training, but these are the exact arguments used and this snippet was made for simplified viewing of the arguments): 
+
+\begin{lstlisting}[language=Python, caption={Word2Vec Models' Training Configuration}]
+model = Word2Vec(
+        sentences=tokenized_texts,
+        vector_size=300,
+        window=5,
+        min_count=2,
+        workers=1,
+        epochs=10,
+        sg=1  # 1 for skip-gram, 0 for CBOW
+    )
+\end{lstlisting}
+
+After the each Word2Vec model is trained, the models are employed to convert each dataset into embedding-form which can be understood by machine learning and deep learning models. After this process, each respective dataset and its embeddings were then used to train several machine learning models (KNN, Gaussian NB, Logistic Regression, SVC, XGBoost, Random Forest) and deep learning models (CNN, CNN-LSTM, LSTM). 
+
+The machine learning and deep learning training saw an initial stratified split of the dataset into 85\% train and 15\% test sets. The train set was again split due to 5-fold cross-validation into 80\% train and 20\% validation (split for each fold). All splits were stratified. 
+
+Below are tables containing the training parameters for the models trained (note: a seed of 42 was used for reproducibility): 
+
+\begin{table}[H]
+    \centering
+    \caption{Machine Learning Model Training Hyperparameters}
+    \label{tab:ml_model_params}
+    \begin{tabular}{l l}
+        \hline
+        \textbf{Model} & \textbf{Training Arguments} \\
+        \hline
+        K-Nearest Neighbors (KNN) & \texttt{n\_neighbors=5} \\
+        Gaussian Naive Bayes & Default parameters \\
+        Logistic Regression & \texttt{max\_iter=2000, class\_weight='balanced', random\_state=seed} \\
+        Support Vector Classifier (SVC) & probability=True, class\_weight='balanced', random\_state=seed \\
+        XGBoost & \texttt{eval\_metric='logloss', random\_state=seed, n\_estimators=300,learning\_rate=0.05, max\_depth=6}, \texttt{eval\_metric='logloss'} \\
+        Random Forest Classifier & \texttt{n\_estimators=300, class\_weight='balanced', random\_state=seed}\\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[ht]
+    \centering
+    \caption{Deep Learning Model Hyperparameters}
+    \label{tab:dl_model_params}
+    \begin{tabular}{l l l}
+        \hline
+        \textbf{Model} & \textbf{Parameter} & \textbf{Value} \\
+        \hline
+        \multicolumn{3}{c}{\textbf{Common Training Settings}} \\
+        & Epochs & 10 \\
+        & Batch Size & 32 \\
+        & Learning Rate & 0.001 \\
+        & Optimizer & Adam \\
+        & Loss Function & BCEWithLogitsLoss \\
+        & Early Stopping Patience & 3 \\
+        & Max Sequence Length & 200 \\
+        & Embedding Layer & Pre-trained Word2Vec (300-d) \\
+        \hline
+        \multirow{3}{*}{TextCNN} & Number of Filters & 128 \\
+        & Filter Sizes & [3, 4, 5] \\
+        & Dropout & 0.5 \\
+        \hline
+        \multirow{3}{*}{TextLSTM} & Hidden Dimension & 128 \\
+        & Number of Layers & 2 \\
+        & Dropout & 0.5 \\
+        \hline
+        \multirow{5}{*}{TextCNN-LSTM} & CNN Filters & 128 \\
+        & CNN Kernel Size & 3 \\
+        & LSTM Hidden Dims & 128 \\
+        & LSTM Layers & 1 \\
+        & Dropout & 0.5 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+After each fold completes training, it is evaluated against the 15\% test set. Then after all the folds have completed training, the best fold according to validation f1-score is chosen for cross-dataset evaluation. 
+
+
 \subsubsection{Proposed Model}
 
 The proposed model, Text Perturbation-based Adversarial BERT (TPA-BERT), sought to improve the generalisation when it comes to fake news detection, particularly against unseen data. This was to be done by directly perturbing the text, followed by adversarial training to minimise the difference in embeddings generated when given original and perturbed data. The intention is, by scrambling the text, and with the adversarial training minimising the differences in model output, TPA-BERT would generate embeddings which are more robust and learn to identify more 'in-depth' features for fake news detection.
 
 Going in more depth regarding the methodology: firstly, before any training began, the datasets are perturbed using NLTK's WordNet by loading each record and applying synonym substitution against 20\% of each record's words, followed by another 10\% of words which are randomly swapped (swapped between words in the same row) and lastly 10\% of words are randomly deleted. Secondly, the BERT model is loaded, and both the original and perturbed datasets and conducting stratified splits of the data (85\% train, 15\% test) which is followed by a 80\%-20\% train and validation split (on the 85\5 train set; remaining 15\% saved for final evaluation)for k=5 cross validation. Following this, the training begins with the model accepting input capped at 128 tokens (per record) and beginning to learn from the adversarial loss function which combines the cross entropy loss and cosine similarity loss (the difference between the CLS tokens produced by the model for the original and perturbed data input). Note that the cosine similarity loss is linearly scaled from 0 to 0.5 over the first 10\% of training steps. Once training is complete, whether by completing all epochs, or by early-stopping (set at 3 steps) the model is evaluated on the held out test set. And to test the model's generalisation, the best model according to validation f1-score is chosen for cross-dataset evaluation (tested against all other datasets; for example: a model trained on WELFake is tested on FakeNewsNet, ISOT, Fake News Classification and Fake News Detection datasets). 
 
-$$\text{Loss} = \text{CE_Loss} + \lambda_{adv} \times \text{Cosine_Similarity_Loss}$$
+put loss function laterrrrr
 
 \begin{lstlisting}[language=Python, caption={BERT Fine-tuning Configuration}]
 training_kwargs = {
