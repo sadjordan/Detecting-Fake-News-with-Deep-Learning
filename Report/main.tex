@@ -773,41 +773,51 @@ To put the above into an example, let's say there is a XGBoost model being used 
 \subsubsection{BERT Fine-tuning}
 Experiments using BERT involved fine-tuning a base BERT-uncased model for each dataset, meaning in total as five datasets were applied, and with k=5 fold cross validation, in total 25 models were trained. Each dataset was split 85-15, 85\% training and 15\% test. The 85\% training set is further split 80-20, train and validation respectively, for each fold.
 
-The datasets were previously cleaned and processed as was explain previously, but in order for the data to be suitable to input to BERT, it undergoes further processing in the form of tokenisation using the base BERT-uncased tokeniser with the following settings: truncation = true, padding = true, max\_length = 128. 
+The datasets were previously cleaned and processed as was explain previously, but in order for the data to be suitable to input to BERT, it undergoes further processing in the form of tokenisation using the base BERT-uncased tokeniser with the settings shown in Table \ref{tab:bert_tokeniser_config}. 
 
-\begin{lstlisting}[language=Python, caption={BERT Tokeniser Configuration}]
-train_encodings = tokeniser(
-      input_text,
-      truncation=True,
-      padding=True,
-      max_length=128
-  )
-\end{lstlisting}
+\begin{table}[H]
+    \centering
+    \caption{BERT Tokeniser Configuration}
+    \label{tab:bert_tokeniser_config}
+    \begin{tabular}{l l}
+        \hline
+        \textbf{Parameter} & \textbf{Value} \\
+        \hline
+        Truncation & True \\
+        Padding & True \\
+        Max Length & 128 \\
+        \hline
+    \end{tabular}
+\end{table}
 
 The reason for capping the max_length at 128 instead of at 512 (max) were due to several factors. Firstly it was hoped that by limiting the maximum length it would reduce the amount of overfitting, improving generalisation. And secondly a lower max_length resulted in lower computational demands, especially on memory. 
 
-After tokenisation, the BERT-uncased model is loaded and the training arguments are set. Below is a code excerpt of the training arguments:
+After tokenisation, the BERT-uncased model is loaded and the training arguments are set. The training arguments are shown in Table \ref{tab:bert_finetune_config}.
 
-\begin{lstlisting}[language=Python, caption={BERT Fine-tuning Configuration}]
-training_args = TrainingArguments(
-    output_dir=f'./results_fold_{fold+1}',
-    num_train_epochs=3,
-    per_device_train_batch_size=128,
-    per_device_eval_batch_size=128,
-    eval_strategy="steps",
-    eval_steps=128,
-    save_strategy="steps",
-    save_steps=128,
-    save_total_limit=2,
-    report_to="none",
-    optim="adamw_torch",
-    logging_dir='./logs',
-    logging_steps=128,
-    metric_for_best_model="f1",
-    load_best_model_at_end=True,
-    weight_decay=0.01,
-)
-\end{lstlisting}
+\begin{table}[H]
+    \centering
+    \caption{Baseline BERT Fine-tuning Configuration}
+    \label{tab:bert_finetune_config}
+    \begin{tabular}{l l}
+        \hline
+        \textbf{Parameter} & \textbf{Value} \\
+        \hline
+        Number of Epochs & 3 \\
+        Train Batch Size (per device) & 128 \\
+        Eval Batch Size (per device) & 128 \\
+        Eval Strategy & Steps \\
+        Eval Steps & 128 \\
+        Save Strategy & Steps \\
+        Save Steps & 128 \\
+        Save Total Limit & 2 \\
+        Optimizer & AdamW (PyTorch) \\
+        Logging Steps & 128 \\
+        Metric for Best Model & F1 \\
+        Load Best Model at End & True \\
+        Weight Decay & 0.01 \\
+        \hline
+    \end{tabular}
+\end{table}
 
 The number of epochs was set at 3, to avoid overfitting but just enough to allow for the weights to be updated to perform better and the batch size was set to 128 to allow for training to progress at a reasonable rate while also allowing for stable gradient updates. The high batch rate was primarily chosen due to limited computational resources, regardless as will be shown later the results remain quite high despite the high batch rate.
 
@@ -816,19 +826,25 @@ At the end the best model is selected using validation F1-score, and this (best 
 \subsubsection{Word2Vec Deep Learning and Machine Learning}
 Word2Vec experimentation saw the text (from previous processing steps) undergo some final processing which involved turning the text into all lower-case and the text undergoing lemmatisation using the Python library NLTK's \textit{WordNetLemmatizer}. After this, the processed text was used to train the Word2Vec model for each dataset (as there are 5 datasets, there will be 5 different Word2Vec embedding models).
 
-The training arguments for the Word2Vec models can be found below (note the exact code can not be found in the notebook used for Word2Vec training, but these are the exact arguments used and this snippet was made for simplified viewing of the arguments): 
+The training arguments for the Word2Vec models can be found in Table \ref{tab:word2vec_config}..
 
-\begin{lstlisting}[language=Python, caption={Word2Vec Models' Training Configuration}]
-model = Word2Vec(
-        sentences=tokenized_texts,
-        vector_size=300,
-        window=5,
-        min_count=2,
-        workers=1,
-        epochs=10,
-        sg=1  # 1 for skip-gram, 0 for CBOW
-    )
-\end{lstlisting}
+\begin{table}[H]
+    \centering
+    \caption{Word2Vec Models' Training Configuration}
+    \label{tab:word2vec_config}
+    \begin{tabular}{l l}
+        \hline
+        \textbf{Parameter} & \textbf{Value} \\
+        \hline
+        Vector Size & 300 \\
+        Window & 5 \\
+        Min Count & 2 \\
+        Workers & 1 \\
+        Epochs & 10 \\
+        Training Algorithm & Skip-gram \\
+        \hline
+    \end{tabular}
+\end{table}
 
 After the each Word2Vec model is trained, the models are employed to convert each dataset into embedding-form which can be understood by machine learning and deep learning models. After this process, each respective dataset and its embeddings were then used to train several machine learning models (KNN, Gaussian NB, Logistic Regression, SVC, XGBoost, Random Forest) and deep learning models (CNN, CNN-LSTM, LSTM). 
 
@@ -900,30 +916,32 @@ Going in more depth regarding the methodology: firstly, before any training bega
 
 put loss function laterrrrr
 
-\begin{lstlisting}[language=Python, caption={BERT Fine-tuning Configuration}]
-training_kwargs = {
-    "output_dir": f'./results_adv_fold_{fold+1}',
-    "num_train_epochs": 3,
-    "per_device_train_batch_size": 32,
-    "per_device_eval_batch_size": 32,
-    "gradient_accumulation_steps": 2,
-    "save_strategy": "steps",
-    "save_steps": 128,
-    "save_total_limit": 1,
-    "bf16": use_tpu,
-    "gradient_checkpointing": not use_tpu,
-    "report_to": "none",
-    "optim": "adamw_torch",
-    "logging_dir": './logs',
-    "logging_steps": 128,
-    "metric_for_best_model": "f1",
-    "load_best_model_at_end": True,
-    "weight_decay": 0.01,
-    "remove_unused_columns": False,
-    "label_names": ["labels"],
-}
-\end{lstlisting}
-*Note that although eval_steps and eval_strategy are not in the parameter list, by default the strategy is "steps" and the steps are "128".
+\begin{table}[H]
+    \centering
+    \caption{TPA-BERT Fine-tuning Configuration}
+    \label{tab:tpa_bert_finetune_config}
+    \begin{tabular}{l l}
+        \hline
+        \textbf{Parameter} & \textbf{Value} \\
+        \hline
+        Number of Epochs & 3 \\
+        Train Batch Size (per device) & 32 \\
+        Eval Batch Size (per device) & 32 \\
+        Gradient Accumulation Steps & 2 \\
+        Eval Strategy* & Steps \\
+        Eval Steps* & 128 \\
+        Save Strategy & Steps \\
+        Save Steps & 128 \\
+        Save Total Limit & 1 \\
+        Optimizer & AdamW (PyTorch) \\
+        Logging Steps & 128 \\
+        Metric for Best Model & F1 \\
+        Load Best Model at End & True \\
+        Weight Decay & 0.01 \\
+        \hline
+    \end{tabular}
+\end{table}
+\footnotesize{*Although Eval Steps and Eval Strategy are not explicitly set in the code, by default the strategy is ``steps'' and the steps are ``128''.}
 
 There are several modifications to the parameters compared to the baseline BERT model. Most notably the training batch size which is now 32 instead of the 128 used by the baseline. There are a few reasons for this: firstly, the model also has to process the adversarial data which essentially doubles the data processed. And secondly, because of the aforementioned doubled data, the forward and backward passes now carry twice as much data. As a result, with double the data as well as the fact the forward and backward passes also have to deal with double the data, the effective batch size is 128. 
 
@@ -952,30 +970,30 @@ The proposed model is inspired by and similar to the process described by \textc
 \renewcommand{\arraystretch}{1.3}
 \setlength\LTleft{0pt}
 \setlength\LTright{0pt}
-\begin{longtable}{@{} p{6.5cm} p{8.0cm} @{}}
+\begin{longtable}{@{} l c c c c @{}}
 \caption{Baseline BERT Results} \label{tab:bert_results} \\
 \toprule
-\textbf{Dataset Name} & \textbf{F1/Precision/Recall/Accuracy} \\
+\textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
 \endfirsthead
 
-\multicolumn{2}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
+\multicolumn{5}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
 \toprule
-\textbf{Dataset Name} & \textbf{F1/Precision/Recall/Accuracy} \\
+\textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
 \endhead
 
 \bottomrule
-\multicolumn{2}{r}{{Continued on next page}} \\
+\multicolumn{5}{r}{{Continued on next page}} \\
 \endfoot
 
 \bottomrule
 \endlastfoot
-WELFake & 0.9908/0.9920/0.9897/0.9917 \\
-FakeNewsNet & 0.9037/0.8768/0.9325/0.8497 \\
-Fake News Detection & 0.9978/0.9986/0.9971/0.9976 \\
-ISOT & 0.9995/0.9991/1.0000/0.9996 \\
-Fake News Classification & 0.9938/0.9948/0.9929/0.9934 \\
+WELFake & 0.9917 & 0.9920 & 0.9897 & 0.9908 \\
+FakeNewsNet & 0.8497 & 0.8768 & 0.9325 & 0.9037 \\
+Fake News Detection & 0.9976 & 0.9986 & 0.9971 & 0.9978 \\
+ISOT & 0.9996 & 0.9991 & 1.0000 & 0.9995 \\
+Fake News Classification & 0.9934 & 0.9948 & 0.9929 & 0.9938 \\
 \end{longtable}
 \endgroup
 
@@ -990,29 +1008,29 @@ BERT has either matched or outperformed the already excellent results obtained f
 \renewcommand{\arraystretch}{1.3}
 \setlength\LTleft{0pt}
 \setlength\LTright{0pt}
-\begin{longtable}{@{} p{6.5cm} p{8.0cm} @{}}
+\begin{longtable}{@{} l c c c c @{}}
 \caption{Cross Dataset Generalisation (BERT) - WELFake Only} \label{tab:bert_cross_results} \\
 \toprule
-\textbf{Dataset Name} & \textbf{F1/Precision/Recall/Accuracy} \\
+\textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
 \endfirsthead
 
-\multicolumn{2}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
+\multicolumn{5}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
 \toprule
-\textbf{Dataset Name} & \textbf{F1/Precision/Recall/Accuracy} \\
+\textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
 \endhead
 
 \bottomrule
-\multicolumn{2}{r}{{Continued on next page}} \\
+\multicolumn{5}{r}{{Continued on next page}} \\
 \endfoot
 
 \bottomrule
 \endlastfoot
-FakeNewsNet & 0.8165/0.7562/0.8872/0.6984 \\
-Fake News Detection & 0.3640/0.3302/0.4054/0.2231 \\
-ISOT & 0.9991/0.9998/0.9983/0.9992 \\
-Fake News Classification & 0.0357/0.0380/0.0336/0.0188 \\
+FakeNewsNet & 0.6984 & 0.7562 & 0.8872 & 0.8165 \\
+Fake News Detection & 0.2231 & 0.3302 & 0.4054 & 0.3640 \\
+ISOT & 0.9992 & 0.9998 & 0.9983 & 0.9991 \\
+Fake News Classification & 0.0188 & 0.0380 & 0.0336 & 0.0357 \\
 \end{longtable}
 \endgroup
 
@@ -1029,44 +1047,44 @@ As for the other two datasets: Fake News Detection and Fake News Classification,
 \renewcommand{\arraystretch}{1.3}
 \setlength\LTleft{0pt}
 \setlength\LTright{0pt}
-\begin{longtable}{@{} p{5.5cm} p{3.0cm} p{6.0cm} @{}}
+\begin{longtable}{@{} p{4.5cm} p{2.0cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} @{}}
 \caption{Deep Learning Baseline Results} \label{tab:dl_results} \\
 \toprule
-\textbf{Dataset Name} & \textbf{Model} & \textbf{F1/Precision/Recall/Accuracy} \\
+\textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
 \endfirsthead
 
-\multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
+\multicolumn{6}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
 \toprule
-\textbf{Dataset Name} & \textbf{Model} & \textbf{F1/Precision/Recall/Accuracy} \\
+\textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
 \endhead
 
 \bottomrule
-\multicolumn{3}{r}{{Continued on next page}} \\
+\multicolumn{6}{r}{{Continued on next page}} \\
 \endfoot
 
 \bottomrule
 \endlastfoot
-\multirow{3}{*}{WELFake} & CNN & 0.9573/0.9504/0.9645/0.9610 \\
- & LSTM & 0.9442/0.9354/0.9536/0.9489 \\
- & CNN-LSTM & 0.9419/0.9433/0.9408/0.9474 \\
+\multirow{3}{*}{WELFake} & CNN & 0.9610 & 0.9504 & 0.9645 & 0.9573 \\
+ & LSTM & 0.9489 & 0.9354 & 0.9536 & 0.9442 \\
+ & CNN-LSTM & 0.9474 & 0.9433 & 0.9408 & 0.9419 \\
 \midrule
-\multirow{3}{*}{FakeNewsNet} & CNN & 0.8974/0.8689/0.9280/0.8395 \\
- & LSTM & 0.8614/0.7565/1.0000/0.7565 \\
- & CNN-LSTM & 0.8614/0.7565/1.0000/0.7565 \\
+\multirow{3}{*}{FakeNewsNet} & CNN & 0.8395 & 0.8689 & 0.9280 & 0.8974 \\
+ & LSTM & 0.7565 & 0.7565 & 1.0000 & 0.8614 \\
+ & CNN-LSTM & 0.7565 & 0.7565 & 1.0000 & 0.8614 \\
 \midrule
-\multirow{3}{*}{Fake News Detection} & CNN & 0.9894/0.9881/0.9907/0.9883 \\
- & LSTM & 0.9841/0.9806/0.9876/0.9824 \\
- & CNN-LSTM & 0.9847/0.9839/0.9855/0.9832 \\
+\multirow{3}{*}{Fake News Detection} & CNN & 0.9883 & 0.9881 & 0.9907 & 0.9894 \\
+ & LSTM & 0.9824 & 0.9806 & 0.9876 & 0.9841 \\
+ & CNN-LSTM & 0.9832 & 0.9839 & 0.9855 & 0.9847 \\
 \midrule
-\multirow{3}{*}{ISOT} & CNN & 0.9981/0.9976/0.9986/0.9983 \\
- & LSTM & 0.9955/0.9942/0.9969/0.9959 \\
- & CNN-LSTM & 0.9977/0.9975/0.9980/0.9979 \\
+\multirow{3}{*}{ISOT} & CNN & 0.9983 & 0.9976 & 0.9986 & 0.9981 \\
+ & LSTM & 0.9959 & 0.9942 & 0.9969 & 0.9955 \\
+ & CNN-LSTM & 0.9979 & 0.9975 & 0.9980 & 0.9977 \\
 \midrule
-\multirow{3}{*}{Fake News Classification} & CNN & 0.9908/0.9959/0.9858/0.9901 \\
- & LSTM & 0.9862/0.9910/0.9816/0.9852 \\
- & CNN-LSTM & 0.9872/0.9922/0.9822/0.9862 \\
+\multirow{3}{*}{Fake News Classification} & CNN & 0.9901 & 0.9959 & 0.9858 & 0.9908 \\
+ & LSTM & 0.9852 & 0.9910 & 0.9816 & 0.9862 \\
+ & CNN-LSTM & 0.9862 & 0.9922 & 0.9822 & 0.9872 \\
 \end{longtable}
 \endgroup
 
@@ -1082,36 +1100,36 @@ Generally though, when compared to BERT, it does seem that BERT outperforms the 
 \renewcommand{\arraystretch}{1.3}
 \setlength\LTleft{0pt}
 \setlength\LTright{0pt}
-\begin{longtable}{@{} p{5.5cm} p{3.0cm} p{6.0cm} @{}}
+\begin{longtable}{@{} p{4.5cm} p{2.0cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} @{}}
 \caption{Cross Dataset Generalisation (CNN and LSTM Only) - Trained on WELFake Only} \label{tab:dl_cross_results} \\
 \toprule
-\textbf{Dataset Name} & \textbf{Model} & \textbf{F1/Precision/Recall/Accuracy} \\
+\textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
 \endfirsthead
 
-\multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
+\multicolumn{6}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
 \toprule
-\textbf{Dataset Name} & \textbf{Model} & \textbf{F1/Precision/Recall/Accuracy} \\
+\textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
 \endhead
 
 \bottomrule
-\multicolumn{3}{r}{{Continued on next page}} \\
+\multicolumn{6}{r}{{Continued on next page}} \\
 \endfoot
 
 \bottomrule
 \endlastfoot
-\multirow{2}{*}{FakeNewsNet} & CNN & 0.6516/0.6274/0.6932/0.6932 \\
- & LSTM & 0.6573/0.6329/0.7063/0.7063 \\
+\multirow{2}{*}{FakeNewsNet} & CNN & 0.6932 & 0.6274 & 0.6932 & 0.6516 \\
+ & LSTM & 0.7063 & 0.6329 & 0.7063 & 0.6573 \\
 \midrule
-\multirow{2}{*}{Fake News Detection} & CNN & 0.1456/0.1403/0.1514/0.1514 \\
- & LSTM & 0.0276/0.0288/0.0269/0.0269 \\
+\multirow{2}{*}{Fake News Detection} & CNN & 0.1514 & 0.1403 & 0.1514 & 0.1456 \\
+ & LSTM & 0.0269 & 0.0288 & 0.0269 & 0.0276 \\
 \midrule
-\multirow{2}{*}{ISOT} & CNN & 0.9959/0.9959/0.9959/0.9959 \\
- & LSTM & 0.9901/0.9902/0.9901/0.9901 \\
+\multirow{2}{*}{ISOT} & CNN & 0.9959 & 0.9959 & 0.9959 & 0.9959 \\
+ & LSTM & 0.9901 & 0.9902 & 0.9901 & 0.9901 \\
 \midrule
-\multirow{2}{*}{Fake News Classification} & CNN & 0.0231/0.0242/0.0222/0.0222 \\
- & LSTM & 0.0283/0.0292/0.0278/0.0278 \\
+\multirow{2}{*}{Fake News Classification} & CNN & 0.0222 & 0.0242 & 0.0222 & 0.0231 \\
+ & LSTM & 0.0278 & 0.0292 & 0.0278 & 0.0283 \\
 \bottomrule
 \end{longtable}
 \footnotesize{*due to the results from CNN and LSTM models generally outperforming the CNN-LSTM hybrid, their results have been omitted for brevity.}
@@ -1131,59 +1149,59 @@ To conclude, while deep learning models trained on Word2Vec embeddings can perfo
 \renewcommand{\arraystretch}{1.3}
 \setlength\LTleft{0pt}
 \setlength\LTright{0pt}
-\begin{longtable}{@{} p{5.5cm} p{3.0cm} p{6.0cm} @{}}
+\begin{longtable}{@{} p{4.5cm} p{2.0cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} @{}}
 \caption{Machine Learning Baseline Results} \label{tab:ml_results} \\
 \toprule
-\textbf{Dataset Name} & \textbf{Model} & \textbf{F1/Precision/Recall/Accuracy} \\
+\textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
 \endfirsthead
 
-\multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
+\multicolumn{6}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
 \toprule
-\textbf{Dataset Name} & \textbf{Model} & \textbf{F1/Precision/Recall/Accuracy} \\
+\textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
 \endhead
 
 \bottomrule
-\multicolumn{3}{r}{{Continued on next page}} \\
+\multicolumn{6}{r}{{Continued on next page}} \\
 \endfoot
 
 \bottomrule
 \endlastfoot
-\multirow{6}{*}{WELFake} & SVC & 0.9452/0.9412/0.9492/0.9501 \\
- & Logistic Regression & 0.9252/0.9219/0.9286/0.9319 \\
- & XGBoost & 0.9228/0.9288/0.9169/0.9304 \\
- & Random Forest & 0.8843/0.8930/0.8758/0.8961 \\
- & KNN & 0.8480/0.9234/0.7839/0.8725 \\
- & Gaussian NB & 0.5800/0.7932/0.4572/0.6998 \\
+\multirow{6}{*}{WELFake} & SVC & 0.9501 & 0.9412 & 0.9492 & 0.9452 \\
+ & Logistic Regression & 0.9319 & 0.9219 & 0.9286 & 0.9252 \\
+ & XGBoost & 0.9304 & 0.9288 & 0.9169 & 0.9228 \\
+ & Random Forest & 0.8961 & 0.8930 & 0.8758 & 0.8843 \\
+ & KNN & 0.8725 & 0.9234 & 0.7839 & 0.8480 \\
+ & Gaussian NB & 0.6998 & 0.7932 & 0.4572 & 0.5800 \\
 \midrule
-\multirow{6}{*}{FakeNewsNet} & SVC & 0.8674/0.8965/0.8401/0.8057 \\
- & Logistic Regression & 0.8487/0.9031/0.8005/0.7841 \\
- & XGBoost & 0.8911/0.8437/0.9442/0.8255 \\
- & Random Forest & 0.8923/0.8251/0.9714/0.8226 \\
- & KNN & 0.8806/0.8382/0.9275/0.8097 \\
- & Gaussian NB & 0.8421/0.8535/0.8311/0.7643 \\
+\multirow{6}{*}{FakeNewsNet} & SVC & 0.8057 & 0.8965 & 0.8401 & 0.8674 \\
+ & Logistic Regression & 0.7841 & 0.9031 & 0.8005 & 0.8487 \\
+ & XGBoost & 0.8255 & 0.8437 & 0.9442 & 0.8911 \\
+ & Random Forest & 0.8226 & 0.8251 & 0.9714 & 0.8923 \\
+ & KNN & 0.8097 & 0.8382 & 0.9275 & 0.8806 \\
+ & Gaussian NB & 0.7643 & 0.8535 & 0.8311 & 0.8421 \\
 \midrule
-\multirow{6}{*}{Fake News Detection} & SVC & 0.9874/0.9830/0.9919/0.9861 \\
- & Logistic Regression & 0.9846/0.9825/0.9867/0.9830 \\
- & XGBoost & 0.9776/0.9698/0.9855/0.9752 \\
- & Random Forest & 0.9577/0.9422/0.9738/0.9529 \\
- & KNN & 0.9514/0.9330/0.9704/0.9456 \\
- & Gaussian NB & 0.9055/0.9122/0.8989/0.8971 \\
+\multirow{6}{*}{Fake News Detection} & SVC & 0.9861 & 0.9830 & 0.9919 & 0.9874 \\
+ & Logistic Regression & 0.9830 & 0.9825 & 0.9867 & 0.9846 \\
+ & XGBoost & 0.9752 & 0.9698 & 0.9855 & 0.9776 \\
+ & Random Forest & 0.9529 & 0.9422 & 0.9738 & 0.9577 \\
+ & KNN & 0.9456 & 0.9330 & 0.9704 & 0.9514 \\
+ & Gaussian NB & 0.8971 & 0.9122 & 0.8989 & 0.9055 \\
 \midrule
-\multirow{6}{*}{ISOT} & SVC & 0.9867/0.9903/0.9830/0.9878 \\
- & Logistic Regression & 0.9857/0.9877/0.9838/0.9869 \\
- & XGBoost & 0.9728/0.9811/0.9647/0.9753 \\
- & Random Forest & 0.9511/0.9667/0.9359/0.9559 \\
- & KNN & 0.9414/0.9708/0.9137/0.9479 \\
- & Gaussian NB & 0.9019/0.8935/0.9104/0.9093 \\
+\multirow{6}{*}{ISOT} & SVC & 0.9878 & 0.9903 & 0.9830 & 0.9867 \\
+ & Logistic Regression & 0.9869 & 0.9877 & 0.9838 & 0.9857 \\
+ & XGBoost & 0.9753 & 0.9811 & 0.9647 & 0.9728 \\
+ & Random Forest & 0.9559 & 0.9667 & 0.9359 & 0.9511 \\
+ & KNN & 0.9479 & 0.9708 & 0.9137 & 0.9414 \\
+ & Gaussian NB & 0.9093 & 0.8935 & 0.9104 & 0.9019 \\
 \midrule
-\multirow{6}{*}{Fake News Classification} & SVC & 0.9775/0.9824/0.9727/0.9759 \\
- & Logistic Regression & 0.9723/0.9733/0.9713/0.9701 \\
- & XGBoost & 0.9665/0.9651/0.9679/0.9638 \\
- & Random Forest & 0.9492/0.9450/0.9535/0.9449 \\
- & KNN & 0.9395/0.9249/0.9546/0.9336 \\
- & Gaussian NB & 0.9050/0.9195/0.8909/0.8989 \\
+\multirow{6}{*}{Fake News Classification} & SVC & 0.9759 & 0.9824 & 0.9727 & 0.9775 \\
+ & Logistic Regression & 0.9701 & 0.9733 & 0.9713 & 0.9723 \\
+ & XGBoost & 0.9638 & 0.9651 & 0.9679 & 0.9665 \\
+ & Random Forest & 0.9449 & 0.9450 & 0.9535 & 0.9492 \\
+ & KNN & 0.9336 & 0.9249 & 0.9546 & 0.9395 \\
+ & Gaussian NB & 0.8989 & 0.9195 & 0.8909 & 0.9050 \\
 \end{longtable}
 \endgroup
 
@@ -1196,40 +1214,40 @@ Like the DL and BERT models, the performance of the ML models were exceptional, 
 \renewcommand{\arraystretch}{1.3}
 \setlength\LTleft{0pt}
 \setlength\LTright{0pt}
-\begin{longtable}{@{} p{5.5cm} p{3.0cm} p{6.0cm} @{}}
+\begin{longtable}{@{} p{4.5cm} p{2.0cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} @{}}
 \caption{Cross Dataset Generalisation (SVC, Random Forest and XGBoost ONLY) - WELFake Only} \label{tab:ml_cross_results} \\
 \toprule
-\textbf{Dataset Name} & \textbf{Model} & \textbf{F1/Precision/Recall/Accuracy} \\
+\textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
 \endfirsthead
 
-\multicolumn{3}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
+\multicolumn{6}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
 \toprule
-\textbf{Dataset Name} & \textbf{Model} & \textbf{F1/Precision/Recall/Accuracy} \\
+\textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
 \endhead
 
 \bottomrule
-\multicolumn{3}{r}{{Continued on next page}} \\
+\multicolumn{6}{r}{{Continued on next page}} \\
 \endfoot
 
 \bottomrule
 \endlastfoot
-\multirow{3}{*}{FakeNewsNet} & SVC & 0.6509/0.6022/0.7536/0.7536 \\
- & Random Forest & 0.6508/0.6291/0.6855/0.6855 \\
- & XGBoost & 0.6459/0.6169/0.6963/0.6963 \\
+\multirow{3}{*}{FakeNewsNet} & SVC & 0.7536 & 0.6022 & 0.7536 & 0.6509 \\
+ & Random Forest & 0.6855 & 0.6291 & 0.6855 & 0.6508 \\
+ & XGBoost & 0.6963 & 0.6169 & 0.6963 & 0.6459 \\
 \midrule
-\multirow{3}{*}{Fake News Detection} & SVC & 0.0184/0.0181/0.0192/0.0192 \\
- & Random Forest & 0.0176/0.0166/0.0190/0.0190 \\
- & XGBoost & 0.0172/0.0166/0.0183/0.0183 \\
+\multirow{3}{*}{Fake News Detection} & SVC & 0.0192 & 0.0181 & 0.0192 & 0.0184 \\
+ & Random Forest & 0.0190 & 0.0166 & 0.0190 & 0.0176 \\
+ & XGBoost & 0.0183 & 0.0166 & 0.0183 & 0.0172 \\
 \midrule
-\multirow{3}{*}{ISOT} & SVC & 0.9841/0.9843/0.9841/0.9841 \\
- & Random Forest & 0.9821/0.9825/0.9822/0.9822 \\
- & XGBoost & 0.9844/0.9847/0.9844/0.9844 \\
+\multirow{3}{*}{ISOT} & SVC & 0.9841 & 0.9843 & 0.9841 & 0.9841 \\
+ & Random Forest & 0.9822 & 0.9825 & 0.9822 & 0.9821 \\
+ & XGBoost & 0.9844 & 0.9847 & 0.9844 & 0.9844 \\
 \midrule
-\multirow{3}{*}{Fake News Classification} & SVC & 0.0335/0.0342/0.0333/0.0333 \\
- & Random Forest & 0.0343/0.0347/0.0345/0.0345 \\
- & XGBoost & 0.0332/0.0336/0.0332/0.0332 \\
+\multirow{3}{*}{Fake News Classification} & SVC & 0.0333 & 0.0342 & 0.0333 & 0.0335 \\
+ & Random Forest & 0.0345 & 0.0347 & 0.0345 & 0.0343 \\
+ & XGBoost & 0.0332 & 0.0336 & 0.0332 & 0.0332 \\
 \bottomrule
 \end{longtable}
 \footnotesize{*Models were selected due to generally outperforming the other models and for brevity's sake.}
@@ -1245,30 +1263,30 @@ As for the other datasets, the ML models were very slightly outperformed by the 
 \renewcommand{\arraystretch}{1.3}
 \setlength\LTleft{0pt}
 \setlength\LTright{0pt}
-\begin{longtable}{@{} p{6.5cm} p{8.0cm} @{}}
+\begin{longtable}{@{} l c c c c @{}}
 \caption{TPA-BERT Results} \label{tab:tpa_bert_results} \\
 \toprule
-\textbf{Dataset Name} & \textbf{F1/Precision/Recall/Accuracy} \\
+\textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
 \endfirsthead
 
-\multicolumn{2}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
+\multicolumn{5}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
 \toprule
-\textbf{Dataset Name} & \textbf{F1/Precision/Recall/Accuracy} \\
+\textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
 \endhead
 
 \bottomrule
-\multicolumn{2}{r}{{Continued on next page}} \\
+\multicolumn{5}{r}{{Continued on next page}} \\
 \endfoot
 
 \bottomrule
 \endlastfoot
-WELFake & 0.9870/0.9852/0.9888/0.9882 \\
-FakeNewsNet & 0.8994/0.8702/0.9305/0.8425 \\
-Fake News Detection & 0.9952/0.9933/0.9971/0.9947 \\
-ISOT & 0.9993/0.9987/0.9998/0.9993 \\
-Fake News Classification & 0.9898/0.9938/0.9858/0.9890 \\
+WELFake & 0.9882 & 0.9852 & 0.9888 & 0.9870 \\
+FakeNewsNet & 0.8425 & 0.8702 & 0.9305 & 0.8994 \\
+Fake News Detection & 0.9947 & 0.9933 & 0.9971 & 0.9952 \\
+ISOT & 0.9993 & 0.9987 & 0.9998 & 0.9993 \\
+Fake News Classification & 0.9890 & 0.9938 & 0.9858 & 0.9898 \\
 \end{longtable}
 \endgroup
 
@@ -1279,29 +1297,29 @@ The results for TPA-BERT were excellent, with results exceeding F1-scores of 0.9
 \renewcommand{\arraystretch}{1.3}
 \setlength\LTleft{0pt}
 \setlength\LTright{0pt}
-\begin{longtable}{@{} p{6.5cm} p{8.0cm} @{}}
+\begin{longtable}{@{} l c c c c @{}}
 \caption{Cross Dataset Generalisation (TPA-BERT) - WELFake Only} \label{tab:tpa_bert_cross_results} \\
 \toprule
-\textbf{Dataset Name} & \textbf{F1/Precision/Recall/Accuracy} \\
+\textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
 \endfirsthead
 
-\multicolumn{2}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
+\multicolumn{5}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
 \toprule
-\textbf{Dataset Name} & \textbf{F1/Precision/Recall/Accuracy} \\
+\textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
 \endhead
 
 \bottomrule
-\multicolumn{2}{r}{{Continued on next page}} \\
+\multicolumn{5}{r}{{Continued on next page}} \\
 \endfoot
 
 \bottomrule
 \endlastfoot
-FakeNewsNet & 0.8191/0.7520/0.8995/0.6996 \\
-Fake News Detection & 0.3562/0.3246/0.3946/0.2178 \\
-ISOT & 0.9981/0.9994/0.9968/0.9982 \\
-Fake News Classification & 0.0359/0.0383/0.0338/0.0196 \\
+FakeNewsNet & 0.6996 & 0.7520 & 0.8995 & 0.8191 \\
+Fake News Detection & 0.2178 & 0.3246 & 0.3946 & 0.3562 \\
+ISOT & 0.9982 & 0.9994 & 0.9968 & 0.9981 \\
+Fake News Classification & 0.0196 & 0.0383 & 0.0338 & 0.0359 \\
 \end{longtable}
 \endgroup
 
