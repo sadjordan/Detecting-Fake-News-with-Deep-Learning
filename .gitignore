@@ -25,6 +25,15 @@ Report/main.lof
 Report/main.lot
 Report/main.toc
 Report/MyBib.bib.backup
+
+Report/conference_paper.aux
+Report/conference_paper.fdb_latexmk
+Report/conference_paper.fls
+Report/conference_paper.log
+Report/conference_paper.pdf
+Report/conference_paper.synctex.gz
+
+
 test.bib
 test.bib.blg
 Report/main.run.xml
