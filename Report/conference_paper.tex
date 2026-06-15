@@ -71,19 +71,23 @@
 
 \begin{document}
 
-\textbf{Enhancing Data Labels using Large Language Models for Bilingual
-Malay-English Hate Speech Detection\\
-}Jordan Ling Shen Hang¹, Sook-Ling Chua¹\textsuperscript{,*}, Lee
-Kien Foo¹
+\begin{center}
+{\fontsize{14}{17}\selectfont\bfseries Enhancing Data Labels using Large Language Models for Bilingual Malay-English Hate Speech Detection\par}
+\vspace{12pt}
+{\fontsize{10}{12}\selectfont Jordan Ling Shen Hang\textsuperscript{1}, Sook-Ling Chua\textsuperscript{1,*}, Lee Kien Foo\textsuperscript{1}\par}
+\vspace{8pt}
 
-\emph{¹ Faculty of Computing and Informatics, Multimedia University,
-Cyberjaya, Malaysia}
+\textit{\textsuperscript{1} Faculty of Computing and Informatics, Multimedia University, Cyberjaya, Malaysia}
+\vspace{4pt}
 
-\emph{\{jordan.ling.shen, slchua, lkfoo\}@mmu.edu.my}
+{\fontsize{9}{11}\selectfont\textit{\{jordan.ling.shen, slchua, lkfoo\}@mmu.edu.my}\par}
+\end{center}
+\vspace{8pt}
 
-\textbf{Abstract.} With the rise of social networking the spread and volume of fake news has dramatically increased, to the point where fact checking every post is unrealistic. In attempts to solve this problem, researchers have proposed methods employing machine learning and deep learning to flag fake news. However, these methods are often limited by lack of applicability as they fail to generalise beyond the datasets used. Furthermore, many of these methods employ black-box models, which reduces trust in the model's predictions. In order to address these issues, we proposed a model based on adversarially fine-tuning a Bidirectional Encoder Representations from Transformers (BERT) model to increase generalisation, and the use of Local Interpretable Model-Agnostic Explanations (LIME) to explain the otherwise black-box BERT model. Results indicated that while this technique failed to effectively generalise the model, the LIME implementation was successful and highlighted the reasons for the model's output.
+\noindent\textbf{Abstract.} With the rise of social networking the spread and volume of fake news has dramatically increased, to the point where fact checking every post is unrealistic. In attempts to solve this problem, researchers have proposed methods employing machine learning and deep learning to flag fake news. However, these methods are often limited by lack of applicability as they fail to generalise beyond the datasets used. Furthermore, most of these methods employ black-box models, which reduces trust in the model's predictions. In order to address these issues, we proposed a model based on adversarially fine-tuning a Bidirectional Encoder Representations from Transformers (BERT) model to increase generalisation, and the use of Local Interpretable Model-Agnostic Explanations (LIME) to explain the otherwise black-box BERT model. Results indicated that while this technique performed on par with BERT, but was no better when it came to generalisation.
+\vspace{4pt}
 
-\textbf{Keywords:} 
+\noindent\textbf{Keywords:} fake news detection, BERT, generalisation
 
 \section{Introduction}
 
@@ -145,7 +149,7 @@ The loss function used is for TPA-BERT is:
     \footnotesize{\textit{Note.} Unimportant metrics (eg. Save Steps) excluded}
 \end{table}
 
-In order to preserve comparibility, most parameters were kept the same between TPA-BERT and BERT. However, there are several modifications to the parameters. Notably the training batch size which is now 32 instead of the 128 used by the baseline. This is due to the model also having to process the adversarial data which essentially doubles the data processed. And because of the aforementioned doubled data, the forward and backward passes now carry twice as much data. As a result, the effective batch size is 128. 
+In order to preserve comparability, most parameters were kept the same between TPA-BERT and BERT, but not all. Notably the training batch size which is now 32 instead of the 128 used by BERT. This is due to the model also having to process the adversarial data which essentially doubles the data processed. And because of the doubled data, the forward and backward passes now carry twice as much data. As a result, the effective batch size is 128. 
 
 \section{Methodology}
 
@@ -166,9 +170,9 @@ The ISOT dataset was downloaded from the University of Victoria website. It was 
 \subsection{Data Preprocessing}
 The data was processed by first merging 'title' and 'text' columns together if the dataset had split 'title' and 'text' into different columns. In one of the datasets "FakeNewsNet", only the 'title' column was used. 
 
-After combining the columns, any columns that did not contain the label or 'combined\_text' column were dropped, such as source URLs columns, and other metadata like date. This revealed substantially more duplicated rows, likely as a result of the gathering process scraping the same content from multiple locations/repeatedly.
+After combining the columns, any columns that did not contain the label or 'combined\_text' column were dropped, such as source URLs columns, and other metadata like date. This revealed substantially more duplicated rows, likely as a result of the gathering methodology scraping the same content.
 
-Once completed, the 'combined\_text' column was stripped of any non-Unicode characters as well as links, phone numbers and other non-ASCII characters. The removal of non-ASCII characters is possible as this research focuses on English news. After this, any rows with empty strings were removed. 
+Once completed, the 'combined\_text' column was stripped of any non-Unicode characters as well as links, phone numbers and other non-ASCII characters. After this, any rows with empty strings were removed. With the above processes complete, the data was tokenised using BERT's tokeniser without further processing steps.
 
 \begin{table}[H]
     \centering
@@ -188,7 +192,6 @@ Once completed, the 'combined\_text' column was stripped of any non-Unicode char
         \bottomrule
     \end{tabular}
 \end{table}
-After the above processes, the data was tokenised using BERT's tokeniser without further processing steps.
 
 \subsection{Experimental Setup}
 For BERT, fine-tuning was done on a base BERT-uncased model into a 2-label classification model. A similar process was done for TPA-BERT, the proposed model, with the addition of adversarial training steps.
