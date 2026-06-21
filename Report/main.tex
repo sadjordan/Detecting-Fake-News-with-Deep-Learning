@@ -512,6 +512,58 @@ Methods which seek to analyse propagation structure for fake news detection ofte
 \end{landscape}
 
 \clearpage
+\section{Theoretical Framework}
+
+
+\subsection{Deep Learning Approaches}
+
+\subsubsection{Convolutional Neural Networks}
+Convolutional Neural Networks or CNNs are neural networks which generally have 3 layers: A convolutional layer, pooling layer and a fully-connected layer. The convolutional layer is the key part of a CNN, and it uses a grid of numbers called kernels (or filters) to 'scan' through the various features and perform a mathematical operation known as 'convolution'. After the convolution layer, the pooling layer reduces the size of the data which also helps with reducing the computational demands and also helps with ensuring the model doesn't become focussed on small and irrelevant details. The final, fully-connected layer works by flattening the prior layer's multi-dimensional features into a single layer. This single-layer output can now be fed to a standard neural network for classification.
+
+\subsubsection{Long Short Term Memory}
+Long Short Term Memory of LSTMs is a type of Recurrent Neural Network (RNN) which aims to solve an issue with RNNs called the 'Vanishing Gradient Problem'. Essentially, the issue is that RNNs work using gradients which inform the weights in neurons, and these gradients are calculated using the chain rule, which means after dozens of multiplications a gradient will rapidly lose its value. This means that RNNs have 'short term memory', an issue LSTM's solve by selectively holding on to important information in a 'Cell State' through a system of gates. There are three gates: forget gate, input gate, and output gate. The forget gate figures out what information should be forgotten because it is now longer useful. The input gate decides what is worth adding to the 'Cell State'. And lastly the output gate figures out what information in the 'Cell State' is important or relevant to the current situation and outputs that. This ensures that LSTMs are able to hold on to important information over a long-term and doesn't suffer from short-term forgetfulness. This makes LSTMs especially suitable for sequential input where important discriminating features are far between each other. 
+
+\subsection{Embedding Approaches}
+\subsubsection{Global Vectors for Word Representation}
+Global Vectors for Word Representation or GloVe is an unsupervised embedding algorithm which generates word embeddings developed by \textcite{glove}. GloVe embeddings are pre-trained on massive textual datasets with a pre-set number of dimensions. The training process works by constructing a co-occurrence matrix where the rows and columns represent each unique word and each entry in the matrix indicates the frequency of two words occurring next to one another within a predefined context window. So for example, the co-occurrence matrix would capture how frequently the words "statistics" and "math" appear together. 
+
+But how is the co-occurrence matrix turned into vectors? This takes place during training, each word is assigned a random vector, and then finds the dot product of two vectors (in this case, each vector is a word), then compares it to the logarithm of the co-occurrence matrix count (of the two words) to find the error, then depending on the error, the vectors will be updated so it is closer to the logarithm of the co-occurrence matrix count. So for example, if two words, "apple" and "fruit" have a logarithm-count of 0.5, and the dot product of their random vector representations returned a value of 0.3, the error would be 0.2 and the model will modify the vectors such that in the next iteration, the dot product will closer align with the logarithm-count. 
+
+But that is not all, if GloVe only relied on counts in the co-occurrence matrix it would encounter issues where common words like "the" become associated with everything and the vectors generated would be less meaningful. To solve this, GloVe employs weights to ensure the vectors being trained are meaningful. Rare words will be given lower weights (noise), and while common words will have higher weights, there will be a cap so that "the" doesn't unfairly bias the vectors being produced. 
+
+After training these embeddings can be loaded (which is what was done here) and then used to generate embeddings of input text. 
+
+To conclude, GloVe is an unsupervised algorithm which generates word embeddings based on a massive textual datasets. The vectors produced are representative of the frequency of words relative to other words. 
+
+\subsubsection{Word2Vec}
+Word2Vec is a neural network embedding model which converts words into dense vector representations developed by \textcite{word2vec}. There are two main architectural variants, Continuous Bag of Words and Skip-gram; Skip-gram was used in this instance and thus will be the only variant elaborated on. 
+
+The Word2Vec Skip-gram variant works by trying to predict the words around a single target word. So, using the example of the sentence "I love vanilla ice cream", the target word being the word "vanilla" and the windows being set at two words; the model would focus on trying to predict the words "I", "love", "ice", "cream" around the word "vanilla". 
+
+To do this, the input word (represented in on-hot-encoded form) is taken in by the model as input and passed to the hidden layer and the outputs from this layer is passed to the output layer which tries to guess the words surrounding the input. If the model gets it right, say by correctly guessing the words "ice" and "cream", the connections between these words and the target word is strengthened and if it fails the model will update the weights in the hidden layer so that it will be more likely to guess the correct words in the next iteration.
+
+This massive guessing operation is used to train the hidden layer, so that when the training is complete, the output layer is stripped and the output of the hidden layer becomes the vectors. So to conclude, Word2Vec's Skip-gram variant works by trying to guess words around a target word and through this exercise trains a hidden layer which will be used to turn words into vectors. 
+
+\subsubsection{Bidirectional Encoder Representations from Transformers}
+Bidirectional Encoder Representations from Transformers or BERT is a self-supervised bidirectional model which differs from Word2Vec and GloVe in that while Word2Vec and GloVe have a single vector for each word; BERT outputs different vectors for each word depending on the context. 
+
+To do this, BERT is trained through two objectives: Masked Language Modelling (MLM) and Next Sentence Prediction (NSP) \parencite{roberta}. MLM works by trying to get BERT to predict the missing word. So using the previous example of "I love vanilla ice cream", say the word "ice" is 'masked' (omitted), BERT will have to try and guess the missing word from: "I love vanilla [mask] cream". Since BERT is bidirectional, it will consider words preceding and subsequent to the mask. This technique gets BERT to learn the relationship between words in a sentence. 
+
+The next technique, NSP is exactly as it sounds. It tries to get BERT to guess if a sentence comes directly after another sentence \parencite{roberta}. So, let's say BERT is given two sentences: the previous example of "I love vanilla ice cream.", and "It tastes so sweet". BERT will have to guess if the latter sentence comes after the former. This was intended to get BERT to learn relationships between pairs of sentences.
+
+However it is important to note that the importance of NSP to BERT may be overstated, as \textcite{roberta} hypothesised after experiments with the NSP component of the loss function showed that removing the NSP loss function could match or even slightly improve performance on downstream tasks. 
+
+As for how BERT is employed for classification, a linear classifier is employed. This linear classifier takes the CLS token which is a 768 dimension representation of the input and outputs prediction scores which are passed through a softmax function to get the final classification. During fine-tuning, the difference between predicted probabilities and true labels is used to calculate the cross-entropy loss and the linear classifier as well as the BERT model weights are updated via backpropagation. 
+
+In conclusion, the bidirectional nature of BERT gives it an edge and the objectives used to train it, specifically MLM gave it an advantage when understanding context, allowing it to create more meaningful vectors. As a note, BERT does have many variants, including RoBERTa, developed by \textcite{roberta} who were cited earlier; this research uses the original BERT, developed by Google. 
+
+\subsection{Explainable AI Approaches}
+\subsubsection{LIME}
+Local Interpretable Model-Agnostic Explanations or LIME is a technique used to explain black-box models. LIME, true to its acronym tries to explain the black-box model 'locally', by taking a prediction, then creating many variations of the data point which lead to that prediction to see how the black-box model responds to these changes. These 'perturbed' data points are assigned weights, with the greater in similarity a point is to the original data point, the higher the weight. These perturbed data points and the black-box's prediction are then used to form a small, weighted dataset which is fitted onto a small interpretable model (often linear regression). The weights from this model will be used to explain the behaviour of the actual black-box model for that one specific prediction. 
+
+To put the above into an example, let's say there is a XGBoost model being used to determine if a person has diabetes. Let's also say that this model only takes 3 features as input: weight, height and age. When given the input [90, 169, 56], it predicts true. To explain this, LIME will then generate variations around this input data, so called 'perturbed data points', for example [89, 167, 58]. These variations of the original data points are then passed to the XGBoost model as input and the output is noted. A dataset is then constructed based on the perturbed data points, the black-box's output, and the proximity of the perturbed data points to the original data point. This weighted dataset is fit onto a linear regression model and this model, as it is interpretable and not a black-box, is used to explain the black-box's prediction.
+
+\clearpage
 \section{Research Methodology}
 \subsection{Datasets}
 \subsubsection{WELFake Dataset}
@@ -567,7 +619,7 @@ The ISOT dataset was downloaded from the University of Victoria website. It was 
 \subsection{Data Understanding}
 
 \subsection{Data Pre-processing}
-The data was processed by first merging 'title' and 'text' columns together if the dataset had split 'title' and 'text' into different columns, this would be combined. In one of the datasets "FakeNewsNet", only the 'title; column was used. After the columns were combined, the new 'combined\_text' column was checked for missing strings and null values, of which none were found.
+The data was processed by first merging 'title' and 'text' columns together if the dataset had split 'title' and 'text' into different columns, this would be combined. In one of the datasets "FakeNewsNet", only the 'title' column was used. After the columns were combined, the new 'combined\_text' column was checked for missing strings and null values, of which none were found.
 
 After combining the columns, any columns that did not contain the label or 'combined\_text' column were dropped, such as source URLs columns, and other metadata like date. This revealed substantially more duplicated rows, likely as a result of the datasets being gathered through scraping methods which scraped the same content from multiple sources causing the dataset to have duplicated textual columns but different metadata, which allowed it to evade detection earlier. The total number of samples dropped is summarised in Table \ref{tab:preprocessing_stats}.
 
@@ -627,7 +679,7 @@ Once completed, the 'combined\_text' column was stripped of any non-Unicode char
     \label{fig:preprcessing_flowchart}
 \end{figure}
 
-After the above processes, the data was then processed separately depending on the type of model being trained. For BERT, the data was tokenised using BERT's tokeniser without further processing steps. For GloVe, the data was decapitalised and then split into individual words for processing. Whereas for Word2Vec, the data was both decapitalised and lemmatised before the data is used to train the Word2Vec model.
+After the above processes, the data was then processed separately depending on the type of model being trained. For BERT, the data was tokenised using BERT's tokeniser without further processing steps. For Word2Vec, the data was both decapitalised and lemmatised before the data is used to train the Word2Vec model.
 
 \begin{table}[H]
 \centering
@@ -639,11 +691,6 @@ After the above processes, the data was then processed separately depending on t
 \midrule
 BERT & Tokenisation using BERT's tokeniser (no additional preprocessing) \\
 \addlinespace
-GloVe & \begin{itemize}[leftmargin=*, nosep]
-    \item Decapitalisation (lower-case conversion)
-    \item Splitting into individual words
-\end{itemize} \\
-\addlinespace
 Word2Vec & \begin{itemize}[leftmargin=*, nosep]
     \item Decapitalisation (lower-case conversion)
     \item Lemmatisation
@@ -653,10 +700,12 @@ Word2Vec & \begin{itemize}[leftmargin=*, nosep]
 \end{tabular}
 \end{table}
 
-\subsection{Modelling}
-Modelling depended on which kind of embedding was used. For BERT, fine-tuning was used to fine-tune a base BERT-uncased model into a 2-label classification model. A similar process was done for TPA-BERT, the proposed model, with the addition of adversarial training steps. For GloVe and Word2Vec, after the datasets were turned into embeddings, the now vectorised datasets were fitted to machine learning models and used to train several deep-learning models as well, specifically: CNN, LSTM and CNN-LSTM. 
+\subsection{Experimental Setup}
+Each dataset, for all models (BERT, TPA-BERT, ML and DL models), was split 85-15, 85\% training and 15\% test. The 85\% training set is further split 80-20, train and validation respectively, using 5-fold cross-validation. The 15\% test set is used at the end of the training process for final evaluation of each fold.
 
-All training was done with k=5 fold cross-validation, with an initial split of 85\% train and 15\% test (held on for the final evaluation of each fold). The 85\% train is split again later on into 80\% train and 20\% validation for each fold. All splits were stratified.
+As this research focuses on generalisation, another evaluation step is conducted: "cross-dataset evaluation". Cross-dataset evaluation is the term we will use to refer to the process where a model is tested against completely unseen datasets, for example: a model trained on WELFake is tested against FakeNewsNet and ISOT. Only one fold is selected for cross-dataset evaluation, specifically the fold which performed best based on validation F1-score.
+
+Below is a summary of the modelling approaches for each embedding type (BERT and Word2Vec). BERT is fine-tuned, while Word2Vec has its embeddings fit onto ML and DL models.
 
 \begin{table}[H]
 \centering
@@ -670,11 +719,6 @@ BERT & \begin{itemize}[leftmargin=*, nosep]
     \item Fine-tuning to convert BERT into a classification model 
 \end{itemize} \\
 \addlinespace
-GloVe & \begin{itemize}[leftmargin=*, nosep]
-    \item Machine learning models (trained on vectorised datasets)
-    \item Deep learning models: CNN, LSTM, CNN-LSTM
-\end{itemize} \\
-\addlinespace
 Word2Vec & \begin{itemize}[leftmargin=*, nosep]
     \item Machine learning models (trained on vectorised datasets)
     \item Deep learning models: CNN, LSTM, CNN-LSTM
@@ -683,97 +727,8 @@ Word2Vec & \begin{itemize}[leftmargin=*, nosep]
 \end{tabular}
 \end{table}
 
-\subsubsection{Proposed Model}
-While the above describe the modelling process for the various embedding algorithms, it was the intention to use the results from the modelling process described above as baseline results for which a proposed model could be compared to. 
-
-
-\subsection{Evaluation}
-%check tense
-Evaluation of the models will be done by comparing F1-score, and its constituent metrics of recall and precision, as well as accuracy. These metrics will be obtained from the trained models by using the test sets.
-
-F1-score is a formula which combines precision and recall. Precision describes the proportion of a model's positive predictions and is calculated by dividing the number of \textit{True Positives} by the sum of \textit{True Positives} and \textit{False Positives}. Recall describes the model's ability to identify positive instances and is calculated by dividing the number of \textit{True Positives} by the sum of \textit{True Positives} and \textit{False Negatives}. Together these metrics are combined to form F1-score, which is calculated by dividing \textit{2} by the sum of the inverse of \textit{Precision} and \textit{Recall}. 
-
-Meanwhile, accuracy is found by dividing the number of correct predictions over the total number of predictions.
-
-The formulae described above are also written below in mathematical notation: 
-
-\begin{equation}
-\text{Precision} = \frac{\text{True\ Positives}}{\text{True\ Positives} + \text{False\ Positives}}
-\end{equation}
-
-\begin{equation}
-\text{Recall} = \frac{\text{True\ Positives}}{\text{True\ Positives} + \text{False\ Negatives}}
-\end{equation}
-
-\begin{equation}
-\text{F1} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
-\end{equation}
-
-\begin{equation}
-\text{Accuracy} = \frac{\text{True\ Positives} + \text{True\ Negatives}}{\text{Total\ Predictions}}
-\end{equation}
-
-\clearpage
-\section{Theoretical Framework}
-
-
-\subsection{Deep Learning Approaches}
-
-\subsubsection{Convolutional Neural Networks}
-Convolutional Neural Networks or CNNs are neural networks which generally have 3 layers: A convolutional layer, pooling layer and a fully-connected layer. The convolutional layer is the key part of a CNN, and it uses a grid of numbers called kernels (or filters) to 'scan' through the various features and perform a mathematical operation known as 'convolution'. After the convolution layer, the pooling layer reduces the size of the data which also helps with reducing the computational demands and also helps with ensuring the model doesn't become focussed on small and irrelevant details. The final, fully-connected layer works by flattening the prior layer's multi-dimensional features into a single layer. This single-layer output can now be fed to a standard neural network for classification.
-
-\subsubsection{Long Short Term Memory}
-Long Short Term Memory of LSTMs is a type of Recurrent Neural Network (RNN) which aims to solve an issue with RNNs called the 'Vanishing Gradient Problem'. Essentially, the issue is that RNNs work using gradients which inform the weights in neurons, and these gradients are calculated using the chain rule, which means after dozens of multiplications a gradient will rapidly lose its value. This means that RNNs have 'short term memory', an issue LSTM's solve by selectively holding on to important information in a 'Cell State' through a system of gates. There are three gates: forget gate, input gate, and output gate. The forget gate figures out what information should be forgotten because it is now longer useful. The input gate decides what is worth adding to the 'Cell State'. And lastly the output gate figures out what information in the 'Cell State' is important or relevant to the current situation and outputs that. This ensures that LSTMs are able to hold on to important information over a long-term and doesn't suffer from short-term forgetfulness. This makes LSTMs especially suitable for sequential input where important discriminating features are far between each other. 
-
-\subsection{Embedding Approaches}
-\subsubsection{Global Vectors for Word Representation}
-Global Vectors for Word Representation or GloVe is an unsupervised embedding algorithm which generates word embeddings developed by \textcite{glove}. GloVe embeddings are pre-trained on massive textual datasets with a pre-set number of dimensions. The training process works by constructing a co-occurrence matrix where the rows and columns represent each unique word and each entry in the matrix indicates the frequency of two words occurring next to one another within a predefined context window. So for example, the co-occurrence matrix would capture how frequently the words "statistics" and "math" appear together. 
-
-But how is the co-occurrence matrix turned into vectors? This takes place during training, each word is assigned a random vector, and then finds the dot product of two vectors (in this case, each vector is a word), then compares it to the logarithm of the co-occurrence matrix count (of the two words) to find the error, then depending on the error, the vectors will be updated so it is closer to the logarithm of the co-occurrence matrix count. So for example, if two words, "apple" and "fruit" have a logarithm-count of 0.5, and the dot product of their random vector representations returned a value of 0.3, the error would be 0.2 and the model will modify the vectors such that in the next iteration, the dot product will closer align with the logarithm-count. 
-
-But that is not all, if GloVe only relied on counts in the co-occurrence matrix it would encounter issues where common words like "the" become associated with everything and the vectors generated would be less meaningful. To solve this, GloVe employs weights to ensure the vectors being trained are meaningful. Rare words will be given lower weights (noise), and while common words will have higher weights, there will be a cap so that "the" doesn't unfairly bias the vectors being produced. 
-
-After training these embeddings can be loaded (which is what was done here) and then used to generate embeddings of input text. 
-
-To conclude, GloVe is an unsupervised algorithm which generates word embeddings based on a massive textual datasets. The vectors produced are representative of the frequency of words relative to other words. 
-
-\subsubsection{Word2Vec}
-Word2Vec is a neural network embedding model which converts words into dense vector representations developed by \textcite{word2vec}. There are two main architectural variants, Continuous Bag of Words and Skip-gram; Skip-gram was used in this instance and thus will be the only variant elaborated on. 
-
-The Word2Vec Skip-gram variant works by trying to predict the words around a single target word. So, using the example of the sentence "I love vanilla ice cream", the target word being the word "vanilla" and the windows being set at two words; the model would focus on trying to predict the words "I", "love", "ice", "cream" around the word "vanilla". 
-
-To do this, the input word (represented in on-hot-encoded form) is taken in by the model as input and passed to the hidden layer and the outputs from this layer is passed to the output layer which tries to guess the words surrounding the input. If the model gets it right, say by correctly guessing the words "ice" and "cream", the connections between these words and the target word is strengthened and if it fails the model will update the weights in the hidden layer so that it will be more likely to guess the correct words in the next iteration.
-
-This massive guessing operation is used to train the hidden layer, so that when the training is complete, the output layer is stripped and the output of the hidden layer becomes the vectors. So to conclude, Word2Vec's Skip-gram variant works by trying to guess words around a target word and through this exercise trains a hidden layer which will be used to turn words into vectors. 
-
-\subsubsection{Bidirectional Encoder Representations from Transformers}
-Bidirectional Encoder Representations from Transformers or BERT is a self-supervised bidirectional model which differs from Word2Vec and GloVe in that while Word2Vec and GloVe have a single vector for each word; BERT outputs different vectors for each word depending on the context. 
-
-To do this, BERT is trained through two objectives: Masked Language Modelling (MLM) and Next Sentence Prediction (NSP) \parencite{roberta}. MLM works by trying to get BERT to predict the missing word. So using the previous example of "I love vanilla ice cream", say the word "ice" is 'masked' (omitted), BERT will have to try and guess the missing word from: "I love vanilla [mask] cream". Since BERT is bidirectional, it will consider words preceding and subsequent to the mask. This technique gets BERT to learn the relationship between words in a sentence. 
-
-The next technique, NSP is exactly as it sounds. It tries to get BERT to guess if a sentence comes directly after another sentence \parencite{roberta}. So, let's say BERT is given two sentences: the previous example of "I love vanilla ice cream.", and "It tastes so sweet". BERT will have to guess if the latter sentence comes after the former. This was intended to get BERT to learn relationships between pairs of sentences.
-
-However it is important to note that the importance of NSP to BERT may be overstated, as \textcite{roberta} hypothesised after experiments with the NSP component of the loss function showed that removing the NSP loss function could match or even slightly improve performance on downstream tasks. 
-
-As for how BERT is employed for classification, a linear classifier is employed. This linear classifier takes the CLS token which is a 768 dimension representation of the input and outputs prediction scores which are passed through a softmax function to get the final classification. During fine-tuning, the difference between predicted probabilities and true labels is used to calculate the cross-entropy loss and the linear classifier as well as the BERT model weights are updated via backpropagation. 
-
-In conclusion, the bidirectional nature of BERT gives it an edge and the objectives used to train it, specifically MLM gave it an advantage when understanding context, allowing it to create more meaningful vectors. As a note, BERT does have many variants, including RoBERTa, developed by \textcite{roberta} who were cited earlier; this research uses the original BERT, developed by Google. 
-
-\subsection{Explainable AI Approaches}
-\subsubsection{LIME}
-Local Interpretable Model-Agnostic Explanations or LIME is a technique used to explain black-box models. LIME, true to its acronym tries to explain the black-box model 'locally', by taking a prediction, then creating many variations of the data point which lead to that prediction to see how the black-box model responds to these changes. These 'perturbed' data points are assigned weights, with the greater in similarity a point is to the original data point, the higher the weight. These perturbed data points and the black-box's prediction are then used to form a small, weighted dataset which is fitted onto a small interpretable model (often linear regression). The weights from this model will be used to explain the behaviour of the actual black-box model for that one specific prediction. 
-
-To put the above into an example, let's say there is a XGBoost model being used to determine if a person has diabetes. Let's also say that this model only takes 3 features as input: weight, height and age. When given the input [90, 169, 56], it predicts true. To explain this, LIME will then generate variations around this input data, so called 'perturbed data points', for example [89, 167, 58]. These variations of the original data points are then passed to the XGBoost model as input and the output is noted. A dataset is then constructed based on the perturbed data points, the black-box's output, and the proximity of the perturbed data points to the original data point. This weighted dataset is fit onto a linear regression model and this model, as it is interpretable and not a black-box, is used to explain the black-box's prediction.
-
-\clearpage
-\section{Implementation}
-
-\subsection{Experiments}
-
 \subsubsection{BERT Fine-tuning}
-Experiments using BERT involved fine-tuning a base BERT-uncased model for each dataset, meaning in total as five datasets were applied, and with k=5 fold cross validation, in total 25 models were trained. Each dataset was split 85-15, 85\% training and 15\% test. The 85\% training set is further split 80-20, train and validation respectively, for each fold.
-
-The datasets were previously cleaned and processed as was explain previously, but in order for the data to be suitable to input to BERT, it undergoes further processing in the form of tokenisation using the base BERT-uncased tokeniser with the settings shown in Table \ref{tab:bert_tokeniser_config}. 
+Experiments using BERT involved fine-tuning a base BERT-uncased model. The datasets were previously cleaned and processed as was explain previously, but in order for the data to be suitable to input to BERT, it undergoes further processing in the form of tokenisation using the base BERT-uncased tokeniser with the settings shown in Table \ref{tab:bert_tokeniser_config}. 
 
 \begin{table}[H]
     \centering
@@ -821,7 +776,7 @@ After tokenisation, the BERT-uncased model is loaded and the training arguments 
 
 The number of epochs was set at 3, to avoid overfitting but just enough to allow for the weights to be updated to perform better and the batch size was set to 128 to allow for training to progress at a reasonable rate while also allowing for stable gradient updates. The high batch rate was primarily chosen due to limited computational resources, regardless as will be shown later the results remain quite high despite the high batch rate.
 
-At the end the best model is selected using validation F1-score, and this (best model) model will undergo cross-dataset evaluation to determine its performance for completely unseen datasets.
+At the end the best model is selected using validation F1-score, and this model will undergo cross-dataset evaluation to determine its generalisation performance.
 
 \subsubsection{Word2Vec Deep Learning and Machine Learning}
 Word2Vec experimentation saw the text (from previous processing steps) undergo some final processing which involved turning the text into all lower-case and the text undergoing lemmatisation using the Python library NLTK's \textit{WordNetLemmatizer}. After this, the processed text was used to train the Word2Vec model for each dataset (as there are 5 datasets, there will be 5 different Word2Vec embedding models).
@@ -846,9 +801,7 @@ The training arguments for the Word2Vec models can be found in Table \ref{tab:wo
     \end{tabular}
 \end{table}
 
-After the each Word2Vec model is trained, the models are employed to convert each dataset into embedding-form which can be understood by machine learning and deep learning models. After this process, each respective dataset and its embeddings were then used to train several machine learning models (KNN, Gaussian NB, Logistic Regression, SVC, XGBoost, Random Forest) and deep learning models (CNN, CNN-LSTM, LSTM). 
-
-The machine learning and deep learning training saw an initial stratified split of the dataset into 85\% train and 15\% test sets. The train set was again split due to 5-fold cross-validation into 80\% train and 20\% validation (split for each fold). All splits were stratified. 
+After each Word2Vec model is trained, the models are employed to convert each dataset into embedding form which can be understood by machine learning and deep learning models. After this process, each respective dataset and its embeddings were then used to train several machine learning models (KNN, Gaussian NB, Logistic Regression, SVC, XGBoost, Random Forest) and deep learning models (CNN, CNN-LSTM, LSTM). 
 
 Below are tables containing the training parameters for the models trained (note: a seed of 42 was used for reproducibility): 
 
@@ -910,11 +863,15 @@ After each fold completes training, it is evaluated against the 15\% test set. T
 
 \subsubsection{Proposed Model}
 
-The proposed model, Text Perturbation-based Adversarial BERT (TPA-BERT), sought to improve the generalisation when it comes to fake news detection, particularly against unseen data. This was to be done by directly perturbing the text, followed by adversarial training to minimise the difference in embeddings generated when given original and perturbed data. The intention is, by scrambling the text, and with the adversarial training minimising the differences in model output, TPA-BERT would generate embeddings which are more robust and learn to identify more 'in-depth' features for fake news detection.
+The proposed model, Text Perturbation-based Adversarial BERT (TPA-BERT), sought to improve generalisation when it came to fake news detection, particularly against unseen data. This was to be done by directly perturbing the text, followed by adversarial training to minimise the difference in embeddings generated when given original and perturbed data. The intention is, by scrambling the text, and with the adversarial training minimising the differences in model output, TPA-BERT would generate embeddings which are more robust and learn to identify more 'in-depth' features for fake news detection.
 
-Going in more depth regarding the methodology: firstly, before any training began, the datasets are perturbed using NLTK's WordNet by loading each record and applying synonym substitution against 20\% of each record's words, followed by another 10\% of words which are randomly swapped (swapped between words in the same row) and lastly 10\% of words are randomly deleted. Secondly, the BERT model is loaded, and both the original and perturbed datasets and conducting stratified splits of the data (85\% train, 15\% test) which is followed by a 80\%-20\% train and validation split (on the 85\5 train set; remaining 15\% saved for final evaluation)for k=5 cross validation. Following this, the training begins with the model accepting input capped at 128 tokens (per record) and beginning to learn from the adversarial loss function which combines the cross entropy loss and cosine similarity loss (the difference between the CLS tokens produced by the model for the original and perturbed data input). Note that the cosine similarity loss is linearly scaled from 0 to 0.5 over the first 10\% of training steps. Once training is complete, whether by completing all epochs, or by early-stopping (set at 3 steps) the model is evaluated on the held out test set. And to test the model's generalisation, the best model according to validation f1-score is chosen for cross-dataset evaluation (tested against all other datasets; for example: a model trained on WELFake is tested on FakeNewsNet, ISOT, Fake News Classification and Fake News Detection datasets). 
+Going in more depth regarding the methodology: firstly, before any training began, the datasets are perturbed using NLTK's WordNet by loading each record and applying synonym substitution against 20\% of each record's words, followed by another 10\% of words which are randomly swapped (swapped between words in the same row) and lastly 10\% of words are randomly deleted. Secondly, the BERT model is loaded, and both the original and perturbed datasets undergo the dataset splitting applied to all models (described previously). The data is then tokenised according to the settings described in \ref{tab:bert_tokeniser_config}. Following this, the training begins with the model accepting input and beginning to learn from the adversarial loss function (\ref{eq:tpa_bert_loss}) which combines the cross entropy loss and cosine similarity loss (the difference between the CLS tokens produced by the model for the original and perturbed data input). Note that the cosine similarity loss is linearly scaled from 0 to 0.5 over the first 10\% of training steps. Once training is complete, whether by completing all epochs, or by early-stopping (set at 3 steps) the model is evaluated on the held out test set. And to test the model's generalisation, the best model according to validation f1-score is chosen for cross-dataset evaluation.
 
-put loss function laterrrrr
+TPA-BERT loss function:
+\begin{equation}
+\mathcal{L} = \mathcal{L}_{\text{CE}} + \lambda_{\text{adv}} \times \mathcal{L}_{\text{cosine}}
+\label{eq:tpa_bert_loss}
+\end{equation}
 
 \begin{table}[H]
     \centering
@@ -947,7 +904,6 @@ There are several modifications to the parameters compared to the baseline BERT 
 
 The proposed model is inspired by and similar to the process described by \textcite{BERT-finetuning}, however, unlike the model described by those authors, TPA-BERT perturbs the text directly, instead of at the embedding and feature level like in FGM-FRAT (the model described by the authors). The reason for this deviation is that perturbation at a text level is simple to implement, in addition to the decreased number of passes per step thus reducing computational demands. Furthermore, the proposed model also contains a LIME component which will complement the BERT component by giving explanations for the otherwise black box model to increase trust in the model. 
 
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\linewidth]{Proposed-model.drawio.png}
@@ -962,7 +918,33 @@ The proposed model is inspired by and similar to the process described by \textc
     \label{fig:proposed-finetuning}
 \end{figure}
 
-\subsection{Results}
+\subsection{Evaluation}
+%check tense
+Evaluation of the models will be done by comparing F1-score, and its constituent metrics of recall and precision, as well as accuracy. These metrics will be obtained from the trained models by using the test sets.
+
+F1-score is a formula which combines precision and recall. Precision describes the proportion of a model's positive predictions and is calculated by dividing the number of \textit{True Positives} by the sum of \textit{True Positives} and \textit{False Positives}. Recall describes the model's ability to identify positive instances and is calculated by dividing the number of \textit{True Positives} by the sum of \textit{True Positives} and \textit{False Negatives}. Together these metrics are combined to form F1-score, which is calculated by dividing \textit{2} by the sum of the inverse of \textit{Precision} and \textit{Recall}. 
+
+Meanwhile, accuracy is found by dividing the number of correct predictions over the total number of predictions.
+
+The formulae described above are also written below in mathematical notation: 
+
+\begin{equation}
+\text{Precision} = \frac{\text{True\ Positives}}{\text{True\ Positives} + \text{False\ Positives}}
+\end{equation}
+
+\begin{equation}
+\text{Recall} = \frac{\text{True\ Positives}}{\text{True\ Positives} + \text{False\ Negatives}}
+\end{equation}
+
+\begin{equation}
+\text{F1} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+\end{equation}
+
+\begin{equation}
+\text{Accuracy} = \frac{\text{True\ Positives} + \text{True\ Negatives}}{\text{Total\ Predictions}}
+\end{equation}
+
+\subsection{Data Analysis and Results}
 \subsubsection{BERT}
 
 \begingroup
@@ -997,11 +979,7 @@ Fake News Classification & 0.9934 & 0.9948 & 0.9929 & 0.9938 \\
 \end{longtable}
 \endgroup
 
-The results from the baseline fine-tuned BERT models exhibited very high accuracy, recall and precision. As can be referred to in Table \ref{tab:bert_results}, it appears that the FakeNewsNet dataset was the most challenging dataset. All the other datasets proved to be no challenge for each of their fine-tuned BERT models. It is however notable that the F1-scores are in the range (with the exception of the FakeNewsNet dataset) exceed 0.99 which is very high, this may indicate that these datasets may have gathered the data for their positive and negative classes with a methodology that unknowingly introduced some level of data leakage. The alternative is that BERT is simply a very effective model, but the relatively lower performance of BERT on the FakeNewsNet dataset indicates the other datasets may be of lower quality or are less challenging. 
-
-Referencing the results from models trained on Word2Vec embeddings, it is clear that the FakeNewsNet dataset is challenging due to its class imbalance and potentially due to the fact that FakeNewsNet only contains the titles of the articles, not the rest of the content. 
-
-BERT has either matched or outperformed the already excellent results obtained from the machine learning models and deep learning models trained on GloVe and Word2Vec vector embeddings. This includes FakeNewsNet where it was able to obtain an F1-score of 0.9037, which was not able to be reached by any of the other machine learning or deep learning models trained on GloVe or Word2Vec embeddings. 
+The results from the baseline fine-tuned BERT models exhibited very high accuracy, recall and precision. As can be referred to in Table \ref{tab:bert_results}, it appears that the FakeNewsNet dataset was the most challenging dataset. All the other datasets proved to be no challenge for each of their fine-tuned BERT models. 
 
 \begingroup
 \setlength{\tabcolsep}{3pt}
@@ -1035,10 +1013,6 @@ Fake News Classification & 0.0188 & 0.0380 & 0.0336 & 0.0357 \\
 \endgroup
 
 The best fold by validation f1-score was selected for cross dataset evaluation. The results show that the model trained on WELFake performed quite well for FakeNewsNet and ISOT, and much poorer for Fake News Detection and Fake News Classification datasets. 
-
-The model most likely performed better on the FakeNewsNet and ISOT datsets due to the similarities between WELFake and the aforementioned datasets. WELFake contains the article title (originally in its own column; appended at the beginning with the rest of the text during preprocessing) which may be why it performs well on the FakeNewsNet dataset. As for ISOT, it may be that these two datasets are very similar, and as a result the model was able to generalise well for ISOT. 
-
-As for the other two datasets: Fake News Detection and Fake News Classification, these datasets likely performed poorly due to being too different than WELFake. As a result the model was unable to generalise for these models thus causing the poor results. This is despite both datsets having 'title' columns initially. This may be because they also contained a 'text' column, which contained the rest of the article; this is in contrast to FakeNewsNet, which contained only the 'title' column. Furthermore, the methodology for collecting these datasets may have been substantially different than the methodology used to collect the WELFake dataset, causing the datasets to differ substantially.
 
 \subsubsection{Deep Learning}
 
@@ -1088,12 +1062,7 @@ As for the other two datasets: Fake News Detection and Fake News Classification,
 \end{longtable}
 \endgroup
 
-The results for the deep learning models trained using the Word2Vec embeddings indicate that all the models had similar performances and were generally on par with one another, although CNNs very slightly outperformed the LSTMs and CNN-LSTMs. All models achieved results exceeding an f1 score of 0.94, with the exception of models trained on FakeNewsNet (which will be covered later). 
-
-The results for FakeNewsNet are rather interesting, as by looking at the recall we can see that the LSTM and CNN-LSTM models achieved perfect recall. This is most likely because there is a significant class imbalance in favour of the positive class. The LSTM and CNN-LSTM models seem to have fallen into the trap of always classifying any input as positive, which due to the class imbalance does mean that it actually performs quite well. The CNN model seems to have escaped this, as it does not have a perfect recall but has better precision, indicating it is actually classifying the negative class with some level of accuracy as well. 
-
-Generally though, when compared to BERT, it does seem that BERT outperforms the DL models trained. Although it is worth mentioning this difference ranges from small (f1 score improvement of ~0.3 for WELFake) to insigificant. Furthermore, BERT does not appear to have fallen into the trap of classifying only positives for FakeNewsNet like the LSTM and CNN-LSTM models fell into. Although the f1-score improvement is negligible (<0.01), it does show that BERT is able to produce embeddings which are more descriptive than Word2Vec. 
-
+The results for the deep learning models trained using the Word2Vec embeddings indicate that all the models had similar performances and were generally on par with one another, although CNNs very slightly outperformed the LSTMs and CNN-LSTMs. All models achieved results exceeding an f1 score of 0.94, with the exception of models trained on FakeNewsNet. 
 
 \begingroup
 \setlength{\tabcolsep}{3pt}
@@ -1135,12 +1104,7 @@ Generally though, when compared to BERT, it does seem that BERT outperforms the 
 \footnotesize{*due to the results from CNN and LSTM models generally outperforming the CNN-LSTM hybrid, their results have been omitted for brevity.}
 \endgroup
 
-Looking at the cross-dataset evaluation results, a similar pattern to the BERT's cross-dataset evaluation emerges. With performance for ISOT and FakeNewsNet being excellnt when compared to performance for Fake News Detection and Fake News Classification. 
-
-However, the cross-dataset evaluation results are significantly poorer compared to BERT's cross-dataset evaluation results. With the differences being most notable when looking at the results for the FakeNewsNet and Fake News Detection datasets. The difference in f1-score for FakeNewsNet and Fake News Classification cross-dataset evaluation results between BERT and the CNN model was 0.1649 and 0.2184 respectively.
-
-To conclude, while deep learning models trained on Word2Vec embeddings can perform almost as well as BERT, the results for cross-dataset evaluation show a clear superiority of BERT over Word2Vec. 
-
+Looking at the cross-dataset evaluation results, a similar pattern to the BERT's cross-dataset evaluation emerges. With performance for ISOT and FakeNewsNet being excellent when compared to performance for Fake News Detection and Fake News Classification. 
 
 \subsubsection{Machine Learning}
 
@@ -1205,9 +1169,7 @@ To conclude, while deep learning models trained on Word2Vec embeddings can perfo
 \end{longtable}
 \endgroup
 
-The machine learning models generally did very well on all datasets save for FakeNewsNet (for reasons discussed earlier in the DL section). When compared against BERT, BERT outperformed the ML results at a degree similar to how it outperformed the DL results; and when compared against DL results, the DL models (or CNN, which was the best DL model) only very slightly outperformed the best ML models for each dataset.
-
-Like the DL and BERT models, the performance of the ML models were exceptional, with the exception of FakeNewsNet. Interestingly however, unlike the DL models, the ML models (all 6 of them) did not have perfet recall. This indicates that the selected ML models have architectures which make them less supseptible to class imbalances, something which was not taken into account during the implementation of the DL models. 
+The machine learning models generally did very well on all datasets save for FakeNewsNet. When compared against BERT, BERT outperformed the ML results at a degree similar to how it outperformed the DL results; and when compared against DL results, the DL models (or CNN, which was the best DL model) only very slightly outperformed the best ML models for each dataset.
 
 \begingroup
 \setlength{\tabcolsep}{3pt}
@@ -1323,17 +1285,37 @@ Fake News Classification & 0.0196 & 0.0383 & 0.0338 & 0.0359 \\
 \end{longtable}
 \endgroup
 
-The cross-dataset evaluation for TPA-BERT followed the usual pattern described earlier. The results however, when compared against BERT were only slightly better (<0.008 difference in f1 score). Even then this small difference may be attributed to randomness. Regardless, these results indicate that the adversarial technique used in TPA-BERT failed to generalise the model sigificantly. 
-
-There could be several causes for this: lack of depth to the text perturbation technique, use of the CLS token, and the fact these perturbations are not 'natural'. The text perturbation techniques employed were: synonym substitution, random swapping and random deletion. These techniques most likely were unable to meaningfully change the overall semantic meaning of the textual input. This flows directly to the next point, use of the CLS token: the CLS token, as previously mentioned is a 768 dimensional representation of the input text (essentially a semantic summary of the input text). This CLS token makes the order of the text less relevant, as the classifier only uses this CLS token and thus overcomes the text perturbation. 
-
-Lastly, the perturbations do not produce meaningful variations. The random synonym substitution, swapping and deletion creates text which, while still legible, is not a meaningful variation of human writing. This means that while the model learned to adapt to the word 'scrambling', it didn't learn to actually handle genuine variations in human writing styles. This failure to handle genuine variation is most like partially why it failed to generalise. 
-
-However it could also be argued the whole approach is flawed. Even if Large Language Models to generate 'genuine variation', the semantics of the text will likely not change sigificantly and any models trained will still suffer from generalisation problems even if their horizons are slightly expanded. Nonetheless, this attempt has proven that while current approaches to fake news detection are more than capable of performing well when working with a dataset, the actual process of generalising a model to a degree where it can be reliably in real-world settings remains elusive. Although there are likely more successful attempts than the one described here like by \textcite{BERT-finetuning}, there remains significant work to be done in regards to generalisation. 
+The cross-dataset evaluation for TPA-BERT followed the usual pattern described earlier. The results however, when compared against BERT were only slightly better (<0.008 difference in f1 score). Even then this small difference may be attributed to randomness. Regardless, these results indicate that the adversarial technique used in TPA-BERT failed to generalise the model sigificantly and is on par with the BERT results. 
 
 \subsection{LIME Implementation}
 TBD
 
+\section{Discussion}
+Comparing the performance of all the models trained (BERT, DL and ML models), BERT outperforms all other models, if only slightly in some cases. Although it is worth mentioning this difference ranges from small (F1 score improvement of ~0.03 for CNN trained on WELFake) to insigificant. Furthermore, BERT does not appear to have fallen into the trap of classifying only positives for FakeNewsNet like the LSTM and CNN-LSTM models fell into. Although the F1-score improvement is negligible (<0.01), it does show that BERT is able to produce embeddings which are more descriptive than Word2Vec. 
+
+The DL results for FakeNewsNet (as mentioned above) are rather interesting, as by looking at the recall we can see that the LSTM and CNN-LSTM models achieved perfect recall. This is most likely because there is a significant class imbalance in favour of the positive class. The LSTM and CNN-LSTM models seem to have fallen into the trap of always classifying any input as positive, which due to the class imbalance does mean that it actually performs quite well. The CNN model seems to have escaped this, as it does not have a perfect recall but has better precision, indicating it is actually classifying the negative class with some level of accuracy as well. 
+
+Like the DL and BERT models, the performance of the ML models were exceptional, with the exception of FakeNewsNet. Interestingly however, unlike the DL models, the ML models (all 6 of them) did not have perfet recall. This indicates that the selected ML models have architectures which make them less supseptible to class imbalances, something which was not taken into account during the implementation of the DL models. 
+
+However, the excellent performance of the models may (at least in part) actually indicate that these datasets may have gathered the data for their positive and negative classes with a methodology that unknowingly introduced some level of data leakage. When experimenting with the LIME implementation on the BERT model trained on WELFake, it was found that the model attributed part of its reasoning to news agency names like "Reuters". This is counterproductive to any model developed for fake news detection as models learn to classify news based on superficial attributes instead of 'deeper' or more substantive attributes. 
+
+Moving on, regarding the unique performance of models on the FakeNewsNet dataset, it is worth noting it differs from the other datasets as it has a significant class imbalance, with about 75\% of the records belonging to the positive class. Furthermore, FakeNewsNet (in our implementation of the dataset, as no attempt was made to scrape the article body) only contains the title of the article, and does not contain the main article body. For these reasons, FakeNewsNet presents a unique challenge which may explain the relatively (compared to other datasets) poor performance of BERT. 
+
+As for cross-dataset evaluation, the performance of the ML and DL models are significantly poorer compared to BERT's cross-dataset evaluation results. With the differences being most notable when looking at the results for the FakeNewsNet and Fake News Detection datasets. The difference in F1-score for FakeNewsNet and Fake News Classification cross-dataset evaluation results between BERT and the CNN model was 0.1649 and 0.2184 respectively.
+
+As for the cross-dataset evaluation performance on the models trained on WELFake. The results for the models trained (regardless if it were BERT, DL or ML) followed a pattern: very strong performance on ISOT, decent performance for FakeNewsNet, poor performance for Fake News Detection (except for the ML models, for which Fake News Detection results were similar to Fake News Classification) and abysmal performance on Fake News Classification. 
+
+The models most likely performed better on the FakeNewsNet and ISOT datsets due to the similarities between WELFake and the aforementioned datasets. WELFake contains the article title (originally in its own column; appended at the beginning with the rest of the text during preprocessing) which may be why it performs well on the FakeNewsNet dataset. As for ISOT, it may be that these two datasets are very similar, and as a result the model was able to generalise well for ISOT. 
+
+And for the last two datasets: Fake News Detection and Fake News Classification, these datasets likely performed poorly due to being too different than WELFake. As a result the model was unable to generalise for these models thus causing the poor results. This is despite both datsets having 'title' columns initially. This may be because they also contained a 'text' column, which contained the rest of the article; this is in contrast to FakeNewsNet, which contained only the 'title' column. Furthermore, the methodology for collecting these datasets may have been substantially different than the methodology used to collect the WELFake dataset, causing the datasets to differ substantially.
+
+Lastly, regarding the proposed model (TPA-BERT) being unable to generalise better than the BERT model, there could be several causes for this. Namely, lack of depth to the text perturbation technique, use of the CLS token, and the fact these perturbations are not 'natural'. 
+
+The text perturbation techniques employed were: synonym substitution, random swapping and random deletion. These techniques most likely were unable to meaningfully change the overall semantic meaning of the textual input. This flows directly to the next point, use of the CLS token: the CLS token, as previously mentioned is a 768 dimensional representation of the input text (essentially a semantic summary of the input text). This CLS token makes the order of the text less relevant, as the classifier only uses this CLS token. This means that without genuine semantic variation, the adversarial training only taught the model how to 'autocorrect' the perturbations in the text.
+
+Furthermore, the perturbations do not produce meaningful variations. The random synonym substitution, swapping and deletion creates text which is not a meaningful variation of human writing. This means that while the model learned to adapt to the perturbations, it didn't learn to actually handle genuine variations in human writing styles. Had there been geuine variations, the semantics may have changed as well, allowing the adversarial training to force the model to identify variation-agnostic features while teaching the model to classify the 'fakeness' of news based on less superficial features.
+
+To conclude, BERT outperforms the models trained on Word2Vec embeddings, but not by much. The main difference comes from the cross-dataset evaluation results where BERT exhibits sigificantly stronger performance. The excellent performance may be caused by the datasets having some form of data leakage, inadvertantly causing superficial features to be used for classification and amongst all the datasets, FakeNewsNet is the most challenging due to its unique attributes relative to other datasets used. Finally the results for TPA-BERT show it is no better or worse when compared against BERT, indicating that the methodology used for its training may be flawed. 
 
 \clearpage
 \section{Conclusion}
@@ -1343,9 +1325,9 @@ For the literature review, 16 articles were reviewed, through which substantial 
 
 Relevant datasets were gathered from Kaggle, research papers and HuggingFace. Originally seven datasets were gathered, but two of them proved to be incompatible and were not used. The five chosen datasets were previously described in detail in Chapter 3. These datasets were then cleaned and preprocessed, allowing for their use in the later experiments with the various embedding algorithms.
 
-Experiments on BERT and Word2Vec were conducted which aimed to gain baseline results for comparison against the proposed model, and to justify the use of BERT compared to other techniques. The experimental data showed that while models (both ML and DL) trained on Word2Vec embeddings performed marginally worse than BERT, the real difference lay in generalisation, where BERT models outperformed the models trained on Woed2Vec embeddings. While this showed BERT had superior generalisation, the patterns observed in the cross-dataset generalisation results suggested that similarity between the dataset used to train a model and the completely unseen datasets used for cross-dataset generalisation is an important factor. 
+Experiments on BERT and Word2Vec were conducted which aimed to gain baseline results for comparison against the proposed model, and to justify the use of BERT compared to other techniques. The experimental data showed that while models (both ML and DL) trained on Word2Vec embeddings performed marginally worse than BERT, the real difference lay in generalisation, where BERT models outperformed the models trained on Woed2Vec embeddings. While this showed BERT had superior generalisation, the patterns observed in the cross-dataset evaluation results suggested that similarity between the dataset used to train a model and the completely unseen datasets used for cross-dataset evaluation is an important factor. 
 
-The proposed model was constructed based on approaches to fake news detection in the articles reviewed in the literature review. It had been hoped that the proposed model would have greater generalisation than baseline BERT models, however this result was not obtained. Rather the results indicate that TPA-BERT was no better or worse than the baseline BERT models in terms of performance (against the test set of the dataset it was trained on) and cross-dataset generalisation. It can be concluded, at least for the datasets involved in this research, that merely perturbing the text using the aforementioned techniques is too 'shallow' a technique for effective generalisation.  
+The proposed model was constructed based on approaches to fake news detection in the articles reviewed in the literature review. It had been hoped that the proposed model would have greater generalisation than baseline BERT models, however this result was not obtained. Rather the results indicate that TPA-BERT was no better or worse than the baseline BERT models in terms of performance (against the test set of the dataset it was trained on) and cross-dataset evaluation. It can be concluded, at least for the datasets involved in this research, that merely perturbing the text using the aforementioned techniques is too 'shallow' a technique for effective generalisation.  
 
 This research experienced a multitude of challenges, the biggest being a lack of computational resources. Model training and testing were done on Google Colab using the TPU backend which came with limitations. Other Colab backends were tried, but TPU remained the only backend which could train the models in a reasonable amount of time and would be able to handle the memory requirement. This caused changes to be made in regards to batch size and epochs, which in future work could perhaps be lowered. Other (more minor) challenges included implementation of the proposed model due to limited resources for experimentation and difficulty %more later
 
