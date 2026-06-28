@@ -1126,7 +1126,7 @@
 \let\@noendfloatfig\figure% BDB
 
 
-\RequirePackage[notablist,figlist,notabhead,nofighead,tablesfirst,nomarkers]{endfloat}[1995/10/11]
+\RequirePackage[tablist,figlist,notabhead,nofighead,tablesfirst,nomarkers]{endfloat}[1995/10/11]
 
 
 \def\@gobbleuntilnext[#1]{}

@@ -1,5 +1,4 @@
 % LTeX: language=en-GB
-
 \documentclass[stu,12pt,floatsintext,donotrepeattitle]{apa7}
 \usepackage{csquotes}
 \usepackage{amsmath}
@@ -92,6 +91,30 @@
   }%
 }
 
+% --- FORCE ALL TABLES TO LIST OF TABLES ---
+\makeatletter
+\AtBeginDocument{%
+  \let\origcaption\caption
+  \newcommand{\@tabletype}{table}
+  \newcommand{\@longtabletype}{longtable}
+  \DeclareRobustCommand{\caption}[2][]{%
+    \ifx\relax#1\relax
+      \origcaption{#2}%
+      \def\temp@cap{#2}%
+    \else
+      \origcaption[#1]{#2}%
+      \def\temp@cap{#1}%
+    \fi
+    \ifx\@captype\@tabletype
+      \ifx\@currenvir\@longtabletype\else
+        \addcontentsline{lot}{table}{\protect\numberline{\thetable}{\ignorespaces\temp@cap}}%
+      \fi
+    \fi
+  }%
+}
+\makeatother
+
+
 
 % --- HEADINGS CONFIGURATION ---
 % We use titlesec to override apa7's default section styling
@@ -131,8 +154,8 @@
 \fancyhead[L]{\fontsize{8}{10}\selectfont Project ID: 351} % Left header with blank space for project ID
 \fancyhead[R]{\fontsize{8}{10}\selectfont\thepage} % Right header with page number
 \fancyfoot[L]{\fontsize{8}{10}\selectfont Prepared by: Jordan Ling Shen Hang} % Left footer
-\fancyfoot[C]{\fontsize{8}{10}\selectfont CPT6314 Project I} % Center footer
-\fancyfoot[R]{\fontsize{8}{10}\selectfont 2530 Term} % Right footer
+\fancyfoot[C]{\fontsize{8}{10}\selectfont CPT6324 Project II} % Center footer
+\fancyfoot[R]{\fontsize{8}{10}\selectfont 2610 Term} % Right footer
 \renewcommand{\headrulewidth}{0.4pt} % Add header line
 \renewcommand{\footrulewidth}{0.4pt} % Add footer line
 
@@ -142,8 +165,8 @@
   \fancyhead[L]{\fontsize{8}{10}\selectfont Project ID: 351}
   \fancyhead[R]{\fontsize{8}{10}\selectfont\thepage}
   \fancyfoot[L]{\fontsize{8}{10}\selectfont Prepared by: Jordan Ling Shen Hang}
-  \fancyfoot[C]{\fontsize{8}{10}\selectfont CPT6314 Project I}
-  \fancyfoot[R]{\fontsize{8}{10}\selectfont 2530 Term}
+  \fancyfoot[C]{\fontsize{8}{10}\selectfont CPT6324 Project II}
+  \fancyfoot[R]{\fontsize{8}{10}\selectfont 2610 Term}
   \renewcommand{\headrulewidth}{0.4pt}
   \renewcommand{\footrulewidth}{0.4pt}
 }
@@ -404,15 +427,22 @@ The objectives of this project are:
 \subsection{Research Scope}
 This project aims to build a deep learning model for fake news detection by first conducting a thorough literature review on related works in order to construct a knowledge base of which will be used to construct a model for detecting fake news.
 
-After the literature review, models to detect fake news will be developed using deep learning techniques. This process will involve gathering datasets, analysing and understanding the data and pre-processing datasets before constructing the architecture of the models and then training the various models.  %are we propos
+After the literature review, models to detect fake news will be developed using deep learning techniques. This process will involve gathering datasets, analysing and understanding the data and pre-processing datasets before constructing the architecture of the models and then training the various models.  %are we 
 
-And lastly, after training the models. The models will be tested on the test sets which are subsets of the datasets used in order to determine their performance. 
+And lastly, after training the models. The models will be evaluated on the test sets which are subsets of the datasets used in order to determine their performance as well as on other datasets to evaluate generalisation.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\linewidth]{FYP1-Gantt_chart.png}
     \caption{Project Timeline Gantt Chart for MMU Term 2530}
     \label{fig:gantt_chart}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{FYP2-Gantt_Chart.png}
+    \caption{Project Timeline Gantt Chart for MMU Term 2610}
+    \label{fig:gantt_chart_fyp2}
 \end{figure}
 
 \clearpage
@@ -677,6 +707,7 @@ After combining the columns, any columns that did not contain the label or 'comb
 
 Once completed, the 'combined\_text' column was stripped of any non-Unicode characters as well as links, phone numbers and other non-ASCII characters. The removal of non-ASCII characters is possible as this research focuses on English news. After this, any rows with empty strings are removed. 
 
+\vspace{25pt}
 \begin{table}[H]
     \centering
     \scriptsize % Reduces font size slightly to fit width
@@ -733,6 +764,8 @@ Once completed, the 'combined\_text' column was stripped of any non-Unicode char
 
 After the above processes, the data was then processed separately depending on the type of model being trained. For BERT, the data was tokenised using BERT's tokeniser without further processing steps. For Word2Vec, the data was both decapitalised and lemmatised before the data is used to train the Word2Vec model.
 
+\vspace{25pt}
+
 \begin{table}[H]
 \centering
 \caption{Summary of Additional Preprocessing Steps for Each Model Type}
@@ -758,6 +791,8 @@ Each dataset, for all models (BERT, TPA-BERT, ML and DL models), was split 85-15
 As this research focuses on generalisation, another evaluation step is conducted: "cross-dataset evaluation". Cross-dataset evaluation is the term we will use to refer to the process where a model is tested against completely unseen datasets, for example: a model trained on WELFake is tested against FakeNewsNet and ISOT. Only one fold is selected for cross-dataset evaluation, specifically the fold which performed best based on validation F1-score.
 
 Below is a summary of the modelling approaches for each embedding type (BERT and Word2Vec). BERT is fine-tuned, while Word2Vec has its embeddings fit onto ML and DL models.
+
+\vspace{25pt}
 
 \begin{table}[H]
 \centering
@@ -789,6 +824,8 @@ The Graphic Processing Unit (GPU) backend (specifically T4 GPU) was used for the
 \subsubsection{BERT Fine-tuning}
 Experiments using BERT involved fine-tuning a base BERT-uncased model. The datasets were previously cleaned and processed as was explain previously, but in order for the data to be suitable to input to BERT, it undergoes further processing in the form of tokenisation using the base BERT-uncased tokeniser with the settings shown in Table \ref{tab:bert_tokeniser_config}. 
 
+\vspace{25pt}
+
 \begin{table}[H]
     \centering
     \caption{BERT Tokeniser Configuration}
@@ -807,6 +844,8 @@ Experiments using BERT involved fine-tuning a base BERT-uncased model. The datas
 The reason for capping the \texttt{max\_length} at 128 instead of at 512 (max) were due to several factors. Firstly it was hoped that by limiting the maximum length it would reduce the amount of overfitting, improving generalisation. And secondly a lower \texttt{max\_length} resulted in lower computational demands, especially on memory. 
 
 After tokenisation, the BERT-uncased model is loaded and the training arguments are set. The training arguments are shown in Table \ref{tab:bert_finetune_config}.
+
+\vspace{25pt}
 
 \begin{table}[H]
     \centering
@@ -842,6 +881,8 @@ Word2Vec experimentation saw the text (from previous processing steps) undergo s
 
 The training arguments for the Word2Vec models can be found in \ref{tab:word2vec_config}.
 
+\vspace{25pt}
+
 \begin{table}[H]
     \centering
     \caption{Word2Vec Models' Training Configuration}
@@ -860,24 +901,51 @@ The training arguments for the Word2Vec models can be found in \ref{tab:word2vec
     \end{tabular}
 \end{table}
 
-After each Word2Vec model is trained, the models are employed to convert each dataset into embedding form which can be understood by machine learning and deep learning models. After this process, each respective dataset and its embeddings were then used to train several machine learning models (KNN, Gaussian NB, Logistic Regression, SVC, XGBoost, Random Forest) and deep learning models (CNN, CNN-LSTM, LSTM). 
+After each Word2Vec model is trained, the models are employed to convert each document into embedding form which can be understood by machine learning and deep learning models. However these embeddings differ in how they are passed to the ML and DL models.
+
+As deep learning models support variable length sequences (though capped at 200 tokens in the training parameters), the Word2Vec embeddings are passed in sequence to the DL models. This is implemented by mapping each preprocessed word (token) in a document to its corresponding integer index in the vocabulary (built from the training set; note that words only seen in the test set will be given the unknown token). A sequence of these integer indices is then formed. In the case that the document is shorter or longer than 200 words, padding is applied using a unique token (0) or truncated to 200 elements, respectively. This index sequence is then passed into the model where it will then lookup each index for its respective 300-dimensional Word2Vec vector representation. 
+
+This is in contrast to ML models, which are unable to accept variable length input; they instead receive input in the form of a single averaged vector. This averaged vector is formed by taking the element-wise mean of the vectors across the document. This results in a single 300 dimension averaged vector (note the vector size in \ref{tab:word2vec_config} for why it is 300).
+
+After this process, model training begins with 5-fold cross validation (as described previously) and several machine learning models (KNN, Gaussian NB, Logistic Regression, SVC, XGBoost, Random Forest) and deep learning models (CNN, CNN-LSTM, LSTM) are trained. 
 
 Below are tables containing the training parameters for the models trained (note: a seed of 42 was used for reproducibility): 
+
+\vspace{25pt}
 
 \begin{table}[H]
     \centering
     \caption{Machine Learning Model Training Hyperparameters}
     \label{tab:ml_model_params}
-    \begin{tabular}{l l}
+    \begin{tabular}{l l l}
         \hline
-        \textbf{Model} & \textbf{Training Arguments} \\
+        \textbf{Model} & \textbf{Parameter} & \textbf{Value} \\
         \hline
-        K-Nearest Neighbors (KNN) & \texttt{n\_neighbors=5} \\
-        Gaussian Naive Bayes & Default parameters \\
-        Logistic Regression & \texttt{max\_iter=2000, class\_weight='balanced', random\_state=seed} \\
-        Support Vector Classifier (SVC) & probability=True, class\_weight='balanced', random\_state=seed \\
-        XGBoost & \texttt{eval\_metric='logloss', random\_state=seed, n\_estimators=300,learning\_rate=0.05, max\_depth=6}, \texttt{eval\_metric='logloss'} \\
-        Random Forest Classifier & \texttt{n\_estimators=300, class\_weight='balanced', random\_state=seed}\\
+        \multicolumn{3}{c}{\textbf{Common Experimental Settings}} \\
+        & Cross-Validation & Stratified 5-Fold \\
+        & Random State Seed & 42 \\
+        & Feature Scaling & StandardScaler \\
+        \hline
+        \multirow{2}{*}{KNN} & Number of Neighbors ($k$) & 5 \\
+        & Distance Metric & Minkowski (Euclidean) \\
+        \hline
+        Gaussian NB & Priors & Default (computed from data) \\
+        \hline
+        \multirow{3}{*}{Logistic Regression} & Maximum Iterations & 2000 \\
+        & Class Weights & Balanced \\
+        & Solver & lbfgs \\
+        \hline
+        \multirow{3}{*}{SVC} & Probability Estimation & Enabled (\texttt{True}) \\
+        & Class Weights & Balanced \\
+        & Kernel & RBF \\
+        \hline
+        \multirow{4}{*}{XGBoost} & Evaluation Metric & \texttt{logloss} \\
+        & Number of Estimators & 300 \\
+        & Learning Rate & 0.05 \\
+        & Maximum Depth & 6 \\
+        \hline
+        \multirow{2}{*}{Random Forest} & Number of Estimators & 300 \\
+        & Class Weights & Balanced \\
         \hline
     \end{tabular}
 \end{table}
@@ -957,7 +1025,6 @@ TPA-BERT loss function:
         \hline
     \end{tabular}
 \end{table}
-\footnotesize{*Although Eval Steps and Eval Strategy are not explicitly set in the code, by default the strategy is ``steps'' and the steps are ``128''.}
 
 There are several modifications to the parameters compared to the baseline BERT model. Most notably the training batch size which is now 32 instead of the 128 used by the baseline. There are a few reasons for this: firstly, the model also has to process the adversarial data which essentially doubles the data processed. And secondly, because of the aforementioned doubled data, the forward and backward passes now carry twice as much data. As a result, with double the data as well as the fact the forward and backward passes also have to deal with double the data, the effective batch size is 128. 
 
@@ -1030,6 +1097,15 @@ where:
     \item $X_{\text{mod}}^{(K)}$ is the modified input text after deleting the top $K$ words (evaluated at $K \in \{5, 10, 20\}$) with the largest absolute attribution weights $|w_i|$.
 \end{itemize}
 
+\newpage
+\subsection{Summary Flowchart}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\linewidth]{Training_Flowchart.png}
+    \caption{Training process from end-to-end}
+    \label{fig:training_pipeline}
+\end{figure}
+
 \section{Results}
 \subsection{BERT}
 
@@ -1054,11 +1130,13 @@ where:
 
 The results from the baseline fine-tuned BERT models exhibited very high accuracy, recall and precision. As can be referred to in Table \ref{tab:bert_results}, it appears that the FakeNewsNet dataset was the most challenging dataset. All the other datasets proved to be no challenge for each of their fine-tuned BERT models. 
 
+\vspace{25pt}
+
 \begin{table}[H]
     \centering
     \setlength{\tabcolsep}{3pt}
     \renewcommand{\arraystretch}{1.3}
-    \caption{Cross Dataset Generalisation (BERT) - WELFake Only}
+    \caption{Cross-Dataset Evaluation (BERT) - WELFake Only}
     \label{tab:bert_cross_results}
     \begin{tabular}{@{} l c c c c @{}}
         \toprule
@@ -1072,7 +1150,7 @@ The results from the baseline fine-tuned BERT models exhibited very high accurac
     \end{tabular}
 \end{table}
 
-The best fold by validation f1-score was selected for cross dataset evaluation. The results show that the model trained on WELFake performed quite well for FakeNewsNet and ISOT, and much poorer for Fake News Detection and Fake News Classification datasets. 
+The best fold by validation f1-score was selected for cross-dataset evaluation. The results show that the model trained on WELFake performed quite well for FakeNewsNet and ISOT, and much poorer for Fake News Detection and Fake News Classification datasets. 
 
 \subsection{Deep Learning}
 
@@ -1081,7 +1159,7 @@ The best fold by validation f1-score was selected for cross dataset evaluation. 
 \renewcommand{\arraystretch}{1.3}
 \setlength\LTleft{\fill}
 \setlength\LTright{\fill}
-\begin{longtable}{@{} p{4.5cm} p{2.0cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} @{}}
+\begin{longtable}{@{} p{4.7cm} p{2.0cm} p{1.7cm} p{1.7cm} p{1.7cm} p{1.7cm} @{}}
 \caption{Deep Learning Baseline Results} \label{tab:dl_results} \\
 \toprule
 \textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
@@ -1100,39 +1178,39 @@ The best fold by validation f1-score was selected for cross dataset evaluation. 
 
 \bottomrule
 \endlastfoot
-\multirow{3}{*}{WELFake} & CNN & 0.9610 & 0.9504 & 0.9645 & 0.9573 \\
- & LSTM & 0.9489 & 0.9354 & 0.9536 & 0.9442 \\
+\multirow{3}{*}{WELFake} & CNN & 0.9610 & 0.9504 & 0.9645 & 0.9573 \\*
+ & LSTM & 0.9489 & 0.9354 & 0.9536 & 0.9442 \\*
  & CNN-LSTM & 0.9474 & 0.9433 & 0.9408 & 0.9419 \\
 \midrule
-\multirow{3}{*}{FakeNewsNet} & CNN & 0.8395 & 0.8689 & 0.9280 & 0.8974 \\
- & LSTM & 0.7565 & 0.7565 & 1.0000 & 0.8614 \\
+\multirow{3}{*}{FakeNewsNet} & CNN & 0.8395 & 0.8689 & 0.9280 & 0.8974 \\*
+ & LSTM & 0.7565 & 0.7565 & 1.0000 & 0.8614 \\*
  & CNN-LSTM & 0.7565 & 0.7565 & 1.0000 & 0.8614 \\
 \midrule
-\multirow{3}{*}{Fake News Detection} & CNN & 0.9883 & 0.9881 & 0.9907 & 0.9894 \\
- & LSTM & 0.9824 & 0.9806 & 0.9876 & 0.9841 \\
+\multirow{3}{*}{Fake News Detection} & CNN & 0.9883 & 0.9881 & 0.9907 & 0.9894 \\*
+ & LSTM & 0.9824 & 0.9806 & 0.9876 & 0.9841 \\*
  & CNN-LSTM & 0.9832 & 0.9839 & 0.9855 & 0.9847 \\
 \midrule
-\multirow{3}{*}{ISOT} & CNN & 0.9983 & 0.9976 & 0.9986 & 0.9981 \\
- & LSTM & 0.9959 & 0.9942 & 0.9969 & 0.9955 \\
+\multirow{3}{*}{ISOT} & CNN & 0.9983 & 0.9976 & 0.9986 & 0.9981 \\*
+ & LSTM & 0.9959 & 0.9942 & 0.9969 & 0.9955 \\*
  & CNN-LSTM & 0.9979 & 0.9975 & 0.9980 & 0.9977 \\
 \midrule
-\multirow{3}{*}{Fake News Classification} & CNN & 0.9901 & 0.9959 & 0.9858 & 0.9908 \\
- & LSTM & 0.9852 & 0.9910 & 0.9816 & 0.9862 \\
+\multirow{3}{*}{Fake News Classification} & CNN & 0.9901 & 0.9959 & 0.9858 & 0.9908 \\*
+ & LSTM & 0.9852 & 0.9910 & 0.9816 & 0.9862 \\*
  & CNN-LSTM & 0.9862 & 0.9922 & 0.9822 & 0.9872 \\
 \end{longtable}
 \endgroup
 
 The results for the deep learning models trained using the Word2Vec embeddings indicate that all the models had similar performances and were generally on par with one another, although CNNs very slightly outperformed the LSTMs and CNN-LSTMs. All models achieved results exceeding an f1 score of 0.94, with the exception of models trained on FakeNewsNet. 
 
-\newpage 
+\vspace{25pt}
 
 \begingroup
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.3}
 \setlength\LTleft{\fill}
 \setlength\LTright{\fill}
-\begin{longtable}{@{} p{4.5cm} p{2.0cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} @{}}
-\caption{Cross Dataset Generalisation (CNN and LSTM Only) - Trained on WELFake Only} \label{tab:dl_cross_results} \\
+\begin{longtable}{@{} p{4.7cm} p{2.0cm} p{1.7cm} p{1.7cm} p{1.7cm} p{1.7cm} @{}}
+\caption{Cross Dataset Evaluation (CNN and LSTM Only) - Trained on WELFake Only} \label{tab:dl_cross_results} \\
 \toprule
 \textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
@@ -1150,24 +1228,24 @@ The results for the deep learning models trained using the Word2Vec embeddings i
 
 \bottomrule
 \endlastfoot
-\multirow{2}{*}{FakeNewsNet} & CNN & 0.6932 & 0.6274 & 0.6932 & 0.6516 \\
+\multirow{2}{*}{FakeNewsNet} & CNN & 0.6932 & 0.6274 & 0.6932 & 0.6516 \\*
  & LSTM & 0.7063 & 0.6329 & 0.7063 & 0.6573 \\
 \midrule
-\multirow{2}{*}{Fake News Detection} & CNN & 0.1514 & 0.1403 & 0.1514 & 0.1456 \\
+\multirow{2}{*}{Fake News Detection} & CNN & 0.1514 & 0.1403 & 0.1514 & 0.1456 \\*
  & LSTM & 0.0269 & 0.0288 & 0.0269 & 0.0276 \\
 \midrule
-\multirow{2}{*}{ISOT} & CNN & 0.9959 & 0.9959 & 0.9959 & 0.9959 \\
+\multirow{2}{*}{ISOT} & CNN & 0.9959 & 0.9959 & 0.9959 & 0.9959 \\*
  & LSTM & 0.9901 & 0.9902 & 0.9901 & 0.9901 \\
 \midrule
-\multirow{2}{*}{Fake News Classification} & CNN & 0.0222 & 0.0242 & 0.0222 & 0.0231 \\
+\multirow{2}{*}{Fake News Classification} & CNN & 0.0222 & 0.0242 & 0.0222 & 0.0231 \\*
  & LSTM & 0.0278 & 0.0292 & 0.0278 & 0.0283 \\
 \bottomrule
 \end{longtable}
-\footnotesize{*due to the results from CNN and LSTM models generally outperforming the CNN-LSTM hybrid, their results have been omitted for brevity.}
 \endgroup
 
 Looking at the cross-dataset evaluation results, a similar pattern to the BERT's cross-dataset evaluation emerges. With performance for ISOT and FakeNewsNet being excellent when compared to performance for Fake News Detection and Fake News Classification. 
 
+\newpage
 \subsection{Machine Learning}
 
 \begingroup
@@ -1175,8 +1253,8 @@ Looking at the cross-dataset evaluation results, a similar pattern to the BERT's
 \renewcommand{\arraystretch}{1.3}
 \setlength\LTleft{\fill}
 \setlength\LTright{\fill}
-\begin{longtable}{@{} p{4.5cm} p{2.0cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} @{}}
-\caption{Machine Learning Baseline Results} \label{tab:ml_results} \\
+\begin{longtable}{@{} p{4.7cm} p{3.2cm} p{1.7cm} p{1.7cm} p{1.7cm} p{1.7cm} @{}}
+\caption{Machine Learning Results} \label{tab:ml_results} \\
 \toprule
 \textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
@@ -1194,52 +1272,54 @@ Looking at the cross-dataset evaluation results, a similar pattern to the BERT's
 
 \bottomrule
 \endlastfoot
-\multirow{6}{*}{WELFake} & SVC & 0.9501 & 0.9412 & 0.9492 & 0.9452 \\
- & Logistic Regression & 0.9319 & 0.9219 & 0.9286 & 0.9252 \\
- & XGBoost & 0.9304 & 0.9288 & 0.9169 & 0.9228 \\
- & Random Forest & 0.8961 & 0.8930 & 0.8758 & 0.8843 \\
- & KNN & 0.8725 & 0.9234 & 0.7839 & 0.8480 \\
+\multirow{6}{*}{WELFake} & SVC & 0.9501 & 0.9412 & 0.9492 & 0.9452 \\*
+ & Logistic Regression & 0.9319 & 0.9219 & 0.9286 & 0.9252 \\*
+ & XGBoost & 0.9304 & 0.9288 & 0.9169 & 0.9228 \\*
+ & Random Forest & 0.8961 & 0.8930 & 0.8758 & 0.8843 \\*
+ & KNN & 0.8725 & 0.9234 & 0.7839 & 0.8480 \\*
  & Gaussian NB & 0.6998 & 0.7932 & 0.4572 & 0.5800 \\
 \midrule
-\multirow{6}{*}{FakeNewsNet} & SVC & 0.8057 & 0.8965 & 0.8401 & 0.8674 \\
- & Logistic Regression & 0.7841 & 0.9031 & 0.8005 & 0.8487 \\
- & XGBoost & 0.8255 & 0.8437 & 0.9442 & 0.8911 \\
- & Random Forest & 0.8226 & 0.8251 & 0.9714 & 0.8923 \\
- & KNN & 0.8097 & 0.8382 & 0.9275 & 0.8806 \\
+\multirow{6}{*}{FakeNewsNet} & SVC & 0.8057 & 0.8965 & 0.8401 & 0.8674 \\*
+ & Logistic Regression & 0.7841 & 0.9031 & 0.8005 & 0.8487 \\*
+ & XGBoost & 0.8255 & 0.8437 & 0.9442 & 0.8911 \\*
+ & Random Forest & 0.8226 & 0.8251 & 0.9714 & 0.8923 \\*
+ & KNN & 0.8097 & 0.8382 & 0.9275 & 0.8806 \\*
  & Gaussian NB & 0.7643 & 0.8535 & 0.8311 & 0.8421 \\
 \midrule
-\multirow{6}{*}{Fake News Detection} & SVC & 0.9861 & 0.9830 & 0.9919 & 0.9874 \\
- & Logistic Regression & 0.9830 & 0.9825 & 0.9867 & 0.9846 \\
- & XGBoost & 0.9752 & 0.9698 & 0.9855 & 0.9776 \\
- & Random Forest & 0.9529 & 0.9422 & 0.9738 & 0.9577 \\
- & KNN & 0.9456 & 0.9330 & 0.9704 & 0.9514 \\
+\multirow{6}{*}{Fake News Detection} & SVC & 0.9861 & 0.9830 & 0.9919 & 0.9874 \\*
+ & Logistic Regression & 0.9830 & 0.9825 & 0.9867 & 0.9846 \\*
+ & XGBoost & 0.9752 & 0.9698 & 0.9855 & 0.9776 \\*
+ & Random Forest & 0.9529 & 0.9422 & 0.9738 & 0.9577 \\*
+ & KNN & 0.9456 & 0.9330 & 0.9704 & 0.9514 \\*
  & Gaussian NB & 0.8971 & 0.9122 & 0.8989 & 0.9055 \\
 \midrule
-\multirow{6}{*}{ISOT} & SVC & 0.9878 & 0.9903 & 0.9830 & 0.9867 \\
- & Logistic Regression & 0.9869 & 0.9877 & 0.9838 & 0.9857 \\
- & XGBoost & 0.9753 & 0.9811 & 0.9647 & 0.9728 \\
- & Random Forest & 0.9559 & 0.9667 & 0.9359 & 0.9511 \\
- & KNN & 0.9479 & 0.9708 & 0.9137 & 0.9414 \\
+\multirow{6}{*}{ISOT} & SVC & 0.9878 & 0.9903 & 0.9830 & 0.9867 \\*
+ & Logistic Regression & 0.9869 & 0.9877 & 0.9838 & 0.9857 \\*
+ & XGBoost & 0.9753 & 0.9811 & 0.9647 & 0.9728 \\*
+ & Random Forest & 0.9559 & 0.9667 & 0.9359 & 0.9511 \\*
+ & KNN & 0.9479 & 0.9708 & 0.9137 & 0.9414 \\*
  & Gaussian NB & 0.9093 & 0.8935 & 0.9104 & 0.9019 \\
 \midrule
-\multirow{6}{*}{Fake News Classification} & SVC & 0.9759 & 0.9824 & 0.9727 & 0.9775 \\
- & Logistic Regression & 0.9701 & 0.9733 & 0.9713 & 0.9723 \\
- & XGBoost & 0.9638 & 0.9651 & 0.9679 & 0.9665 \\
- & Random Forest & 0.9449 & 0.9450 & 0.9535 & 0.9492 \\
- & KNN & 0.9336 & 0.9249 & 0.9546 & 0.9395 \\
+\multirow{6}{*}{Fake News Classification} & SVC & 0.9759 & 0.9824 & 0.9727 & 0.9775 \\*
+ & Logistic Regression & 0.9701 & 0.9733 & 0.9713 & 0.9723 \\*
+ & XGBoost & 0.9638 & 0.9651 & 0.9679 & 0.9665 \\*
+ & Random Forest & 0.9449 & 0.9450 & 0.9535 & 0.9492 \\*
+ & KNN & 0.9336 & 0.9249 & 0.9546 & 0.9395 \\*
  & Gaussian NB & 0.8989 & 0.9195 & 0.8909 & 0.9050 \\
 \end{longtable}
 \endgroup
 
 The machine learning models generally did very well on all datasets save for FakeNewsNet. When compared against BERT, BERT outperformed the ML results at a degree similar to how it outperformed the DL results; and when compared against DL results, the DL models (or CNN, which was the best DL model) only very slightly outperformed the best ML models for each dataset.
 
+\vspace{25pt}
+
 \begingroup
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.3}
 \setlength\LTleft{\fill}
 \setlength\LTright{\fill}
-\begin{longtable}{@{} p{4.5cm} p{2.0cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} @{}}
-\caption{Cross Dataset Generalisation (SVC, Random Forest and XGBoost ONLY) - WELFake Only} \label{tab:ml_cross_results} \\
+\begin{longtable}{@{} p{4.7cm} p{3.2cm} p{1.7cm} p{1.7cm} p{1.7cm} p{1.7cm} @{}}
+\caption{Cross Dataset Evaluation (SVC, Random Forest and XGBoost) - WELFake Only} \label{tab:ml_cross_results} \\
 \toprule
 \textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
@@ -1257,24 +1337,23 @@ The machine learning models generally did very well on all datasets save for Fak
 
 \bottomrule
 \endlastfoot
-\multirow{3}{*}{FakeNewsNet} & SVC & 0.7536 & 0.6022 & 0.7536 & 0.6509 \\
- & Random Forest & 0.6855 & 0.6291 & 0.6855 & 0.6508 \\
+\multirow{3}{*}{FakeNewsNet} & SVC & 0.7536 & 0.6022 & 0.7536 & 0.6509 \\*
+ & Random Forest & 0.6855 & 0.6291 & 0.6855 & 0.6508 \\*
  & XGBoost & 0.6963 & 0.6169 & 0.6963 & 0.6459 \\
 \midrule
-\multirow{3}{*}{Fake News Detection} & SVC & 0.0192 & 0.0181 & 0.0192 & 0.0184 \\
- & Random Forest & 0.0190 & 0.0166 & 0.0190 & 0.0176 \\
+\multirow{3}{*}{Fake News Detection} & SVC & 0.0192 & 0.0181 & 0.0192 & 0.0184 \\*
+ & Random Forest & 0.0190 & 0.0166 & 0.0190 & 0.0176 \\*
  & XGBoost & 0.0183 & 0.0166 & 0.0183 & 0.0172 \\
 \midrule
-\multirow{3}{*}{ISOT} & SVC & 0.9841 & 0.9843 & 0.9841 & 0.9841 \\
- & Random Forest & 0.9822 & 0.9825 & 0.9822 & 0.9821 \\
+\multirow{3}{*}{ISOT} & SVC & 0.9841 & 0.9843 & 0.9841 & 0.9841 \\*
+ & Random Forest & 0.9822 & 0.9825 & 0.9822 & 0.9821 \\*
  & XGBoost & 0.9844 & 0.9847 & 0.9844 & 0.9844 \\
 \midrule
-\multirow{3}{*}{Fake News Classification} & SVC & 0.0333 & 0.0342 & 0.0333 & 0.0335 \\
- & Random Forest & 0.0345 & 0.0347 & 0.0345 & 0.0343 \\
+\multirow{3}{*}{Fake News Classification} & SVC & 0.0333 & 0.0342 & 0.0333 & 0.0335 \\*
+ & Random Forest & 0.0345 & 0.0347 & 0.0345 & 0.0343 \\*
  & XGBoost & 0.0332 & 0.0336 & 0.0332 & 0.0332 \\
 \bottomrule
 \end{longtable}
-\footnotesize{*Models were selected due to generally outperforming the other models and for brevity's sake.}
 \endgroup
 
 The cross-dataset evaluation of the selected ML models again followed the pattern observed by the BERT and DL model's cross-dataset evaluation results. However, most notably for the ML models the results for Fake News Detection was much poorer than BERT and the DL models. For reference, BERT and CNN achieved an f1 score of 0.3640 and 0.1456 respectively, while the best ML model (for Fake News Detection): SVC, only achieved an F1-score of 0.0184. 
@@ -1303,11 +1382,13 @@ As for the other datasets, the ML models were very slightly outperformed by the 
 
 The results for TPA-BERT were excellent, with results exceeding F1-scores of 0.95 with the exception of FakeNewsNet. When comparing the results against BERT, BERT again very slightly (<0.005 difference in f1 score) outperforms TPA-BERT. Overall these results is very typical when observed together with the other results. The adversarial training does seem to have very slightly impacted the performance of the model but not by much. 
 
+\vspace{25pt}
+
 \begin{table}[H]
     \centering
     \setlength{\tabcolsep}{3pt}
     \renewcommand{\arraystretch}{1.3}
-    \caption{Cross Dataset Generalisation (TPA-BERT) - WELFake Only}
+    \caption{Cross-Dataset Evaluation (TPA-BERT) - WELFake Only}
     \label{tab:tpa_bert_cross_results}
     \begin{tabular}{@{} l c c c c @{}}
         \toprule
@@ -1349,7 +1430,9 @@ Like the DL and BERT models, the performance of the ML models were exceptional, 
 
 However, the excellent performance of the models may (at least in part) actually indicate that these datasets may have gathered the data for their positive and negative classes with a methodology that unknowingly introduced some level of data leakage. When experimenting with the LIME implementation on the BERT model trained on WELFake, it was found that the model attributed part of its reasoning to news agency names like "Reuters". This is counterproductive to any model developed for fake news detection as models learn to classify news based on superficial attributes instead of 'deeper' or more substantive attributes. 
 
-Moving on, regarding the unique performance of models on the FakeNewsNet dataset, it is worth noting it differs from the other datasets as it has a significant class imbalance, with about 75\% of the records belonging to the positive class. Furthermore, FakeNewsNet (in our implementation of the dataset, as no attempt was made to scrape the article body) only contains the title of the article, and does not contain the main article body. For these reasons, FakeNewsNet presents a unique challenge which may explain the relatively (compared to other datasets) poor performance of BERT. 
+Regarding the unique performance of models on the FakeNewsNet dataset, it is worth noting it differs from the other datasets as it has a significant class imbalance, with about 75\% of the records belonging to the positive class. Furthermore, FakeNewsNet (in our implementation of the dataset, as no attempt was made to scrape the article body) only contains the title of the article, and does not contain the main article body. For these reasons, FakeNewsNet presents a unique challenge which may explain the relatively (compared to other datasets) poor performance of BERT. 
+
+Lastly, despite the difference in how the Word2Vec embeddings were passed to the ML and DL models, this does not appear to have had a sigificant impact on the results. 
 
 \subsection{Cross-Dataset Evaluation}
 As for cross-dataset evaluation, the performance of the ML and DL models are significantly poorer compared to BERT's cross-dataset evaluation results. With the differences being most notable when looking at the results for the FakeNewsNet and Fake News Detection datasets. The difference in F1-score for FakeNewsNet and Fake News Classification cross-dataset evaluation results between BERT and the CNN model was 0.1649 and 0.2184 respectively.
@@ -1391,15 +1474,17 @@ And finally, LIME was implemented on BERT and TPA-BERT with results indicating t
 
 \subsection{Limitations}
 % This research has a multitude of limitations, the biggest being a lack of computational resources. Model training and testing were done on Google Colab using the TPU backend which came with limitations. Other Colab backends were tried, but TPU remained the only backend which could train the models in a reasonable amount of time and would be able to handle the memory requirement. This caused changes to be made in regards to batch size and epochs, which in future work could perhaps be lowered. 
-This research contains several limitations, such as lack of hyperparameter tuning, large batch sizes, limited LIME implementation.
+This research contains several limitations, such as lack of hyperparameter tuning, large batch sizes, limited LIME implementation and lack of masking for certain terms.
 
 Hyperparameter tuning was not conducted due to limitations in computational resources. It is possible with sufficient hyperparameter tuning, TPA-BERT could've performed better. 
 
 Furthermore, the limitation in computational resources was also the rationale behind the use of large batch sizes in the training parameters of the BERT and TPA-BERT models. This could have led to a deprecation in performance both in regards to same-dataset performance and cross-dataset performance. 
 
-Lastly, LIME was only implemented and evaluated on the BERT and TPA-BERT models trained on WELFake. This was done primarily due to the intense computational demands of LIME. In addition, in the implementation of LIME, each input was only explained by 1000 perturbed samples (again, due to resource constraints). An increase of this number to 5000 wold ahve likely improved explainability.
+Additionally, LIME was only implemented and evaluated on the BERT and TPA-BERT models trained on WELFake. This was done primarily due to the intense computational demands of LIME. In addition, in the implementation of LIME, each input was only explained by 1000 perturbed samples (again, due to resource constraints). An increase of this number to 5000 wold ahve likely improved explainability.
 
-\section{Future Work}
+Lastly, as discovered after the LIME implementation, the models (BERT and TPA BERT trained on WELFake) used words like "Reuters" to help make the classification decision. This means that the models partially learned to detect fake news using superficial features. In the future such words could be detected and masked/removed during the preprocessing phase.
+
+\subsection{Future Work}
 Future work could expand on this research by the use of 'deeper' adversarial methods, more diverse datasets, BERT varieties as well as exploring multimodal methods.
 
 Firstly, hyperparameter optimisation, as mentioned in the limitations section, could have improved model performance. Future work could employ hyperparemter optimisation to improve model performance and also explore the impact of specific parameters on generalisation. 
@@ -1415,6 +1500,7 @@ And lastly, this research only explored text-based methods, future work could ex
 \printbibliography
 
 \appendix
+\oneappendixfalse
 \section{Meeting Logs}
 \addcontentsline{toc}{section}{Appendix A: Meeting Logs}
 \label{app:meeting_logs}
