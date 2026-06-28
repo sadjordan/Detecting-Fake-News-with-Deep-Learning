@@ -37,11 +37,61 @@
 \clubpenalty=10000
 \raggedbottom
 
+% --- TABLE COLUMN TYPES ---
+% C{width}: fixed-width, horizontally centred column (for numeric data)
+\usepackage{array}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
 % --- CAPTION CONFIGURATION ---
-% Ensures captions for Tables and Charts (Figures) are single spaced
+% Ensures captions for Tables and Charts (Figures) are single spaced.
+% apa7 hardcodes \textbf inside \DeclareCaptionLabelFormat{figurelabel} and
+% {tablelabel} (apa7.cls lines 712-723), so labelfont= has no effect on bold.
+% Fix: declare our own label/text formats without \textbf/\textit, and switch
+% captionsetup to use them. Must be in \AtBeginDocument to run after apa7.
 \usepackage[font={singlespacing}, labelsep=colon]{caption}
 \counterwithin{figure}{section}
 \counterwithin{table}{section}
+\AtBeginDocument{%
+  % Plain label format: just the label text, no \textbf wrapper
+  \DeclareCaptionLabelFormat{plainlabel}{#1~#2}%
+  % Plain text format: just the caption text, no \textit wrapper
+  \DeclareCaptionTextFormat{plaintext}{#1}%
+  \captionsetup[figure]{%
+    labelformat    = plainlabel, % overrides apa7's \textbf{figurelabel}
+    textformat     = plaintext,  % overrides apa7's \textit{tabletext}
+    textfont       = up,         % overrides apa7's textfont=it (removes italic)
+    labelsep       = colon,
+    format         = plain,      % label + text on one line
+    font           = {singlespacing},
+    singlelinecheck= true,
+    justification  = centering,
+  }%
+  \captionsetup[table]{%
+    position       = above,
+    skip           = 0pt,
+    belowskip      = -10pt,
+    labelformat    = plainlabel,
+    textformat     = plaintext,
+    labelsep       = colon,
+    format         = plain,
+    font           = {singlespacing},
+    singlelinecheck= true,
+    justification  = raggedright,
+  }%
+  \captionsetup[longtable]{%
+    position       = above,
+    skip           = 0pt,
+    belowskip      = -10pt,
+    labelformat    = plainlabel,
+    textformat     = plaintext,
+    labelsep       = colon,
+    format         = plain,
+    font           = {singlespacing},
+    singlelinecheck= true,
+    justification  = raggedright,
+  }%
+}
+
 
 % --- HEADINGS CONFIGURATION ---
 % We use titlesec to override apa7's default section styling
@@ -115,7 +165,17 @@
 \usepackage{booktabs}
 \usepackage{multirow} 
 \usepackage{lipsum}
-\usepackage{etoolbox} 
+\usepackage{etoolbox}
+\AtBeginEnvironment{table}{%
+  \setlength{\parskip}{0pt}%
+  \let\oldcaption\caption
+  \renewcommand{\caption}[2][]{%
+    \oldcaption[#1]{#2}%
+    \vspace{-12pt}%
+  }%
+}
+\AtBeginEnvironment{figure}{\setlength{\parskip}{0pt}}
+\AtBeginEnvironment{longtable}{\setlength{\parskip}{0pt}}
 \usepackage{longtable}
 \usepackage{pdflscape}
 \usepackage{pdfpages}
@@ -198,7 +258,7 @@ Date: 06: 02: 2026
 
 \clearpage
 \section*{Abstract}
-With the rise of social networking the spread and volume of fake news has dramatically increased, to the point where fact checking every post is unrealistic. In attempts to solve this problem, researchers have proposed methods employing machine learning and deep learning to flag fake news. However, these methods are often limited by lack of applicability as they fail to generalise beyond the datasets used. Furthermore, many of these methods employ black-box models, which reduces trust in the model's predictions. In order to address these issues, we proposed a model based on adversarially fine-tuning a Bidirectional Encoder Representations from Transformers (BERT) model to increase generalisation, and the use of Local Interpretable Model-Agnostic Explanations (LIME) to explain the otherwise black-box BERT model. Results indicated that while this technique failed to effectively generalise the model, the LIME implementation was successful and highlighted the reasons for the model's output.
+With the rise of social networking the spread and volume of fake news has dramatically increased, to the point where fact checking every post is unrealistic. In attempts to solve this problem, researchers have proposed methods employing machine learning and deep learning to flag fake news. However, these methods are often limited by lack of applicability as they fail to generalise beyond the datasets used. Furthermore, many of these methods employ black-box models, which reduces trust in the model's predictions. In order to address these issues, we proposed a model based on adversarially fine-tuning a Bidirectional Encoder Representations from Transformers (BERT) model to increase generalisation, and the use of Local Interpretable Model-Agnostic Explanations (LIME) to explain the otherwise black-box BERT model. Results indicated that the proposed model did not achieve its aims of increased generalisation. However the LIME implementation did result in it being able to explain the models somewhat, but more importantly it demonstrated a behavioral difference in between BERT and the proposed model.
 
 \clearpage
 \section*{Acknowledgements}
@@ -344,7 +404,7 @@ The objectives of this project are:
 \subsection{Research Scope}
 This project aims to build a deep learning model for fake news detection by first conducting a thorough literature review on related works in order to construct a knowledge base of which will be used to construct a model for detecting fake news.
 
-After the literature review, models to detect fake news will be developed using deep learning techniques. This process will involve gathering datasets, analysing and understanding the data and pre-processing datasets before constructing the architecture of the models and then training the various models.  %are we proposing new models?
+After the literature review, models to detect fake news will be developed using deep learning techniques. This process will involve gathering datasets, analysing and understanding the data and pre-processing datasets before constructing the architecture of the models and then training the various models.  %are we propos
 
 And lastly, after training the models. The models will be tested on the test sets which are subsets of the datasets used in order to determine their performance. 
 
@@ -447,7 +507,7 @@ Methods which seek to analyse propagation structure for fake news detection ofte
     \midrule
 \endfirsthead
 
-\multicolumn{8}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
+\multicolumn{8}{c}{\normalsize\tablename\ \thetable{} (continued)} \\
     \toprule
     \textbf{Author(s)} & \textbf{Year} & \textbf{Title} &  \textbf{Model Proposed} & \textbf{Proposed Methodology} & \textbf{Results} & \textbf{Notes} & \textbf{BERT used?} \\
     \midrule
@@ -737,7 +797,7 @@ Experiments using BERT involved fine-tuning a base BERT-uncased model. The datas
     \end{tabular}
 \end{table}
 
-The reason for capping the max_length at 128 instead of at 512 (max) were due to several factors. Firstly it was hoped that by limiting the maximum length it would reduce the amount of overfitting, improving generalisation. And secondly a lower max_length resulted in lower computational demands, especially on memory. 
+The reason for capping the \texttt{max\_length} at 128 instead of at 512 (max) were due to several factors. Firstly it was hoped that by limiting the maximum length it would reduce the amount of overfitting, improving generalisation. And secondly a lower \texttt{max\_length} resulted in lower computational demands, especially on memory. 
 
 After tokenisation, the BERT-uncased model is loaded and the training arguments are set. The training arguments are shown in Table \ref{tab:bert_finetune_config}.
 
@@ -773,7 +833,7 @@ At the end the best model is selected using validation F1-score, and this model 
 \subsubsection{Word2Vec Deep Learning and Machine Learning}
 Word2Vec experimentation saw the text (from previous processing steps) undergo some final processing which involved turning the text into all lower-case and the text undergoing lemmatisation using the Python library NLTK's \textit{WordNetLemmatizer}. After this, the processed text was used to train the Word2Vec model for each dataset (as there are 5 datasets, there will be 5 different Word2Vec embedding models).
 
-The training arguments for the Word2Vec models can be found in Table \ref{tab:word2vec_config}..
+The training arguments for the Word2Vec models can be found in \ref{tab:word2vec_config}.
 
 \begin{table}[H]
     \centering
@@ -966,70 +1026,44 @@ where:
 \section{Results}
 \subsection{BERT}
 
-\begingroup
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.3}
-\setlength\LTleft{0pt}
-\setlength\LTright{0pt}
-\begin{longtable}{@{} l c c c c @{}}
-\caption{Baseline BERT Results} \label{tab:bert_results} \\
-\toprule
-\textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
-\midrule
-\endfirsthead
-
-\multicolumn{5}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
-\toprule
-\textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
-\midrule
-\endhead
-
-\bottomrule
-\multicolumn{5}{r}{{Continued on next page}} \\
-\endfoot
-
-\bottomrule
-\endlastfoot
-WELFake & 0.9917 & 0.9920 & 0.9897 & 0.9908 \\
-FakeNewsNet & 0.8497 & 0.8768 & 0.9325 & 0.9037 \\
-Fake News Detection & 0.9976 & 0.9986 & 0.9971 & 0.9978 \\
-ISOT & 0.9996 & 0.9991 & 1.0000 & 0.9995 \\
-Fake News Classification & 0.9934 & 0.9948 & 0.9929 & 0.9938 \\
-\end{longtable}
-\endgroup
+\begin{table}[H]
+    \centering
+    \setlength{\tabcolsep}{3pt}
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Baseline BERT Results}
+    \label{tab:bert_results}
+    \begin{tabular}{@{} l c c c c @{}}
+        \toprule
+        \textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
+        \midrule
+        WELFake & 0.9917 & 0.9920 & 0.9897 & 0.9908 \\
+        FakeNewsNet & 0.8497 & 0.8768 & 0.9325 & 0.9037 \\
+        Fake News Detection & 0.9976 & 0.9986 & 0.9971 & 0.9978 \\
+        ISOT & 0.9996 & 0.9991 & 1.0000 & 0.9995 \\
+        Fake News Classification & 0.9934 & 0.9948 & 0.9929 & 0.9938 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 The results from the baseline fine-tuned BERT models exhibited very high accuracy, recall and precision. As can be referred to in Table \ref{tab:bert_results}, it appears that the FakeNewsNet dataset was the most challenging dataset. All the other datasets proved to be no challenge for each of their fine-tuned BERT models. 
 
-\begingroup
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.3}
-\setlength\LTleft{0pt}
-\setlength\LTright{0pt}
-\begin{longtable}{@{} l c c c c @{}}
-\caption{Cross Dataset Generalisation (BERT) - WELFake Only} \label{tab:bert_cross_results} \\
-\toprule
-\textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
-\midrule
-\endfirsthead
-
-\multicolumn{5}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
-\toprule
-\textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
-\midrule
-\endhead
-
-\bottomrule
-\multicolumn{5}{r}{{Continued on next page}} \\
-\endfoot
-
-\bottomrule
-\endlastfoot
-FakeNewsNet & 0.6984 & 0.7562 & 0.8872 & 0.8165 \\
-Fake News Detection & 0.2231 & 0.3302 & 0.4054 & 0.3640 \\
-ISOT & 0.9992 & 0.9998 & 0.9983 & 0.9991 \\
-Fake News Classification & 0.0188 & 0.0380 & 0.0336 & 0.0357 \\
-\end{longtable}
-\endgroup
+\begin{table}[H]
+    \centering
+    \setlength{\tabcolsep}{3pt}
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Cross Dataset Generalisation (BERT) - WELFake Only}
+    \label{tab:bert_cross_results}
+    \begin{tabular}{@{} l c c c c @{}}
+        \toprule
+        \textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
+        \midrule
+        FakeNewsNet & 0.6984 & 0.7562 & 0.8872 & 0.8165 \\
+        Fake News Detection & 0.2231 & 0.3302 & 0.4054 & 0.3640 \\
+        ISOT & 0.9992 & 0.9998 & 0.9983 & 0.9991 \\
+        Fake News Classification & 0.0188 & 0.0380 & 0.0336 & 0.0357 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 The best fold by validation f1-score was selected for cross dataset evaluation. The results show that the model trained on WELFake performed quite well for FakeNewsNet and ISOT, and much poorer for Fake News Detection and Fake News Classification datasets. 
 
@@ -1038,8 +1072,8 @@ The best fold by validation f1-score was selected for cross dataset evaluation. 
 \begingroup
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.3}
-\setlength\LTleft{0pt}
-\setlength\LTright{0pt}
+\setlength\LTleft{\fill}
+\setlength\LTright{\fill}
 \begin{longtable}{@{} p{4.5cm} p{2.0cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} @{}}
 \caption{Deep Learning Baseline Results} \label{tab:dl_results} \\
 \toprule
@@ -1047,7 +1081,7 @@ The best fold by validation f1-score was selected for cross dataset evaluation. 
 \midrule
 \endfirsthead
 
-\multicolumn{6}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
+\multicolumn{6}{c}{\normalsize\tablename\ \thetable{} (continued)} \\
 \toprule
 \textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
@@ -1083,11 +1117,13 @@ The best fold by validation f1-score was selected for cross dataset evaluation. 
 
 The results for the deep learning models trained using the Word2Vec embeddings indicate that all the models had similar performances and were generally on par with one another, although CNNs very slightly outperformed the LSTMs and CNN-LSTMs. All models achieved results exceeding an f1 score of 0.94, with the exception of models trained on FakeNewsNet. 
 
+\newpage 
+
 \begingroup
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.3}
-\setlength\LTleft{0pt}
-\setlength\LTright{0pt}
+\setlength\LTleft{\fill}
+\setlength\LTright{\fill}
 \begin{longtable}{@{} p{4.5cm} p{2.0cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} @{}}
 \caption{Cross Dataset Generalisation (CNN and LSTM Only) - Trained on WELFake Only} \label{tab:dl_cross_results} \\
 \toprule
@@ -1095,7 +1131,7 @@ The results for the deep learning models trained using the Word2Vec embeddings i
 \midrule
 \endfirsthead
 
-\multicolumn{6}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
+\multicolumn{6}{c}{\normalsize\tablename\ \thetable{} (continued)} \\
 \toprule
 \textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
@@ -1130,8 +1166,8 @@ Looking at the cross-dataset evaluation results, a similar pattern to the BERT's
 \begingroup
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.3}
-\setlength\LTleft{0pt}
-\setlength\LTright{0pt}
+\setlength\LTleft{\fill}
+\setlength\LTright{\fill}
 \begin{longtable}{@{} p{4.5cm} p{2.0cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} @{}}
 \caption{Machine Learning Baseline Results} \label{tab:ml_results} \\
 \toprule
@@ -1139,7 +1175,7 @@ Looking at the cross-dataset evaluation results, a similar pattern to the BERT's
 \midrule
 \endfirsthead
 
-\multicolumn{6}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
+\multicolumn{6}{c}{\normalsize\tablename\ \thetable{} (continued)} \\
 \toprule
 \textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
@@ -1193,8 +1229,8 @@ The machine learning models generally did very well on all datasets save for Fak
 \begingroup
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.3}
-\setlength\LTleft{0pt}
-\setlength\LTright{0pt}
+\setlength\LTleft{\fill}
+\setlength\LTright{\fill}
 \begin{longtable}{@{} p{4.5cm} p{2.0cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} @{}}
 \caption{Cross Dataset Generalisation (SVC, Random Forest and XGBoost ONLY) - WELFake Only} \label{tab:ml_cross_results} \\
 \toprule
@@ -1202,7 +1238,7 @@ The machine learning models generally did very well on all datasets save for Fak
 \midrule
 \endfirsthead
 
-\multicolumn{6}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
+\multicolumn{6}{c}{\normalsize\tablename\ \thetable{} (continued)} \\
 \toprule
 \textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
@@ -1239,70 +1275,44 @@ The cross-dataset evaluation of the selected ML models again followed the patter
 As for the other datasets, the ML models were very slightly outperformed by the DL models, with such a small difference than randomness could have very well caused it. With the exception of Fake News Classification, but the results for that dataset are already quite poor and as a result is of little consequence. 
 
 \subsection{TPA-BERT}
-\begingroup
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.3}
-\setlength\LTleft{0pt}
-\setlength\LTright{0pt}
-\begin{longtable}{@{} l c c c c @{}}
-\caption{TPA-BERT Results} \label{tab:tpa_bert_results} \\
-\toprule
-\textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
-\midrule
-\endfirsthead
-
-\multicolumn{5}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
-\toprule
-\textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
-\midrule
-\endhead
-
-\bottomrule
-\multicolumn{5}{r}{{Continued on next page}} \\
-\endfoot
-
-\bottomrule
-\endlastfoot
-WELFake & 0.9882 & 0.9852 & 0.9888 & 0.9870 \\
-FakeNewsNet & 0.8425 & 0.8702 & 0.9305 & 0.8994 \\
-Fake News Detection & 0.9947 & 0.9933 & 0.9971 & 0.9952 \\
-ISOT & 0.9993 & 0.9987 & 0.9998 & 0.9993 \\
-Fake News Classification & 0.9890 & 0.9938 & 0.9858 & 0.9898 \\
-\end{longtable}
-\endgroup
+\begin{table}[H]
+    \centering
+    \setlength{\tabcolsep}{3pt}
+    \renewcommand{\arraystretch}{1.3}
+    \caption{TPA-BERT Results}
+    \label{tab:tpa_bert_results}
+    \begin{tabular}{@{} l c c c c @{}}
+        \toprule
+        \textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
+        \midrule
+        WELFake & 0.9882 & 0.9852 & 0.9888 & 0.9870 \\
+        FakeNewsNet & 0.8425 & 0.8702 & 0.9305 & 0.8994 \\
+        Fake News Detection & 0.9947 & 0.9933 & 0.9971 & 0.9952 \\
+        ISOT & 0.9993 & 0.9987 & 0.9998 & 0.9993 \\
+        Fake News Classification & 0.9890 & 0.9938 & 0.9858 & 0.9898 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 The results for TPA-BERT were excellent, with results exceeding F1-scores of 0.95 with the exception of FakeNewsNet. When comparing the results against BERT, BERT again very slightly (<0.005 difference in f1 score) outperforms TPA-BERT. Overall these results is very typical when observed together with the other results. The adversarial training does seem to have very slightly impacted the performance of the model but not by much. 
 
-\begingroup
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.3}
-\setlength\LTleft{0pt}
-\setlength\LTright{0pt}
-\begin{longtable}{@{} l c c c c @{}}
-\caption{Cross Dataset Generalisation (TPA-BERT) - WELFake Only} \label{tab:tpa_bert_cross_results} \\
-\toprule
-\textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
-\midrule
-\endfirsthead
-
-\multicolumn{5}{c}{{\bfseries \tablename\ \thetable{} (continued)}} \\
-\toprule
-\textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
-\midrule
-\endhead
-
-\bottomrule
-\multicolumn{5}{r}{{Continued on next page}} \\
-\endfoot
-
-\bottomrule
-\endlastfoot
-FakeNewsNet & 0.6996 & 0.7520 & 0.8995 & 0.8191 \\
-Fake News Detection & 0.2178 & 0.3246 & 0.3946 & 0.3562 \\
-ISOT & 0.9982 & 0.9994 & 0.9968 & 0.9981 \\
-Fake News Classification & 0.0196 & 0.0383 & 0.0338 & 0.0359 \\
-\end{longtable}
-\endgroup
+\begin{table}[H]
+    \centering
+    \setlength{\tabcolsep}{3pt}
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Cross Dataset Generalisation (TPA-BERT) - WELFake Only}
+    \label{tab:tpa_bert_cross_results}
+    \begin{tabular}{@{} l c c c c @{}}
+        \toprule
+        \textbf{Dataset Name} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
+        \midrule
+        FakeNewsNet & 0.6996 & 0.7520 & 0.8995 & 0.8191 \\
+        Fake News Detection & 0.2178 & 0.3246 & 0.3946 & 0.3562 \\
+        ISOT & 0.9982 & 0.9994 & 0.9968 & 0.9981 \\
+        Fake News Classification & 0.0196 & 0.0383 & 0.0338 & 0.0359 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 The cross-dataset evaluation for TPA-BERT followed the usual pattern described earlier. The results however, when compared against BERT were only slightly better (<0.008 difference in f1 score). Even then this small difference may be attributed to randomness. Regardless, these results indicate that the adversarial technique used in TPA-BERT failed to generalise the model sigificantly and is on par with the BERT results. 
 
@@ -1322,6 +1332,8 @@ The results indicated that the average attribution scores were stronger for BERT
 As for the faithfulness score, it was evaluated with K = 5, 10 and 20. The results indicate some level of correlation between the number of features removed and the faithfulness score. Furthermore, the results indicate that the features LIME identified do in fact meaningfully impact the classification. When comparing BERT and TPA-BERT, it quickly becomes evident that TPA-BERT is less faithful than BERT. 
 
 \section{Discussion}
+
+\subsection{Model Performance Comparison}
 Comparing the performance of all the models trained (BERT, DL and ML models), BERT outperforms all other models, if only slightly in some cases. Although it is worth mentioning this difference ranges from small (F1 score improvement of ~0.03 for CNN trained on WELFake) to insigificant. Furthermore, BERT does not appear to have fallen into the trap of classifying only positives for FakeNewsNet like the LSTM and CNN-LSTM models fell into. Although the F1-score improvement is negligible (<0.01), it does show that BERT is able to produce embeddings which are more descriptive than Word2Vec. 
 
 The DL results for FakeNewsNet (as mentioned above) are rather interesting, as by looking at the recall we can see that the LSTM and CNN-LSTM models achieved perfect recall. This is most likely because there is a significant class imbalance in favour of the positive class. The LSTM and CNN-LSTM models seem to have fallen into the trap of always classifying any input as positive, which due to the class imbalance does mean that it actually performs quite well. The CNN model seems to have escaped this, as it does not have a perfect recall but has better precision, indicating it is actually classifying the negative class with some level of accuracy as well. 
@@ -1332,6 +1344,7 @@ However, the excellent performance of the models may (at least in part) actually
 
 Moving on, regarding the unique performance of models on the FakeNewsNet dataset, it is worth noting it differs from the other datasets as it has a significant class imbalance, with about 75\% of the records belonging to the positive class. Furthermore, FakeNewsNet (in our implementation of the dataset, as no attempt was made to scrape the article body) only contains the title of the article, and does not contain the main article body. For these reasons, FakeNewsNet presents a unique challenge which may explain the relatively (compared to other datasets) poor performance of BERT. 
 
+\subsection{Cross-Dataset Evaluation}
 As for cross-dataset evaluation, the performance of the ML and DL models are significantly poorer compared to BERT's cross-dataset evaluation results. With the differences being most notable when looking at the results for the FakeNewsNet and Fake News Detection datasets. The difference in F1-score for FakeNewsNet and Fake News Classification cross-dataset evaluation results between BERT and the CNN model was 0.1649 and 0.2184 respectively.
 
 As for the cross-dataset evaluation performance on the models trained on WELFake. The results for the models trained (regardless if it were BERT, DL or ML) followed a pattern: very strong performance on ISOT, decent performance for FakeNewsNet, poor performance for Fake News Detection (except for the ML models, for which Fake News Detection results were similar to Fake News Classification) and abysmal performance on Fake News Classification. 
@@ -1340,21 +1353,24 @@ The models most likely performed better on the FakeNewsNet and ISOT datsets due 
 
 And for the last two datasets: Fake News Detection and Fake News Classification, these datasets likely performed poorly due to being too different than WELFake. As a result the model was unable to generalise for these models thus causing the poor results. This is despite both datsets having 'title' columns initially. This may be because they also contained a 'text' column, which contained the rest of the article; this is in contrast to FakeNewsNet, which contained only the 'title' column. Furthermore, the methodology for collecting these datasets may have been substantially different than the methodology used to collect the WELFake dataset, causing the datasets to differ substantially.
 
+
+\subsection{TPA-BERT}
 Addressing the proposed model (TPA-BERT) being unable to generalise better than the BERT model, there could be several causes for this. Namely, lack of depth to the text perturbation technique, use of the CLS token, and the fact these perturbations are not 'natural'. 
 
 The text perturbation techniques employed were: synonym substitution, random swapping and random deletion. These techniques most likely were unable to meaningfully change the overall semantic meaning of the textual input. This flows directly to the next point, use of the CLS token: the CLS token, as previously mentioned is a 768 dimensional representation of the input text (essentially a semantic summary of the input text). This CLS token makes the order of the text less relevant, as the classifier only uses this CLS token. This means that without genuine semantic variation, the adversarial training only taught the model how to 'autocorrect' the perturbations in the text.
 
 Furthermore, the perturbations do not produce meaningful variations. The random synonym substitution, swapping and deletion creates text which is not a meaningful variation of human writing. This means that while the model learned to adapt to the perturbations, it didn't learn to actually handle genuine variations in human writing styles. Had there been geuine variations, the semantics may have changed as well, allowing the adversarial training to force the model to identify variation-agnostic features while teaching the model to classify the 'fakeness' of news based on less superficial features.
 
+\subsection{LIME}
 Lastly, LIME was implemented to explain the model's (BERT and TPA-BERT) behaviour. The evaluation of the average attribution strength and faifthfulness showed that LIME was able to explain the results of BERT and TPA-BERT to varying degrees, being much more suitable for explaining the BERT model than TPA-BERT. Going into more depth regarding the difference in the results between TPA-BERT and BERT, it does seem that TPA-BERT was sigificantly less explainable than BERT. However there are a few reasons why could have caused this. Namely, the adversarial training process used to train TPA-BERT.
 
 TPA-BERT's adversarial training process trained the model to effectively adapt to missing words and jumbled text, which coincidentally was how LIME measured the attribution. This adversarial training likely made the model more resilient to words being dropped and as such is responsible for the poor attribution and faifthfulness results relative to BERT. Although this research only conducted dataset perturbation, it is possible that adversarial training may indeed reduce the explainability of models, at least when it comes to implementing LIME. However, while these results are not exactly positive for TPA-BERT, it does prove that TPA-BERT does have different behaviour compared to BERT, and that the adversarial training process worked (although not as intended).
 
-To conclude, BERT outperforms the models trained on Word2Vec embeddings, but not by much. The main difference comes from the cross-dataset evaluation results where BERT exhibits sigificantly stronger performance. The excellent performance may be caused by the datasets having some form of data leakage, inadvertantly causing superficial features to be used for classification and amongst all the datasets, FakeNewsNet is the most challenging due to its unique attributes relative to other datasets used. The results for TPA-BERT show it is no better or worse when compared against BERT. However the LIME evaluation results show that TPA-BERT does indeed have different behaviour compared to BERT, but also had substantially weaker attribution and faifthfulness scores relative to BERT.
+% To conclude, BERT outperforms the models trained on Word2Vec embeddings, but not by much. The main difference comes from the cross-dataset evaluation results where BERT exhibits sigificantly stronger performance. The excellent performance may be caused by the datasets having some form of data leakage, inadvertantly causing superficial features to be used for classification and amongst all the datasets, FakeNewsNet is the most challenging due to its unique attributes relative to other datasets used. The results for TPA-BERT show it is no better or worse when compared against BERT. However the LIME evaluation results show that TPA-BERT does indeed have different behaviour compared to BERT, but also had substantially weaker attribution and faifthfulness scores relative to BERT.
 
 \clearpage
 \section{Conclusion}
-In summary, this research has, pursuant to the research objectives: completed a thorough literature review of related works, gathered datasets and conducted experiments involving the proposed model (TPA-BERT), BERT and Word2Vec. BERT and TPA-BERT were then fitted with a LIME component for explainability. %continue later
+In summary, this research has, pursuant to the research objectives: completed a thorough literature review of related works, gathered datasets and conducted experiments involving the proposed model (TPA-BERT), BERT and Word2Vec. BERT and TPA-BERT were then fitted with a LIME component for explainability. 
 
 For the literature review, 16 articles were reviewed, through which substantial insight was gained into the research around fake news detection. Insight was gained into the use of various embedding algorithms such as BERT, GloVe and Doc2Vec for text, as well as other techniques such as VGG19 for image processing. Furthermore, the various approaches undertaken by the authors of the read papers were noted, and informed the development of the proposed model for this research. These approaches varied from machine learning, to multi-layered models employing embedding algorithms, deep learning and graphical models amongst other algorithms. Most interestingly, many state-of-the-art models were black-boxes, which motivated the reading of articles discussing explainable AI techniques, such as LIME. To conclude, the literature review was critical to the development of a substantial knowledge base which supported this FYP and efforts toward the research goals.
 
