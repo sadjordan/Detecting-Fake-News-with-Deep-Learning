@@ -779,6 +779,13 @@ Word2Vec & \begin{itemize}[leftmargin=*, nosep]
 \end{tabular}
 \end{table}
 
+\subsubsection{Training Environment}
+All training was conducted with Google Colab. The latest models (final models) were trained with a Python 3 runtime on version 2026.04 (latest as of writing). The backend used differed depending on what was being trained.
+
+The Tensor Processing Unit (TPU) backend (specifically v5e-1 TPU) was used for BERT and TPA-BERT training as well as the LIME implementation. The TPU backend was chosen as it was able to train BERT and TPA-BERT models fastest and with greater efficiency. 
+
+The Graphic Processing Unit (GPU) backend (specifically T4 GPU) was used for the Word2Vec embedding model training as well as the ML and DL models. This was done because TPU offered no substantial advantage for the Word2Vec embedding model training (the main bottleneck). This allowed for the conservation of limited compute units (Colab's quantification of computational resources) on Google Colab. 
+
 \subsubsection{BERT Fine-tuning}
 Experiments using BERT involved fine-tuning a base BERT-uncased model. The datasets were previously cleaned and processed as was explain previously, but in order for the data to be suitable to input to BERT, it undergoes further processing in the form of tokenisation using the base BERT-uncased tokeniser with the settings shown in Table \ref{tab:bert_tokeniser_config}. 
 
