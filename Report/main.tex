@@ -39,7 +39,7 @@
 
 % --- CAPTION CONFIGURATION ---
 % Ensures captions for Tables and Charts (Figures) are single spaced
-\usepackage[font={singlespacing}, labelsep=period]{caption}
+\usepackage[font={singlespacing}, labelsep=colon]{caption}
 \counterwithin{figure}{section}
 \counterwithin{table}{section}
 
@@ -60,6 +60,8 @@
 \titleformat{\section}
   {\normalfont\sffamily\fontsize{14}{17}\bfseries}{\thesection}{1em}{#1}
 \titlespacing*{\section}{0pt}{0pt}{20pt}
+% Force every \section (and \section*) to start on a new page
+\pretocmd{\section}{\clearpage}{}{}
 
 % Subsection (Mapped to Sub-heading): Arial 12pt Bold
 \titleformat{\subsection}
@@ -349,7 +351,7 @@ And lastly, after training the models. The models will be tested on the test set
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\linewidth]{FYP1-Gantt_chart.png}
-    \caption{Gantt chart depicting the timeline for this project relative during MMU's term 2530}
+    \caption{Project Timeline Gantt Chart for MMU Term 2530}
     \label{fig:gantt_chart}
 \end{figure}
 
@@ -387,7 +389,7 @@ In research conducted by \textcite{mcnn}, the authors proposed a novel 5-module 
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.8\linewidth]{MCNN-model-architecture.jpg}
-    \caption{Figure depicts the architecture of the proposed MCNN model. The module coloured blue is the text feature extraction model; the module coloured red is the visual semantic feature extraction module; the module coloured in purple (above the text and visual semantic feature extraction modules) is the similarity measurement module; the module in yellow/orange is the visual tampering feature extraction module; and lastly the module in pink is the multimodal fusion module. From "Detecting fake news by exploring the consistency of multimodal data", by \citeauthor{mcnn}, 2021, \textit{Information Processing and Management.}, 58(5), https://doi.org/10.1016/j.ipm.2021.102610. Copyright 2024 held by 2021 Elsevier Ltd.}
+    \caption{Architecture of the Proposed MCNN Model. From "Detecting fake news by exploring the consistency of multimodal data", by \citeauthor{mcnn}, 2021, \textit{Information Processing and Management.}, 58(5), https://doi.org/10.1016/j.ipm.2021.102610. Copyright 2024 held by 2021 Elsevier Ltd.}
     \label{fig:mcnn_architecture}
 \end{figure}
 
@@ -398,7 +400,7 @@ In research conducted by \textcite{mcnn}, the authors proposed a novel 5-module 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\linewidth]{graph-based-architecture.jpg}
-    \caption{Figure depicts the architecture of the DAGA-NN model, each box represents a module which is labelled in the button right corner. From "Improving fake news detection with domain-adversarial and graph-attention neural network" by \citeauthor{graph-attention-multimodal}, 2021, \textit{Decision Support Systems}, 151, p. 3 (https://doi.org/10.1016/j.dss.2021.113633). Copyright 2021 Elsevier B.V.}
+    \caption{Architecture of the DAGA-NN Model. From "Improving fake news detection with domain-adversarial and graph-attention neural network" by \citeauthor{graph-attention-multimodal}, 2021, \textit{Decision Support Systems}, 151, p. 3 (https://doi.org/10.1016/j.dss.2021.113633). Copyright 2021 Elsevier B.V.}
     \label{fig:DAGA-NN Architecture}
 \end{figure}
 
@@ -524,16 +526,6 @@ Convolutional Neural Networks or CNNs are neural networks which generally have 3
 Long Short Term Memory of LSTMs is a type of Recurrent Neural Network (RNN) which aims to solve an issue with RNNs called the 'Vanishing Gradient Problem'. Essentially, the issue is that RNNs work using gradients which inform the weights in neurons, and these gradients are calculated using the chain rule, which means after dozens of multiplications a gradient will rapidly lose its value. This means that RNNs have 'short term memory', an issue LSTM's solve by selectively holding on to important information in a 'Cell State' through a system of gates. There are three gates: forget gate, input gate, and output gate. The forget gate figures out what information should be forgotten because it is now longer useful. The input gate decides what is worth adding to the 'Cell State'. And lastly the output gate figures out what information in the 'Cell State' is important or relevant to the current situation and outputs that. This ensures that LSTMs are able to hold on to important information over a long-term and doesn't suffer from short-term forgetfulness. This makes LSTMs especially suitable for sequential input where important discriminating features are far between each other. 
 
 \subsection{Embedding Approaches}
-\subsubsection{Global Vectors for Word Representation}
-Global Vectors for Word Representation or GloVe is an unsupervised embedding algorithm which generates word embeddings developed by \textcite{glove}. GloVe embeddings are pre-trained on massive textual datasets with a pre-set number of dimensions. The training process works by constructing a co-occurrence matrix where the rows and columns represent each unique word and each entry in the matrix indicates the frequency of two words occurring next to one another within a predefined context window. So for example, the co-occurrence matrix would capture how frequently the words "statistics" and "math" appear together. 
-
-But how is the co-occurrence matrix turned into vectors? This takes place during training, each word is assigned a random vector, and then finds the dot product of two vectors (in this case, each vector is a word), then compares it to the logarithm of the co-occurrence matrix count (of the two words) to find the error, then depending on the error, the vectors will be updated so it is closer to the logarithm of the co-occurrence matrix count. So for example, if two words, "apple" and "fruit" have a logarithm-count of 0.5, and the dot product of their random vector representations returned a value of 0.3, the error would be 0.2 and the model will modify the vectors such that in the next iteration, the dot product will closer align with the logarithm-count. 
-
-But that is not all, if GloVe only relied on counts in the co-occurrence matrix it would encounter issues where common words like "the" become associated with everything and the vectors generated would be less meaningful. To solve this, GloVe employs weights to ensure the vectors being trained are meaningful. Rare words will be given lower weights (noise), and while common words will have higher weights, there will be a cap so that "the" doesn't unfairly bias the vectors being produced. 
-
-After training these embeddings can be loaded (which is what was done here) and then used to generate embeddings of input text. 
-
-To conclude, GloVe is an unsupervised algorithm which generates word embeddings based on a massive textual datasets. The vectors produced are representative of the frequency of words relative to other words. 
 
 \subsubsection{Word2Vec}
 Word2Vec is a neural network embedding model which converts words into dense vector representations developed by \textcite{word2vec}. There are two main architectural variants, Continuous Bag of Words and Skip-gram; Skip-gram was used in this instance and thus will be the only variant elaborated on. 
@@ -545,7 +537,7 @@ To do this, the input word (represented in on-hot-encoded form) is taken in by t
 This massive guessing operation is used to train the hidden layer, so that when the training is complete, the output layer is stripped and the output of the hidden layer becomes the vectors. So to conclude, Word2Vec's Skip-gram variant works by trying to guess words around a target word and through this exercise trains a hidden layer which will be used to turn words into vectors. 
 
 \subsubsection{Bidirectional Encoder Representations from Transformers}
-Bidirectional Encoder Representations from Transformers or BERT is a self-supervised bidirectional model which differs from Word2Vec and GloVe in that while Word2Vec and GloVe have a single vector for each word; BERT outputs different vectors for each word depending on the context. 
+Bidirectional Encoder Representations from Transformers or BERT is a self-supervised bidirectional model which differs from Word2Vec and GloVe in that while Word2Vec have a single vector for each word; BERT outputs different vectors for each word depending on the context. 
 
 To do this, BERT is trained through two objectives: Masked Language Modelling (MLM) and Next Sentence Prediction (NSP) \parencite{roberta}. MLM works by trying to get BERT to predict the missing word. So using the previous example of "I love vanilla ice cream", say the word "ice" is 'masked' (omitted), BERT will have to try and guess the missing word from: "I love vanilla [mask] cream". Since BERT is bidirectional, it will consider words preceding and subsequent to the mask. This technique gets BERT to learn the relationship between words in a sentence. 
 
@@ -572,7 +564,7 @@ The WELFake dataset was downloaded from Kaggle, and contains 72134 rows of data.
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.5\linewidth]{WELFake class distribution.png}
-    \caption{Figure depicts the class distribution of the WELFake dataset}
+    \caption{Class Distribution of the WELFake Dataset}
     \label{fig:welfake_dist}
 \end{figure}
 
@@ -582,7 +574,7 @@ This dataset, named "Fake News Classification" was downloaded from Kaggle. It co
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.5\linewidth]{Fake news classification class balance.png}
-    \caption{Figure depicts the class distribution of the Fake News Classification dataset}
+    \caption{Class Distribution of the Fake News Classification Dataset}
     \label{fig:fake_news_class_dist}
 \end{figure}
 
@@ -592,7 +584,7 @@ The FakeNewsNet dataset was downloaded from Kaggle, it is worth noting this was 
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.5\linewidth]{FakeNewsNet class distribution.png}
-    \caption{Figure depicts the class distribution of the FakeNewsNet dataset}
+    \caption{Class Distribution of the FakeNewsNet Dataset}
     \label{fig:fakenewsnet_dist}
 \end{figure}
 
@@ -602,7 +594,7 @@ The Fake News Detection dataset was downloaded from Hugging Face. It contains 44
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.5\linewidth]{fake news detection class balance.png}
-    \caption{Figure depicts the class distribution of the Fake News Detection dataset}
+    \caption{Class Distribution of the Fake News Detection Dataset}
     \label{fig:fake_news_detection_dist}
 \end{figure}
 
@@ -612,7 +604,7 @@ The ISOT dataset was downloaded from the University of Victoria website. It was 
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.5\linewidth]{ISOT class balance.png}
-    \caption{Figure depicts the class distribution of the ISOT dataset}
+    \caption{Class Distribution of the ISOT Dataset}
     \label{fig:isot_dist}
 \end{figure}
 
@@ -675,7 +667,7 @@ Once completed, the 'combined\_text' column was stripped of any non-Unicode char
 \begin{figure} [H]
     \centering
     \includegraphics[width=0.5\linewidth]{FYP_Research_Methodology.png}
-    \caption{Figure depicts preprocessing steps in flowchart form}
+    \caption{Data Preprocessing Steps Flowchart}
     \label{fig:preprcessing_flowchart}
 \end{figure}
 
@@ -907,16 +899,23 @@ The proposed model is inspired by and similar to the process described by \textc
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\linewidth]{Proposed-model.drawio.png}
-    \caption{Figure depicts the proposed models' architecture}
+    \caption{Proposed TPA-BERT Model Architecture}
     \label{fig:proposed-model}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\linewidth]{BERT-finetuning.drawio.png}
-    \caption{Figure depicts the proposed fine-tuning process for the BERT component of the proposed model}
+    \caption{Proposed Fine-Tuning Process for TPA-BERT}
     \label{fig:proposed-finetuning}
 \end{figure}
+
+\subsubsection{LIME}
+LIME was implemented on BERT and TPA-BERT. For this implementation, LIME generates a local dataset of 1000 perturbed samples of the input by randomly removing words from the original input. This local dataset is then passed through the classification model (BERT or TPA-BERT) to obtain the prediction probabilities. 
+
+As the BERT tokeniser is capped at 128 tokens, to ensure consistent output the perturbed data is tokenised with static padding at 128 tokens. Esnuring a fixed size of 128. 
+
+Once the probabilities were obtained, LIME fits a linear model onto the weighted perturbations. Weights are determined by cosine distance to the original text. For this study, the top 20 features were selected to explain the model's behaviour. 
 
 \subsection{Evaluation}
 %check tense
@@ -944,8 +943,28 @@ The formulae described above are also written below in mathematical notation:
 \text{Accuracy} = \frac{\text{True\ Positives} + \text{True\ Negatives}}{\text{Total\ Predictions}}
 \end{equation}
 
-\subsection{Data Analysis and Results}
-\subsubsection{BERT}
+\subsubsection{LIME Evaluation}
+To evaluate the implementation of LIME, two metrics were used: Average Attribution Strength and "Faithfulness". Average Attribution Strength refers to the average (absolute) LIME attribution scores for the top 20 features. And Faithfulness is calculated by removing the top K (evaluated with K at 5, 10 and 20) features identified by LIME and then finding the difference in the confidence of the prediction between the original input and the top features-removed input.
+
+The specific formulae are below:
+
+\begin{equation}
+\text{Attribution\ Strength} = \frac{1}{N} \sum_{i=1}^{N} |w_i|
+\end{equation}
+where $N = 20$ represents the number of top features, and $w_i$ denotes the LIME attribution coefficient assigned to feature $i$.
+
+\begin{equation}
+\text{Faithfulness}(K) = P(y \mid X_{\text{orig}}) - P(y \mid X_{\text{mod}}^{(K)})
+\end{equation}
+where:
+\begin{itemize}
+    \item $y$ represents the model's predicted class for the original input text $X_{\text{orig}}$.
+    \item $P(y \mid X)$ is the model's predicted probability (confidence) for class $y$ given the input $X$.
+    \item $X_{\text{mod}}^{(K)}$ is the modified input text after deleting the top $K$ words (evaluated at $K \in \{5, 10, 20\}$) with the largest absolute attribution weights $|w_i|$.
+\end{itemize}
+
+\section{Results}
+\subsection{BERT}
 
 \begingroup
 \setlength{\tabcolsep}{3pt}
@@ -1014,7 +1033,7 @@ Fake News Classification & 0.0188 & 0.0380 & 0.0336 & 0.0357 \\
 
 The best fold by validation f1-score was selected for cross dataset evaluation. The results show that the model trained on WELFake performed quite well for FakeNewsNet and ISOT, and much poorer for Fake News Detection and Fake News Classification datasets. 
 
-\subsubsection{Deep Learning}
+\subsection{Deep Learning}
 
 \begingroup
 \setlength{\tabcolsep}{3pt}
@@ -1106,7 +1125,7 @@ The results for the deep learning models trained using the Word2Vec embeddings i
 
 Looking at the cross-dataset evaluation results, a similar pattern to the BERT's cross-dataset evaluation emerges. With performance for ISOT and FakeNewsNet being excellent when compared to performance for Fake News Detection and Fake News Classification. 
 
-\subsubsection{Machine Learning}
+\subsection{Machine Learning}
 
 \begingroup
 \setlength{\tabcolsep}{3pt}
@@ -1219,7 +1238,7 @@ The cross-dataset evaluation of the selected ML models again followed the patter
 
 As for the other datasets, the ML models were very slightly outperformed by the DL models, with such a small difference than randomness could have very well caused it. With the exception of Fake News Classification, but the results for that dataset are already quite poor and as a result is of little consequence. 
 
-\subsubsection{TPA-BERT}
+\subsection{TPA-BERT}
 \begingroup
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.3}
@@ -1287,8 +1306,20 @@ Fake News Classification & 0.0196 & 0.0383 & 0.0338 & 0.0359 \\
 
 The cross-dataset evaluation for TPA-BERT followed the usual pattern described earlier. The results however, when compared against BERT were only slightly better (<0.008 difference in f1 score). Even then this small difference may be attributed to randomness. Regardless, these results indicate that the adversarial technique used in TPA-BERT failed to generalise the model sigificantly and is on par with the BERT results. 
 
-\subsection{LIME Implementation}
-TBD
+\subsection{LIME Results}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{lime_eval.png}
+    \caption{LIME Evaluation Results}
+    \label{fig:LIME-results}
+\end{figure}
+
+LIME was implemented on the BERT and TPA-BERT models trained on WELFake. And the evaluation was done on these two models.
+
+The results indicated that the average attribution scores were stronger for BERT than TPA-BERT, with average scores of 0.032 and 0.015 respectively. This indicates that LIME was better able to explain the BERT model than the TPA-BERT model. 
+
+As for the faithfulness score, it was evaluated with K = 5, 10 and 20. The results indicate some level of correlation between the number of features removed and the faithfulness score. Furthermore, the results indicate that the features LIME identified do in fact meaningfully impact the classification. When comparing BERT and TPA-BERT, it quickly becomes evident that TPA-BERT is less faithful than BERT. 
 
 \section{Discussion}
 Comparing the performance of all the models trained (BERT, DL and ML models), BERT outperforms all other models, if only slightly in some cases. Although it is worth mentioning this difference ranges from small (F1 score improvement of ~0.03 for CNN trained on WELFake) to insigificant. Furthermore, BERT does not appear to have fallen into the trap of classifying only positives for FakeNewsNet like the LSTM and CNN-LSTM models fell into. Although the F1-score improvement is negligible (<0.01), it does show that BERT is able to produce embeddings which are more descriptive than Word2Vec. 
@@ -1309,13 +1340,17 @@ The models most likely performed better on the FakeNewsNet and ISOT datsets due 
 
 And for the last two datasets: Fake News Detection and Fake News Classification, these datasets likely performed poorly due to being too different than WELFake. As a result the model was unable to generalise for these models thus causing the poor results. This is despite both datsets having 'title' columns initially. This may be because they also contained a 'text' column, which contained the rest of the article; this is in contrast to FakeNewsNet, which contained only the 'title' column. Furthermore, the methodology for collecting these datasets may have been substantially different than the methodology used to collect the WELFake dataset, causing the datasets to differ substantially.
 
-Lastly, regarding the proposed model (TPA-BERT) being unable to generalise better than the BERT model, there could be several causes for this. Namely, lack of depth to the text perturbation technique, use of the CLS token, and the fact these perturbations are not 'natural'. 
+Addressing the proposed model (TPA-BERT) being unable to generalise better than the BERT model, there could be several causes for this. Namely, lack of depth to the text perturbation technique, use of the CLS token, and the fact these perturbations are not 'natural'. 
 
 The text perturbation techniques employed were: synonym substitution, random swapping and random deletion. These techniques most likely were unable to meaningfully change the overall semantic meaning of the textual input. This flows directly to the next point, use of the CLS token: the CLS token, as previously mentioned is a 768 dimensional representation of the input text (essentially a semantic summary of the input text). This CLS token makes the order of the text less relevant, as the classifier only uses this CLS token. This means that without genuine semantic variation, the adversarial training only taught the model how to 'autocorrect' the perturbations in the text.
 
 Furthermore, the perturbations do not produce meaningful variations. The random synonym substitution, swapping and deletion creates text which is not a meaningful variation of human writing. This means that while the model learned to adapt to the perturbations, it didn't learn to actually handle genuine variations in human writing styles. Had there been geuine variations, the semantics may have changed as well, allowing the adversarial training to force the model to identify variation-agnostic features while teaching the model to classify the 'fakeness' of news based on less superficial features.
 
-To conclude, BERT outperforms the models trained on Word2Vec embeddings, but not by much. The main difference comes from the cross-dataset evaluation results where BERT exhibits sigificantly stronger performance. The excellent performance may be caused by the datasets having some form of data leakage, inadvertantly causing superficial features to be used for classification and amongst all the datasets, FakeNewsNet is the most challenging due to its unique attributes relative to other datasets used. Finally the results for TPA-BERT show it is no better or worse when compared against BERT, indicating that the methodology used for its training may be flawed. 
+Lastly, LIME was implemented to explain the model's (BERT and TPA-BERT) behaviour. The evaluation of the average attribution strength and faifthfulness showed that LIME was able to explain the results of BERT and TPA-BERT to varying degrees, being much more suitable for explaining the BERT model than TPA-BERT. Going into more depth regarding the difference in the results between TPA-BERT and BERT, it does seem that TPA-BERT was sigificantly less explainable than BERT. However there are a few reasons why could have caused this. Namely, the adversarial training process used to train TPA-BERT.
+
+TPA-BERT's adversarial training process trained the model to effectively adapt to missing words and jumbled text, which coincidentally was how LIME measured the attribution. This adversarial training likely made the model more resilient to words being dropped and as such is responsible for the poor attribution and faifthfulness results relative to BERT. Although this research only conducted dataset perturbation, it is possible that adversarial training may indeed reduce the explainability of models, at least when it comes to implementing LIME. However, while these results are not exactly positive for TPA-BERT, it does prove that TPA-BERT does have different behaviour compared to BERT, and that the adversarial training process worked (although not as intended).
+
+To conclude, BERT outperforms the models trained on Word2Vec embeddings, but not by much. The main difference comes from the cross-dataset evaluation results where BERT exhibits sigificantly stronger performance. The excellent performance may be caused by the datasets having some form of data leakage, inadvertantly causing superficial features to be used for classification and amongst all the datasets, FakeNewsNet is the most challenging due to its unique attributes relative to other datasets used. The results for TPA-BERT show it is no better or worse when compared against BERT. However the LIME evaluation results show that TPA-BERT does indeed have different behaviour compared to BERT, but also had substantially weaker attribution and faifthfulness scores relative to BERT.
 
 \clearpage
 \section{Conclusion}
@@ -1327,9 +1362,30 @@ Relevant datasets were gathered from Kaggle, research papers and HuggingFace. Or
 
 Experiments on BERT and Word2Vec were conducted which aimed to gain baseline results for comparison against the proposed model, and to justify the use of BERT compared to other techniques. The experimental data showed that while models (both ML and DL) trained on Word2Vec embeddings performed marginally worse than BERT, the real difference lay in generalisation, where BERT models outperformed the models trained on Woed2Vec embeddings. While this showed BERT had superior generalisation, the patterns observed in the cross-dataset evaluation results suggested that similarity between the dataset used to train a model and the completely unseen datasets used for cross-dataset evaluation is an important factor. 
 
-The proposed model was constructed based on approaches to fake news detection in the articles reviewed in the literature review. It had been hoped that the proposed model would have greater generalisation than baseline BERT models, however this result was not obtained. Rather the results indicate that TPA-BERT was no better or worse than the baseline BERT models in terms of performance (against the test set of the dataset it was trained on) and cross-dataset evaluation. It can be concluded, at least for the datasets involved in this research, that merely perturbing the text using the aforementioned techniques is too 'shallow' a technique for effective generalisation.  
+The proposed model was constructed based on approaches to fake news detection in the articles reviewed in the literature review. It had been hoped that the proposed model would have greater generalisation than baseline BERT models, however this result was not obtained. Rather the results indicate that TPA-BERT was no better or worse than the baseline BERT models in terms of performance (against the test set of the dataset it was trained on) and cross-dataset evaluation. It can be concluded, at least for the datasets involved in this research, that merely perturbing the text using the aforementioned techniques may be too 'shallow' a technique for effective generalisation. 
 
-This research experienced a multitude of challenges, the biggest being a lack of computational resources. Model training and testing were done on Google Colab using the TPU backend which came with limitations. Other Colab backends were tried, but TPU remained the only backend which could train the models in a reasonable amount of time and would be able to handle the memory requirement. This caused changes to be made in regards to batch size and epochs, which in future work could perhaps be lowered. Other (more minor) challenges included implementation of the proposed model due to limited resources for experimentation and difficulty %more later
+And finally, LIME was implemented on BERT and TPA-BERT with results indicating that LIME had greater explainability for BERT than TPA-BERT. This was likely due to the adversarial training process employed by TPA-BERT which made it resilient to words being randomly removed. Despite this, these results prove that TPA-BERT's adversarial training process did impact the model's behaviour, just not as intended (increased generalisation).
+
+\subsection{Limitations}
+% This research has a multitude of limitations, the biggest being a lack of computational resources. Model training and testing were done on Google Colab using the TPU backend which came with limitations. Other Colab backends were tried, but TPU remained the only backend which could train the models in a reasonable amount of time and would be able to handle the memory requirement. This caused changes to be made in regards to batch size and epochs, which in future work could perhaps be lowered. 
+This research contains several limitations, such as lack of hyperparameter tuning, large batch sizes, limited LIME implementation.
+
+Hyperparameter tuning was not conducted due to limitations in computational resources. It is possible with sufficient hyperparameter tuning, TPA-BERT could've performed better. 
+
+Furthermore, the limitation in computational resources was also the rationale behind the use of large batch sizes in the training parameters of the BERT and TPA-BERT models. This could have led to a deprecation in performance both in regards to same-dataset performance and cross-dataset performance. 
+
+Lastly, LIME was only implemented and evaluated on the BERT and TPA-BERT models trained on WELFake. This was done primarily due to the intense computational demands of LIME. In addition, in the implementation of LIME, each input was only explained by 1000 perturbed samples (again, due to resource constraints). An increase of this number to 5000 wold ahve likely improved explainability.
+
+\section{Future Work}
+Future work could expand on this research by the use of 'deeper' adversarial methods, more diverse datasets, BERT varieties as well as exploring multimodal methods.
+
+Firstly, hyperparameter optimisation, as mentioned in the limitations section, could have improved model performance. Future work could employ hyperparemter optimisation to improve model performance and also explore the impact of specific parameters on generalisation. 
+
+Secondly, more datasets or more specifically, more diverse datasets could be employed. Although not done in this research, combination of datasets will likely improve model generalisation by exposing the model to multiple 'domains' (datasets) during training. And should more datasets be procured there is also more evaluation data available for a more thorough analysis. 
+
+Furthermore, in this research only BERT (TPA-BERT also used BERT) was used. Future work could explore the use of BERT varieties such as RoBERTa, DistilBERT, or ELECTRA (Efficiently Learning an Encoder that Classifies Token Replacements Accurately) to name but a few. Some BERT variants may have superior generalisation performance in regards to fake news detection.
+
+And lastly, this research only explored text-based methods, future work could explore the use of multimodal methodologies for fake news detection. Throughout the literature review, multimodal techniques generally had the input structure as an image (accompanying the text) and a body of text. A possible alternative technique for future work could see the input structure as: an image of the webpage containing the article, and the text of the article. Such a methodology may lead to greater rates of fake news detection and improved generalisation as there may be stylistic differences between sites more likely to publish genuine news and sites which predominantly publish fake news.
 
 \clearpage
 \addcontentsline{toc}{section}{References}
@@ -1348,7 +1404,7 @@ This research experienced a multitude of challenges, the biggest being a lack of
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\linewidth]{FYP1-Similarity.png}
-    \caption{Turnitin Similarity Score for this interim report}
+    \caption{Turnitin Similarity Score for This Report}
     \label{fig:similarity-turnitin}
 \end{figure}
 
