@@ -151,22 +151,22 @@
 \setlength{\headwidth}{\textwidth}
 \fancyhfoffset[L,R]{0pt}
 \fancyhf{} % Clear default apa7 headers/footers
-\fancyhead[L]{\fontsize{8}{10}\selectfont Project ID: FYP01-DS-T2530-0351} % Left header with blank space for project ID
+\fancyhead[L]{\fontsize{8}{10}\selectfont Project ID: FYP02-DS-T2610-0351} % Left header with blank space for project ID
 \fancyhead[R]{\fontsize{8}{10}\selectfont\thepage} % Right header with page number
 \fancyfoot[L]{\fontsize{8}{10}\selectfont Prepared by: Jordan Ling Shen Hang} % Left footer
 \fancyfoot[C]{\fontsize{8}{10}\selectfont CPT6324 Project II} % Center footer
-\fancyfoot[R]{\fontsize{8}{10}\selectfont 2530 Term} % Right footer
+\fancyfoot[R]{\fontsize{8}{10}\selectfont 2610 Term} % Right footer
 \renewcommand{\headrulewidth}{0.4pt} % Add header line
 \renewcommand{\footrulewidth}{0.4pt} % Add footer line
 
 % Ensure plain pages (like title page) also use this style
 \fancypagestyle{plain}{
   \fancyhf{}
-  \fancyhead[L]{\fontsize{8}{10}\selectfont Project ID: FYP01-DS-T2530-0351}
+  \fancyhead[L]{\fontsize{8}{10}\selectfont Project ID: FYP02-DS-T2610-0351}
   \fancyhead[R]{\fontsize{8}{10}\selectfont\thepage}
   \fancyfoot[L]{\fontsize{8}{10}\selectfont Prepared by: Jordan Ling Shen Hang}
   \fancyfoot[C]{\fontsize{8}{10}\selectfont CPT6324 Project II}
-  \fancyfoot[R]{\fontsize{8}{10}\selectfont 2530 Term}
+  \fancyfoot[R]{\fontsize{8}{10}\selectfont 2610 Term}
   \renewcommand{\headrulewidth}{0.4pt}
   \renewcommand{\footrulewidth}{0.4pt}
 }
@@ -272,7 +272,7 @@ I hereby declare that the work has been done by myself and no portion of the wor
 \noindent\includegraphics[width=0.4\linewidth]{signature.png}
 
 Name of candidate: Jordan Ling Shen Hang \\
-Faculty of Computing & Informatics \\
+Faculty of Computing \& Informatics \\
 Multimedia University \\
 Date: 06: 02: 2026 
 \endgroup
@@ -867,7 +867,7 @@ After tokenisation, the BERT-uncased model is loaded and the training arguments 
 
 \begin{table}[H]
     \centering
-    \caption{Baseline BERT Fine-tuning Configuration}
+    \caption{BERT Fine-tuning Configuration}
     \label{tab:bert_finetune_config}
     \begin{tabular}{l l}
         \hline
@@ -1044,7 +1044,7 @@ TPA-BERT loss function:
     \end{tabular}
 \end{table}
 
-There are several modifications to the parameters compared to the baseline BERT model. Most notably the training batch size which is now 32 instead of the 128 used by the baseline. There are a few reasons for this: firstly, the model also has to process the adversarial data which essentially doubles the data processed. And secondly, because of the aforementioned doubled data, the forward and backward passes now carry twice as much data. As a result, with double the data as well as the fact the forward and backward passes also have to deal with double the data, the effective batch size is 128. 
+There are several modifications to the parameters compared to the baseline BERT model. Most notably the training batch size which is now 32 instead of the 128 used by BERT. There are a few reasons for this: firstly, the model also has to process the adversarial data which essentially doubles the data processed. And secondly, because of the aforementioned doubled data, the forward and backward passes now carry twice as much data. As a result, with double the data as well as the fact the forward and backward passes also have to deal with double the data, the effective batch size is 128. 
 
 The proposed model is inspired by and similar to the process described by \textcite{BERT-finetuning}, however, unlike the model described by those authors, TPA-BERT perturbs the text directly, instead of at the embedding and feature level like in FGM-FRAT (the model described by the authors). The reason for this deviation is that perturbation at a text level is simple to implement, in addition to the decreased number of passes per step thus reducing computational demands. Furthermore, the proposed model also contains a LIME component which will complement the BERT component by giving explanations for the otherwise black box model to increase trust in the model. 
 
@@ -1131,7 +1131,7 @@ where:
     \centering
     \setlength{\tabcolsep}{3pt}
     \renewcommand{\arraystretch}{1.3}
-    \caption{Baseline BERT Results}
+    \caption{5-Fold Cross-Validated BERT Results}
     \label{tab:bert_results}
     \begin{tabular}{@{} l c c c c @{}}
         \toprule
@@ -1146,7 +1146,7 @@ where:
     \end{tabular}
 \end{table}
 
-The results from the baseline fine-tuned BERT models exhibited very high accuracy, recall and precision. As shown in Table \ref{tab:bert_results}, it appears that the FakeNewsNet dataset was the most challenging dataset. All the other datasets proved to be no challenge for each of their fine-tuned BERT models. 
+The results from the fine-tuned BERT models exhibited very high accuracy, recall and precision. As shown in Table \ref{tab:bert_results}, it appears that the FakeNewsNet dataset was the most challenging dataset. All the other datasets proved to be no challenge for each of their fine-tuned BERT models. 
 
 \vspace{25pt}
 
@@ -1178,7 +1178,7 @@ The best fold by validation F1-score was selected for cross-dataset evaluation. 
 \setlength\LTleft{\fill}
 \setlength\LTright{\fill}
 \begin{longtable}{@{} p{4.7cm} p{2.0cm} p{1.7cm} p{1.7cm} p{1.7cm} p{1.7cm} @{}}
-\caption{Deep Learning Baseline Results} \label{tab:dl_results} \\
+\caption{5-Fold Cross-Validated Deep Learning Model Results} \label{tab:dl_results} \\
 \toprule
 \textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
@@ -1272,7 +1272,7 @@ Looking at the cross-dataset evaluation results, a similar pattern to BERT's cro
 \setlength\LTleft{\fill}
 \setlength\LTright{\fill}
 \begin{longtable}{@{} p{4.7cm} p{3.2cm} p{1.7cm} p{1.7cm} p{1.7cm} p{1.7cm} @{}}
-\caption{Machine Learning Results} \label{tab:ml_results} \\
+\caption{5-Fold Cross-Validated Machine Learning Results} \label{tab:ml_results} \\
 \toprule
 \textbf{Dataset Name} & \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
 \midrule
@@ -1540,6 +1540,7 @@ And lastly, this research only explored text-based methods, future work could ex
 \addcontentsline{toc}{section}{Appendix B: Meeting Logs}
 \label{app:meeting_logs}
 \includepdf[pages=-, pagecommand={\thispagestyle{fancy}}, offset=1cm 0cm]{Meeting_Logs_FYP1_T2530.pdf}
+\includepdf[pages=-, pagecommand={\thispagestyle{fancy}}, offset=1cm -1cm]{Meeting_Logs_FYP2_T2610.pdf}
 
 % \appendix
 \section{Turnitin Similarity}
@@ -1547,7 +1548,7 @@ And lastly, this research only explored text-based methods, future work could ex
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth]{FYP1-Similarity.png}
+    \includegraphics[width=0.8\linewidth]{FYP2-Similarity.png}
     \caption{Turnitin Similarity Score for This Report}
     \label{fig:similarity-turnitin}
 \end{figure}
